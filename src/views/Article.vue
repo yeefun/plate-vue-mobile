@@ -6,7 +6,6 @@
       </section>
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
         <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full mobile-hide" :config="props.config"/>
-        <vue-dfp :is="props.vueDfp" pos="MBHD" extClass="full mobile-only" :config="props.config"/>
         <div class="split-line"></div>
         <div class="article-heromedia" v-if="heroVideo" >
           <article-video :video="heroVideo" class="heroimg" />
@@ -21,35 +20,9 @@
         </div>
         <div class="article" v-if="articleData">
           <article-body :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist" :viewport="viewport">
-            <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
-              <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
-              <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
-              <vue-dfp :is="props.vueDfp" v-if="abIndicator === 'A'" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
-              <div v-if="abIndicator === 'A'" class="article_aside_fbPage fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
-                <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
-                  <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
-                </blockquote>
-              </div>
-              <article-aside-fixed :abIndicator="abIndicator" :projects="projectlist">
-                <vue-dfp :is="props.vueDfp" v-if="abIndicator === 'B'" slot="dfpR2" pos="PCR2B" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
-                <div v-if="abIndicator === 'B'" slot="fbPage" class="article_aside_fbPage fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
-                  <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
-                    <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
-                  </blockquote>
-                </div>
-                <pop-list-vert :pop="popularlist" slot="popListVert">
-                  <micro-ad  v-for="(a, i) in getValue(microAds, [ 'articleFixed' ])" :currEnv="dfpMode" :currUrl="articleUrl"
-                    :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
-                    class="popListVert-list__item" :slot="`microAd${getValue(a, [ 'pos' ])}`"></micro-ad>
-                </pop-list-vert>
-              </article-aside-fixed>
-            </aside>
             <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="PCE2" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="MBE1" extClass="mobile-only" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="PCAR" extClass="mobile-hide" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :dfpId="props.dfpId" :config="props.config"/>
             <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist && !(viewport >= 1200)" :currEnv="dfpMode">
               <micro-ad  v-for="(a, i) in getValue(microAds, [ 'article' ])" :currEnv="dfpMode" :currUrl="articleUrl"
                 :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
@@ -64,7 +37,6 @@
           </article-body>
           <div class="article_footer">
             <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config"/>
             <div style="width: 100%; height: 100%;">
               <app-footer />
             </div>
@@ -77,7 +49,6 @@
           <div class="article_fb_comment" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
           <div slot="slot_dfpFT">
             <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only`" :config="props.config" v-if="viewport < 767" />
           </div>
         </article-body-photography>
       </div>
@@ -105,7 +76,6 @@
   import { getRole } from '../util/mmABRoleAssign'
   import { microAds } from '../constants/microAds'
   import AdultContentAlert from '../components/AdultContentAlert.vue'
-  import ArticleAsideFixed from '../components/article/ArticleAsideFixed.vue'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
   import ArticleVideo from '../components/article/Video.vue'
@@ -339,7 +309,6 @@
     },
     components: {
       'adult-content-alert': AdultContentAlert,
-      'article-aside-fixed': ArticleAsideFixed,
       'article-body': ArticleBody,
       'article-body-photography': ArticleBodyPhotography,
       'app-footer': Footer,
@@ -857,10 +826,6 @@
 
   @media (max-width 999px)
     .mobile-hide
-      display none !important
-
-  @media (min-width 1000px)
-    .mobile-only
       display none !important
 
   @media (min-width 768px) and (max-width 1199px)
