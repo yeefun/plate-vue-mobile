@@ -13,20 +13,14 @@
         <div class="article-heromedia" v-else-if="heroImage">
           <img v-if="heroImage && heroImage.image" class="heroimg" :alt="heroCaption" v-lazy="getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
           :data-srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
-          getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
-          getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'" />
+          getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w'" />
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
         <div class="article" v-if="articleData">
-          <article-body :articleData="articleData" :poplistData="popularlist" :viewport="viewport">
+          <article-body :articleData="articleData" :viewport="viewport">
             <vue-dfp :is="props.vueDfp" pos="MBE1" extClass="mobile-only" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :dfpId="props.dfpId" :config="props.config"/>
-            <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist && !(viewport >= 1200)" :currEnv="dfpMode">
-              <micro-ad  v-for="(a, i) in getValue(microAds, [ 'article' ])" :currEnv="dfpMode" :currUrl="articleUrl"
-                :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
-                class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
-            </pop-list>
             <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0)" slot="relatedlistBottom" :sectionId="sectionId" />
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
             <template slot="recommendList">
@@ -41,7 +35,6 @@
 		      </div>
 		  </div>
         </div>
-        <share-tools v-if="viewport > 767" />
       </div>
       <div v-else-if="(articleStyle === 'photography')">
         <article-body-photography :articleData="articleData" :viewport="viewport" :initFBComment="initializeFBComments">
@@ -82,12 +75,9 @@
   import Header from '../components/Header.vue'
   import LiveStream from '../components/LiveStream.vue'
   import MicroAd from '../components/MicroAd.vue'
-  import PopList from '../components/article/PopList.vue'
-  import PopListVert from '../components/article/PopListVert.vue'
   import RecommendList from '../components/article/RecommendList.vue'
   // import RelatedList from '../components/article/RelatedList.vue'
   import RelatedListOneCol from '../components/article/RelatedListOneCol.vue'
-  import ShareTools from '../components/article/ShareTools.vue'
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
   import moment from 'moment'
   import sanitizeHtml from 'sanitize-html'
@@ -135,10 +125,6 @@
         fetchPartners(store)
       }
     })
-  }
-
-  const fetchPop = (store) => {
-    return store.dispatch('FETCH_ARTICLES_POP_LIST', {})
   }
 
   const fetchRecommendList = (store, id) => {
@@ -254,7 +240,6 @@
                 const id = _.get(_.find(_.get(vm.$store, [ 'state', 'articles', 'items' ]), { 'slug': vm.$store.state.route.params.slug }), [ 'id' ], '')
                 return fetchRecommendList(vm.$store, id)
               }),
-              fetchPop(vm.$store)
             ])
           }
         })
@@ -296,7 +281,6 @@
           'sections': _.get(sections, [ 0, 'id' ])
         }
       })
-      fetchPop(this.$store)
       fetchCommonData(this.$store)
       fetchPartners(this.$store)
       fetchEvent(this.$store, 'embedded')
@@ -311,11 +295,8 @@
       'dfp-fixed': DfpFixed,
       'live-stream': LiveStream,
       'micro-ad': MicroAd,
-      'pop-list': PopList,
-      'pop-list-vert': PopListVert,
       // 'related-list': RelatedList,
       'related-list-one-col': RelatedListOneCol,
-      'share-tools': ShareTools,
       'vue-dfp-provider': VueDfpProvider,
       ArticleVideo,
       DfpCover,
@@ -496,16 +477,9 @@
           "brand": { "@type": "Brand", "name": "${SITE_TITLE}", "url": "${SITE_URL}", "image": "https://www.mirrormedia.mg/public/logo.svg", "logo": "https://www.mirrormedia.mg/public/logo.svg", "description": "${SITE_DESCRIPTION}" }
         }`
       },
-      latestList () {
-        return _.get(this.$store.state.latestArticle, [ 'items' ], [])
-      },
       popularlist () {
         const { report = [] } = _.get(this.$store, [ 'state', 'articlesPopList' ])
         return report
-      },
-      projectlist () {
-        const items = _.get(this.$store.state, [ 'commonData', 'projects', 'items' ])
-        return items
       },
       recommendlist () {
         return _.get(this.$store, [ 'state', 'articlesRecommendList', 'relatedNews' ], [])
@@ -753,25 +727,17 @@
           object-fit contain
           height 150px
       .heroimg-caption
+        padding 5px 25px 0
+        line-height 1.3rem
         margin-top 5px
-        padding 5px 50px 0
     
     .article
       font-family "Noto Sans TC", STHeitiTC-Light, "Microsoft JhengHei", sans-serif
       max-width 1160px
       margin 0 auto
       background-color #fff
-      padding 30px 50px 0
+      padding 30px 0 0
 
-      .article_aside
-        float right
-        padding-top 10px
-        width 310px
-        margin-top -30px
-        &_fbPage
-          width 300px
-          margin 20px 5px 15px
-      
       .article_footer
         text-align center
         clear both
@@ -798,16 +764,6 @@
     a, a:hover, a:link, a:visited
       display inline
 
-  @media (min-width 0px) and (max-width 499px)
-    .article-container
-      .article-heromedia
-        .heroimg-caption
-          padding 5px 25px 0
-          line-height 1.3rem
-      
-      .article
-        padding 30px 0 0
-
   @media (min-width 321px) and (max-width 499px)
     .article-container
       .article
@@ -821,15 +777,6 @@
   @media (min-width 1000px)
     .mobile-only
       display none !important
-
-  @media (min-width 768px) and (max-width 1199px)
-    .article-container
-      .article-heromedia
-        .heroimg-caption
-          text-align center
-      
-      .article
-        padding 100px 50px 0
 
 .ad-fit
   position relative
