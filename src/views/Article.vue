@@ -727,16 +727,19 @@
           object-fit contain
           height 150px
       .heroimg-caption
-        padding 5px 25px 0
-        line-height 1.3rem
-        margin-top 5px
+
+        margin 5px auto 0 auto
+        padding 5px 30px 0 30px
+        // max-width 1010px
+
     
     .article
       font-family "Noto Sans TC", STHeitiTC-Light, "Microsoft JhengHei", sans-serif
       max-width 1160px
       margin 0 auto
       background-color #fff
-      padding 30px 0 0
+
+      padding 30px 30px 0 30px
 
       .article_footer
         text-align center
