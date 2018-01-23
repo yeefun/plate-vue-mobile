@@ -1,9 +1,4 @@
 <template>
-  <section class="articleAsideFixed">
-    <slot name="dfpR2"></slot>
-    <slot name="fbPage"></slot>
-    <slot name="popListVert"></slot>
-  </section>
 </template>
 
 <script>
