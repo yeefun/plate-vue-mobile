@@ -1,34 +1,6 @@
 <template>
   <section id="editorChoice" class="editorChoice">
-    <h2>編輯精選</h2>
-    <app-slider class="editorChoice__slides" slideId="editorChoiceSlider" :option="sliderOption" v-if="viewport > 1199">
-      <template slot-scope="props">
-        <swiper-slide :is="props.slide" v-for="(item, index) in editorChoice"  :key="`${index}-${Date.now()}`">
-          <template>
-            <router-link :to="getHref(item)" :id="'choices-' + item.name" v-if="item.style !== 'projects'" :target="target">
-              <div :id="'slide-' + index" class="editorChoice__slides--img" :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
-              </div>
-            </router-link>
-            <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" v-if="item.style === 'projects'" :target="target">
-              <div :id="'slide-' + index" class="editorChoice__slides--img" :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
-              </div>
-            </a>
-          </template>
-        </swiper-slide>
-      </template>
-    </app-slider>
-    <div class="editorChoice__menu">
-      <template v-for="(item, index) in editorChoice">
-        <router-link :to="getHref(item)" :id="'choices-' + item.name" class="editorChoice__menu--item" :class="(index === 0) ? 'active' : ''"
-          @click="jumpToSlideForParent" v-if="item.style !== 'projects'" :target="target">
-          <span v-text="getTitle(item, 18)" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
-        </router-link>
-        <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" class="editorChoice__menu--item" :class="(index === 0) ? 'active' : ''"
-          @click="jumpToSlideForParent" v-if="item.style === 'projects'" :target="target">
-          <span v-text="getTitle(item, 18)" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
-        </a>
-      </template>
-    </div>
+
     <div class="editorChoice--mobile">
       <div class="editorChoice__eyebrow"><h2>編輯精選</h2></div>
       <div v-for="(item, index) in editorChoice" :href="getHref(item)" class="editorChoice__block">
@@ -93,7 +65,6 @@ export default {
       if (!e && !pTarget) { return }
       const targ = pTarget || e.target
       const targOld = targ.parentNode.getAttribute('class')
-      // const targSect = targ.getAttribute('section')
       const i = Number(targ.getAttribute('index'))
       window.refs[ 'editorChoiceSlider' ].slideTo((i + 1), 1000, false)
       const lastTarg = document.querySelector(`.${targOld}.active`)
@@ -101,7 +72,6 @@ export default {
         lastTarg.setAttribute('class', `${targOld}`)
         lastTarg.removeAttribute('style')
       }
-      // targ.parentNode.setAttribute('style', `border-left: ${SECTION_MAP[ targSect ][ 'borderLeft' ]};`)
       targ.parentNode.setAttribute('class', `${targOld} active`)
     },
     jumpToSlideForParent (e) {
@@ -146,13 +116,12 @@ export default {
       const index = (ind !== 6) ? (ind % 6) : 1
       const targ = document.querySelector(`.editorChoice__menu--item span[index="${(index - 1)}"]`)
       const targOld = targ.parentNode.getAttribute('class')
-      // const targSect = targ.getAttribute('section')
       const lastTarg = document.querySelector(`.${targOld}.active`)
       if (lastTarg) {
         lastTarg.setAttribute('class', `${targOld}`)
         lastTarg.removeAttribute('style')
       }
-      // targ.parentNode.setAttribute('style', `border-left: ${SECTION_MAP[ targSect ][ 'borderLeft' ]};`)
+
       targ.parentNode.setAttribute('class', `${targOld} active`)
     }
   },
@@ -237,7 +206,7 @@ export default {
         margin-left 10px
         border-top 5px solid #356d9c
 
-@media (min-width: 600px)
+@media (min-width: 1200px)
   .editorChoice
     &--mobile
       flex-direction row
@@ -294,7 +263,6 @@ export default {
         &.active
           background-color #356d9c
           color #fff
-    &--mobile
-      display none
+
 
 </style>
