@@ -5,7 +5,6 @@
         <app-header :commonData="commonData" :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" v-if="(articleStyle !== 'photography')" :props="props"></app-header>
       </section>
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
-        <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full mobile-hide" :config="props.config"/>
         <div class="split-line"></div>
         <div class="article-heromedia" v-if="heroVideo" >
           <article-video :video="heroVideo" class="heroimg" />
@@ -19,10 +18,10 @@
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
         <div class="article" v-if="articleData">
-          <article-body :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist" :viewport="viewport">
-            <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="PCE2" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="PCAR" extClass="mobile-hide" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
+          <article-body :articleData="articleData" :poplistData="popularlist" :viewport="viewport">
+            <vue-dfp :is="props.vueDfp" pos="MBE1" extClass="mobile-only" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :dfpId="props.dfpId" :config="props.config"/>
             <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist && !(viewport >= 1200)" :currEnv="dfpMode">
               <micro-ad  v-for="(a, i) in getValue(microAds, [ 'article' ])" :currEnv="dfpMode" :currUrl="articleUrl"
                 :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
@@ -35,21 +34,18 @@
               <div id="matchedContentContainer" class="matchedContentContainer"></div>
             </template>
           </article-body>
-          <div class="article_footer">
-            <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
-            <div style="width: 100%; height: 100%;">
-              <app-footer />
-            </div>
-          </div>
+		  <div class="article_footer">
+		    <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
+		      <div style="width: 100%; height: 100%;">
+		        <app-footer />
+		      </div>
+		  </div>
         </div>
         <share-tools v-if="viewport > 767" />
       </div>
       <div v-else-if="(articleStyle === 'photography')">
         <article-body-photography :articleData="articleData" :viewport="viewport" :initFBComment="initializeFBComments">
           <div class="article_fb_comment" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
-          <div slot="slot_dfpFT">
-            <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
-          </div>
         </article-body-photography>
       </div>
       <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
@@ -84,7 +80,6 @@
   import DfpFixed from '../components/DfpFixed.vue'
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
-  import LatestList from '../components/article/LatestList.vue'
   import LiveStream from '../components/LiveStream.vue'
   import MicroAd from '../components/MicroAd.vue'
   import PopList from '../components/article/PopList.vue'
@@ -154,9 +149,9 @@
     })
   }
 
-  const fetchLatestArticle = (store, params) => {
-    return store.dispatch('FETCH_LATESTARTICLE', { params: params })
-  }
+  //const fetchLatestArticle = (store, params) => {
+  //  return store.dispatch('FETCH_LATESTARTICLE', { params: params })
+  //}
 
   const fetchSSRData = (store) => {
     return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] })
@@ -314,7 +309,6 @@
       'app-footer': Footer,
       'app-header': Header,
       'dfp-fixed': DfpFixed,
-      'latest-list': LatestList,
       'live-stream': LiveStream,
       'micro-ad': MicroAd,
       'pop-list': PopList,
@@ -824,8 +818,8 @@
       .article-heromedia, .article
          max-width 100%
 
-  @media (max-width 999px)
-    .mobile-hide
+  @media (min-width 1000px)
+    .mobile-only
       display none !important
 
   @media (min-width 768px) and (max-width 1199px)
