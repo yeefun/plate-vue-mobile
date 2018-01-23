@@ -346,6 +346,8 @@ $duration = 1.4s
       font-size .9rem
       line-height 1.3
 
+.single-col .newsletterCategories__category p {padding:10px;}
+
 @media (min-width: 600px)
   .newsletter
     margin 1em 0 0 2em

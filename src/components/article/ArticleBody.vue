@@ -188,16 +188,19 @@ export default {
       return report
     },
     styleForCurrArticle () {
-      switch (this.articleStyle) {
-        case 'wide':
-          return {
-            'single-col': (this.viewport > 1199)
+      return {
+            'single-col': true
           }
-        default:
-          return {
-            'single-col': false
-          }
-      }
+      // switch (this.articleStyle) {
+      //   case 'wide':
+      //     return {
+      //       'single-col': (this.viewport > 1199)
+      //     }
+      //   default:
+      //     return {
+      //       'single-col': false
+      //     }
+      // }
     },
     sliderOption () {
       return {
@@ -546,6 +549,7 @@ export default {
       .article_main_tags 
         clear both
         margin-top 3em
+        margin-bottom 3em
         padding-left 32px
         
         .tags 
@@ -873,16 +877,21 @@ export default {
       .dfpad-set
         clear both
 
-    &.single-col 
-      margin-top 50px
+    &.single-col       
+      max-width 660px
+      margin 20px auto 0 auto
 
       .article_basic-info
-        width 660px
+        width 100%
         margin 0 auto
 
       .article_title
         margin 15px auto
-        width 660px
+        width 100%
+
+      .article_subtitle
+        display block
+        margin 0 auto 15px auto  
 
       .article_credit 
         display block
@@ -890,26 +899,26 @@ export default {
         margin 0 auto
       
       .article_main 
-        width 950px
+        width 100%
         margin 0 auto
         max-width 950px
         display block
 
         p, h2, .split-line, .embedded, .article_main_pop, .article_main_proj, .article_main_related_bottom, .article_fb_comment, ul, .youtube, .dfpad-set
-          padding 0 145px
+          padding 0
           text-align justify
 
         .article_main_pop
           margin-top 40px
         
         blockquote
-          padding 0 145px
+          padding 0
           &.quote
             > .quote-content
               text-align justify
 
         .innerImg 
-          padding 0 145px 1.5em
+          padding 0 0 1.5em 0
           
           &.left 
             margin-right 50px
@@ -920,11 +929,11 @@ export default {
             padding 0
                   
         .article_main_tags 
-          padding 0 145px
+          padding 0 0 0 35px
         
         .info-box-container 
           &.center 
-            padding 0 145px
+            padding 0
           
           .info-box 
             p, ul 
@@ -994,6 +1003,7 @@ export default {
       padding 0
       font-size 0
       border none
+
 
   @media (min-width 0px) and (max-width 499px)
     .article_body
@@ -1121,6 +1131,7 @@ export default {
 
     .article_fb_comment
       margin-bottom 60px!important
+  
   
   @media (max-width 899px) and (min-width 768px)
     .article_body
