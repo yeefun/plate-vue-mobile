@@ -5,27 +5,23 @@
         <section style="width: 100%;">
           <app-Header v-if="true" :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/>
         </section>
-        <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)"  :config="props.config"/>
-        <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
+
+        <vue-dfp :is="props.vueDfp" pos="LMBHD" :config="props.config"/>
         <section class="home-mainContent">
           <main>
-            <editor-choice v-if="abIndicator === 'A'" :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
-            <editor-choiceB v-else-if="abIndicator === 'B'" :editorChoice='editorChoice' :viewport="viewport" target="_blank"/>
-            <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>專題報導</h2></div>
-            <ProjectList v-if="(viewport <= 1199)" :projects="projects" :viewport="viewport" target="_blank" style="margin-bottom: 40px;" />
-            <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
-            <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>焦點新聞</h2></div>
+            <editor-choice :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
+
+            <vue-dfp :is="props.vueDfp" pos="LMBL1" :config="props.config"/>
+            <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
+
             <div class="focusNewsContainer">
-              <LatestArticleAside :groupedArticle="o" :viewport="viewport" :needStick="false" v-show="viewport < 1200" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
+              <LatestArticleAside :groupedArticle="o" :viewport="viewport" :needStick="false" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
             </div>
-            <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
+
+            <vue-dfp :is="props.vueDfp" pos="LMBL2" :config="props.config"/>
             <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank"></LatestArticleMain>
           </main>
-          <aside v-show="viewport >= 1200">
-            <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
-            <LatestArticleAside :groupedArticle="o" :index="i" :needStick="false" :viewport="viewport" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), secondLast: i === (groupedArticle.length - 2), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
-          </aside>
+
         </section>
         <loading :show="loading" />
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
@@ -533,6 +529,9 @@ export default {
 
 .home-mainContent
   width 100%
+  main
+    max-width 660px
+    margin 0 auto
   .latest-main-container
     width 90%
     margin 0 auto
@@ -649,7 +648,6 @@ section.footer
       align-items flex-start
 
       main
-        width 75%
         #latestArticle
           margin-top 30px
 
@@ -673,7 +671,9 @@ section.footer
     margin 40px auto 0
     padding 0
     main
-      width 75%
+      width 100%
+      // max-width 660px
+      margin 0 auto
     aside
       width 25%
       padding-left 30px
