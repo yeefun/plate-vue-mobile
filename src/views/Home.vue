@@ -529,6 +529,9 @@ export default {
 
 .home-mainContent
   width 100%
+  main
+    max-width 660px
+    margin 0 auto
   .latest-main-container
     width 90%
     margin 0 auto
@@ -669,7 +672,7 @@ section.footer
     padding 0
     main
       width 100%
-      max-width 660px
+      // max-width 660px
       margin 0 auto
     aside
       width 25%

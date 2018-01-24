@@ -206,7 +206,8 @@ export default {
         margin-left 10px
         border-top 5px solid #356d9c
 
-@media (min-width: 1200px)
+//two column
+@media (min-width: 660px)
   .editorChoice
     &--mobile
       flex-direction row
@@ -220,49 +221,49 @@ export default {
       .editorChoice__block--title
         height 65px
 
-@media (min-width: 1200px)
-  .editorChoice
+//single column
+.editorChoice
+  display block
+  position relative
+  width 100%
+  margin-bottom 15px
+  > h2
     display block
-    position relative
+    margin 0 0 10px
+    color #356d9c
+    font-size 1.3rem
+    line-height 1.15
+    font-weight 400
+  .editorChoice__slides
+    display block
     width 100%
-    margin-bottom 15px
-    > h2
-      display block
-      margin 0 0 10px
-      color #356d9c
-      font-size 1.3rem
-      line-height 1.15
-      font-weight 400
-    .editorChoice__slides
-      display block
-      width 100%
-      height 500px
-    .editorChoice__menu
+    height 500px
+  .editorChoice__menu
+    display flex
+    position absolute
+    left 0
+    right 0
+    bottom 0
+    z-index 10
+    width 100%
+    background-color rgba(246,246,246,.8)
+    a:not(:last-child)
+      border-right 1px solid rgba(204, 204, 204, 0.75)
+    &--item
       display flex
-      position absolute
-      left 0
-      right 0
-      bottom 0
-      z-index 10
-      width 100%
-      background-color rgba(246,246,246,.8)
-      a:not(:last-child)
-        border-right 1px solid rgba(204, 204, 204, 0.75)
-      &--item
-        display flex
-        justify-content center
-        align-items center
-        flex-grow 1
-        flex-basis 0
-        padding .5em 1em
-        color #000
-        span
-          text-align justify
-          line-height 1.3
-          font-weight 300
-        &.active
-          background-color #356d9c
-          color #fff
+      justify-content center
+      align-items center
+      flex-grow 1
+      flex-basis 0
+      padding .5em 1em
+      color #000
+      span
+        text-align justify
+        line-height 1.3
+        font-weight 300
+      &.active
+        background-color #356d9c
+        color #fff
 
 
 </style>
