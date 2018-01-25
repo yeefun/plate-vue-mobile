@@ -12,11 +12,6 @@
             <editor-choice :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
 
             <vue-dfp :is="props.vueDfp" pos="LMBL1" :config="props.config"/>
-            <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
-
-            <div class="focusNewsContainer">
-              <LatestArticleAside :groupedArticle="o" :viewport="viewport" :needStick="false" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
-            </div>
 
             <vue-dfp :is="props.vueDfp" pos="LMBL2" :config="props.config"/>
             <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank"></LatestArticleMain>
@@ -50,7 +45,6 @@ import EditorChoice from '../components/EditorChoice.vue'
 import EditorChoiceB from '../components/EditorChoiceB.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
-import LatestArticleAside from '../components/LatestArticleAside.vue'
 import LatestArticleMain from '../components/LatestArticleMain.vue'
 import LiveStream from '../components/LiveStream.vue'
 import Loading from '../components/Loading.vue'
@@ -134,7 +128,6 @@ export default {
     'more': More,
     'project-listVert': ProjectListVert,
     DfpCover,
-    LatestArticleAside,
     LatestArticleMain,
     MirrorMediaTVAside,
     PopularArticles,
@@ -340,10 +333,6 @@ export default {
       unLockJS()
     },
     detectFixProject: function (e) {
-      const secondLastFocusNews = document.querySelector('aside .latest-aside-container.secondLast')
-      const secondLastFocusNewsBottomPos = elmYPosition('aside .latest-aside-container.secondLast') + secondLastFocusNews.offsetHeight
-      const lastFocusNews = document.querySelector('aside .latest-aside-container.last')
-      const lastFocusNewsBottomPos = elmYPosition('aside .latest-aside-container.last') + lastFocusNews.offsetHeight
       const project = document.querySelector('.projectListVert')
       if (project) {
         if (this.viewport >= 1200 && (currentYPosition() > lastFocusNewsBottomPos)) {
