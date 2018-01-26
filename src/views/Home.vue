@@ -51,8 +51,6 @@ import Loading from '../components/Loading.vue'
 import MirrorMediaTVAside from '../components/MirrorMediaTVAside.vue'
 import More from '../components/More.vue'
 import PopularArticles from '../components/PopularArticles.vue'
-import ProjectList from '../components/article/ProjectList.vue'
-import ProjectListVert from '../components/article/ProjectListVert.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
 import titleMetaMixin from '../util/mixinTitleMeta'
@@ -126,12 +124,10 @@ export default {
     'live-stream': LiveStream,
     'loading': Loading,
     'more': More,
-    'project-listVert': ProjectListVert,
     DfpCover,
     LatestArticleMain,
     MirrorMediaTVAside,
     PopularArticles,
-    ProjectList,
     VueDfpProvider
   },
   asyncData ({ store }) {
@@ -331,22 +327,6 @@ export default {
   methods: {
     checkIfLockJS () {
       unLockJS()
-    },
-    detectFixProject: function (e) {
-      const project = document.querySelector('.projectListVert')
-      if (project) {
-        if (this.viewport >= 1200 && (currentYPosition() > lastFocusNewsBottomPos)) {
-          project.classList.add('fixed')
-        } else {
-          project.classList.remove('fixed')
-        }
-      } else {
-        if (this.viewport >= 1200 && (currentYPosition() > secondLastFocusNewsBottomPos)) {
-          lastFocusNews.classList.add('fixed')
-        } else {
-          lastFocusNews.classList.remove('fixed')
-        }
-      }
     },
     getRole,
     getMmid () {
@@ -551,13 +531,6 @@ export default {
 section.footer
   width 100%
 
-.projectListVert
-  &.fixed
-    position fixed
-    top 20px
-    right auto
-    width calc(1024px * 0.25 - 30px)     
-      
 @media (min-width: 600px)
   .list
     &.container
