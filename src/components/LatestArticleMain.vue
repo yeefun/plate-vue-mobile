@@ -296,51 +296,6 @@ export default {
                 margin 0 0 10px
                 font-size 1.3rem
 
-  @media (min-width: 1200px)
-    .desktop-hidden
-      display none !important
-
-    .latest-main-container
-      &_title
-        overflow hidden
-
-        > h3
-          font-size 1.3rem
-          margin 0
-
-          &::after
-            display none
-
-      .latest-list
-        flex-direction row
-
-        .ad-container
-          width 31%
-
-        &_item
-          width 31%
-          display block
-
-          > a
-            .latest-list_item_label
-              height 25px
-              white-space normal
-              padding 0 10px
-              top auto
-              bottom 0
-              left 0
-              right auto
-              font-size 0.9rem
-
-          &_title
-            padding-left 0
-            padding-top 5px
-
-            > a
-              h3
-                font-size 1rem
-                font-weight 300
-
     .tablet-only
       display none
 </style>
