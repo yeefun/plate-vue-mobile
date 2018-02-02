@@ -11,7 +11,7 @@ node {
     def slack_user
 
     stage('Pre-build Setup') {
-        // checkout([$class: 'GitSCM', branches: [[name: '*/dev']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'AuthorInChangelog']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/ichiaohsu/plate-vue-mobile']]])
+        // checkout([$class: 'GitSCM', branches: [[name: '*/dev']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'AuthorInChangelog']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/mirror-media/plate-vue-mobile']]])
         try {
             checkout scm
             
@@ -29,15 +29,14 @@ node {
 
             slack_user = slackUsers(git_author_mail)
             sh("echo slack target: ${slack_user}")
-            sh("git clone -b master https://github.com/ichiaohsu/plate-vue-mobile.git")
-            // sh("git clone -b master https://github.com/ichiaohsu/plate-vue-mobile-docker.git")
+            sh("git clone -b master https://github.com/mirror-media/plate-vue-mobile.git")
 
             sh("gcloud source repos clone default --project=mirrormedia-1470651750304")
             sh("cp default/plate-vue/config.js plate-vue-mobile/api/")
             sh("cp default/keystone/gcskeyfile.json plate-vue-mobile/")
             
         } catch(e) {
-            slackSend (color: '#FF0000', message: "Houston, we have a *pre-build* problem.")
+            // slackSend (color: '#FF0000', message: "Houston, we have a *pre-build* problem.")
             notifySlack("",[
                 [
                     color: "#FF0000",
@@ -50,7 +49,7 @@ node {
             throw e
         }
 
-        slackSend (color: '#C5C9CC', message: "*${git_author_name}* gave Github a little push. Let the build begin!")
+        // slackSend (color: '#C5C9CC', message: "*${git_author_name}* gave Github a little push. Let the build begin!")
         notifySlack("",[
             [
                 color: "#C5C9CC",
@@ -68,14 +67,12 @@ node {
                     script: "date +%Y-%m-%d_%H%M%S",
                     returnStdout: true
                 ).trim()
-                // sh("date +%Y-%m-%d_%H%M%S > .finishtime")
-                // build_time = readFile '.finishtime'
+
                 sh("docker build --no-cache -t ${imageTag}:${slack_user}_${build_time} .")
-                // sh("echo ${build_time}")
                 
                 sh("gcloud docker -- push ${imageTag}:${slack_user}_${build_time}")
             } catch(e) {
-                slackSend (color: '#FF0000', message: "@${slack_user}, we got a *build* problem.")
+                // slackSend (color: '#FF0000', message: "@${slack_user}, we got a *build* problem.")
                 notifySlack("",[
                     [
                         color: "#FF0000",
@@ -88,7 +85,7 @@ node {
                 throw e
             }
             
-            slackSend (color: '#BDFFC3', message: "Build ${slack_user}_${build_time} *SUCCESS*.\n Make NEWS great again!")
+            // slackSend (color: '#BDFFC3', message: "Build ${slack_user}_${build_time} *SUCCESS*.\n Make NEWS great again!")
             notifySlack("",[
                 [
                     color: "#BDFFC3",
@@ -110,7 +107,7 @@ node {
             sh("sleep 30s")
 
         } catch(e) {
-            slackSend (color: '#FF0000', message: "Houston, we have a *deploy* problem.")
+            // slackSend (color: '#FF0000', message: "Houston, we have a *deploy* problem.")
             notifySlack("",[
                 [
                     color: "#FF0000",
@@ -123,12 +120,12 @@ node {
             throw e
         }
         
-        slackSend (color: '#FCE028', message: "@${slack_user}, you've got build. Check out https://dev.mirrormedia.mg")
+        // slackSend (color: '#FCE028', message: "@${slack_user}, you've got build. Check out https://dev.mirrormedia.mg")
         notifySlack("",[
             [
                 color: "#3A7BD1",
                 title: "Deploy Success",
-                text: "@${slack_user} @mushin, open up! You have a new <https://dev.mirrormedia.mg|deploy>",
+                text: "@${slack_user} @mushin, open up! You have a new <https://mobile-dev.mirrormedia.mg|deploy>",
         		mrkdwn_in: ["text"]
     		]
         ])
@@ -140,7 +137,7 @@ def notifySlack(text, attachments) {
     def jenkinsIcon = 'https://vuejs.org/images/logo.png'
 
     def payload = JsonOutput.toJson([text: text,
-        channel: "#ground_control",
+        channel: "#jenkins",
         username: "plate-vue-mobile",
         link_names: true,
         icon_url: jenkinsIcon,
