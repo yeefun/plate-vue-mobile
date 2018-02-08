@@ -5,18 +5,14 @@
         <section style="width: 100%;">
           <app-Header v-if="true" :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/>
         </section>
-
         <vue-dfp :is="props.vueDfp" pos="LMBHD" :config="props.config"/>
         <section class="home-mainContent">
           <main>
             <editor-choice :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
-
             <vue-dfp :is="props.vueDfp" pos="LMBL1" :config="props.config"/>
-
             <vue-dfp :is="props.vueDfp" pos="LMBL2" :config="props.config"/>
-            <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank"></LatestArticleMain>
+            <LatestArticleMain id="latestArticle" :latestList="latestArticlesList" :viewport="viewport" target="_blank"></LatestArticleMain>
           </main>
-
         </section>
         <loading :show="loading" />
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
@@ -285,33 +281,6 @@ export default {
     },
     latestEndIndex () {
       return _.get(this.$store.state, [ 'articlesGroupedList', 'latestEndIndex' ])
-    },
-    latestArticle () {
-      const { articlesGroupedList, latestEndIndex, latestArticlesList } = this
-
-      const latestFirstPage = _.dropRight(_.get(articlesGroupedList, [ 'latest' ]), 3)
-      const latestAfterFirstPage = _.drop(latestArticlesList, latestEndIndex)
-      const choices = _.get(articlesGroupedList, [ 'choices' ])
-      const groupedTitle = _.get(articlesGroupedList, [ 'grouped' ])
-      const groupedRelateds = _.flatten(_.map(_.get(articlesGroupedList, [ 'grouped' ]), (o) => o.relateds))
-      const grouped = _.union(groupedTitle, groupedRelateds)
-      const choicesAndGrouped = _.unionBy(choices, grouped, 'slug')
-      const choicesAndGrouped_slugs = choicesAndGrouped.map((o) => o.slug)
-
-      const latest = _.uniqBy(
-        _.concat(latestFirstPage, latestAfterFirstPage),
-        'slug'
-      )
-
-      _.remove(latest, (o) => {
-        return _.includes(choicesAndGrouped_slugs, o.slug)
-      })
-
-      if (this.notFirstPageNow) {
-        return latest
-      } else {
-        return latestFirstPage
-      }
     },
     notFirstPageNow () {
       return _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], 1) !== 1
