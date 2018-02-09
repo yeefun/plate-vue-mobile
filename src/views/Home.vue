@@ -65,7 +65,7 @@ const fetchSSRData = (store) => {
 }
 
 const fetchCommonData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'posts-vue', 'projects', 'topics' ] })
+  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'posts-vue', 'topics' ] })
 }
 
 const fetchEvent = (store, eventType = 'embedded') => {
@@ -289,9 +289,6 @@ export default {
       const { report = [] } = _.get(this.$store, [ 'state', 'articlesPopList' ])
       return report
     },
-    projects () {
-      return _.get(this.commonData, [ 'projects', 'items' ])
-    }
   },
   methods: {
     checkIfLockJS () {

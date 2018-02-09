@@ -237,14 +237,6 @@ export default {
 
   .tablet-only
     display none !important
-  @media (min-width: 600px) and (max-width: 1199px)
-    .latest-main-container
-      .latest-list
-        &_item
-          > a
-            .latest-list_item_label
-              width 60px
-              white-space normal
   @media (min-width: 600px)  
     .tablet-only
       display block !important
