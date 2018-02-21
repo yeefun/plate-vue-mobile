@@ -1,5 +1,5 @@
 const _ = require('lodash')
-const { fetchFromRedis, insertIntoRedis, redisFetching, redisFetchingRecommendNews, redisWriting } = require('./middle/redisHandler')
+const { fetchFromRedis, insertIntoRedis, redisFetching, redisFetchingRecommendNews, redisWriting } = require('./middle/redisHandler') 
 const config = require('./config')
 const bodyParser = require('body-parser')
 const debug = require('debug')('PLATEVUE:api')
@@ -293,8 +293,12 @@ router.get('*', fetchFromRedis, (req, res, next) => {
           res.send(res_data)
         } else {
           res.status(response.status).send(error)
-          console.error(`error during fetch data : ${req.url}`)
-          console.error(error)  
+          if (response.status !== 404) {
+            console.error(`error during fetch data: ${req.url}`)
+            console.error(error)  
+          } else {
+            console.error(`Not Found: ${req.url}`)
+          }
         }
       })
   }
