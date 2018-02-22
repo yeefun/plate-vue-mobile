@@ -12,8 +12,11 @@ const path = require('path')
 const requestIp = require('request-ip')
 const resolve = file => path.resolve(__dirname, file)
 const uuidv4 = require('uuid/v4')
-const { VALID_PREVIEW_IP_ADD } = require('./api/config')
+const { VALID_PREVIEW_IP_ADD, SERVER_PROTOCOL, SERVER_HOST } = require('./api/config')
 const { createBundleRenderer } = require('vue-server-renderer')
+
+const debug = require('debug')('PLATEVUE:server')
+const useragent = require('useragent')
 
 const formatMem = (bytes) => {
   return (bytes / 1024 / 1024).toFixed(2) + ' Mb'
@@ -91,7 +94,6 @@ app.use('/service-worker.js', serve('./dist/service-worker.js'))
  
 
 function render (req, res, next) {
-
   if (req.url.indexOf('/api/') === 0) {
     next()
     return
@@ -99,6 +101,16 @@ function render (req, res, next) {
     res.status(404).render('404')
     return
   }
+
+  const agent = useragent.parse(req.headers['user-agent'], req.query.jsuseragent)
+  const os = agent.os.toString()
+  debug('Current client OS:', os)
+  if (os.indexOf('Windows') > -1 || os.indexOf('Mac') > -1) {
+    res.redirect(302, `${SERVER_PROTOCOL}://${SERVER_HOST}${req.url}`)
+    return
+  }
+
+
   const s = Date.now()
   let isPageNotFound = false
   let isErrorOccurred = false  

@@ -62,6 +62,7 @@
     "truncate": "^2.0.0",
     "twitter": "^1.7.0",
     "twitter-text": "^1.14.3",
+    "useragent": "^2.3.0",
     "uuid": "^3.1.0",
     "verge": "^1.10.2",
     "vue": "^2.5.13",
