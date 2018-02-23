@@ -23,8 +23,8 @@ export const SECTION_MAP = {
   '5964418a4bbe120f002a3198': { 'bgcolor': '#009245' },
   // watch
   '57dfe3b0ee85930e00cad4d7': { 'bgcolor': '#c1d16e' },
-  // external dev
-  '5a2f4ab66fed0f0e00d6ab00': { 'bgcolor': '#ee5a24' }
+  // external
+  'external': { 'bgcolor': '#ee5a24' }
 }
 
 export const DFP_SIZE_MAPPING = {
@@ -148,3 +148,7 @@ export const FB_APP_ID = '175313259598308'
 export const FB_PAGE_ID = '1855418728011324'
 
 export const MM_TV_CH = '鏡電視'
+
+export const RELATED_LIST_MAX = 10
+
+export const RECOMM_HITORY_MAX_IN_LOCALSTORAGE = 10

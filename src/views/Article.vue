@@ -21,7 +21,13 @@
             <vue-dfp :is="props.vueDfp" pos="MBE1" extClass="mobile-only" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :dfpId="props.dfpId" :config="props.config"/>
-            <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0)" slot="relatedlistBottom" :sectionId="sectionId" />
+            <RelatedListWithRecommendList v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)"
+              slot="relatedlistBottom" 
+              :isAd="isAd" 
+              :sectionId="sectionId" 
+              :relateds="relateds" 
+              :recommends="recommendlist" 
+              :excludingArticle="routeUpateReferrerSlug"></RelatedListWithRecommendList>
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
             <template slot="recommendList">
               <div><h3>推薦文章</h3></div>
@@ -75,9 +81,7 @@
   import Header from '../components/Header.vue'
   import LiveStream from '../components/LiveStream.vue'
   import MicroAd from '../components/MicroAd.vue'
-  import RecommendList from '../components/article/RecommendList.vue'
-  // import RelatedList from '../components/article/RelatedList.vue'
-  import RelatedListOneCol from '../components/article/RelatedListOneCol.vue'
+  import RelatedListWithRecommendList from '../components/article/RelatedListWithRecommendList.vue'
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
   import moment from 'moment'
   import sanitizeHtml from 'sanitize-html'
@@ -295,12 +299,10 @@
       'dfp-fixed': DfpFixed,
       'live-stream': LiveStream,
       'micro-ad': MicroAd,
-      // 'related-list': RelatedList,
-      'related-list-one-col': RelatedListOneCol,
       'vue-dfp-provider': VueDfpProvider,
       ArticleVideo,
       DfpCover,
-      RecommendList
+      RelatedListWithRecommendList
     },
     data () {
       return {
@@ -449,6 +451,9 @@
       },
       isAdultContent () {
         return _.get(this.articleData, [ 'isAdult' ], false)
+      },
+      isAd () {
+        return _.get(this.articleData, [ 'isAdvertised' ], false)
       },
       jsonLDBreadcrumbList () {
         return `{ "@context": "http://schema.org", "@type": "BreadcrumbList",
