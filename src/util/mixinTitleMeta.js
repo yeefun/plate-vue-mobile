@@ -53,8 +53,8 @@ const clientTitleMetaMixin = {
       document.querySelector('title').innerHTML = title
     }
     if (url) {
-      const alternate = document.head.querySelector(`link[rel='alternate']`)
-      alternate && (document.head.querySelector(`link[rel='alternate']`).href = url)
+      const canonical = document.head.querySelector(`link[rel='canonical']`)
+      canonical && (canonical.href = url)
     }
     if (meta) {
       const dynamicMeta = document.querySelectorAll('head meta:not([fixed="true"])')

@@ -104,8 +104,13 @@ function render (req, res, next) {
 
   const agent = useragent.parse(req.headers['user-agent'], req.query.jsuseragent)
   const os = agent.os.toString()
-  debug('Current client OS:', os)
-  if (os.indexOf('Windows') > -1 || os.indexOf('Mac') > -1) {
+  const curr_host = _.get(req, 'headers.host') || ''
+  const targ_exp = /(dev)|(localhost)/
+  const os_exp = /(Windows)|(Mac)/
+  debug('Current client OS:', os, os.match(os_exp))
+  debug('Current client host:', curr_host, !curr_host.match(targ_exp))
+
+  if (os.match(os_exp) && !curr_host.match(targ_exp)) {
     res.redirect(302, `${SERVER_PROTOCOL}://${SERVER_HOST}${req.url}`)
     return
   }

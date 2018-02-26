@@ -4,7 +4,8 @@
       <section style="width: 100%;">
         <app-header :commonData="commonData" :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" v-if="(articleStyle !== 'photography')" :props="props"></app-header>
       </section>
-      <div class="article-container" v-if="(articleStyle !== 'photography')" >
+      <div class="article-container" v-if="(articleStyle !== 'photography')">
+        <vue-dfp :is="props.vueDfp" pos="MBHD" extClass="full mobile-only" :config="props.config"/>
         <div class="split-line"></div>
         <div class="article-heromedia" v-if="heroVideo" >
           <article-video :video="heroVideo" class="heroimg" />
@@ -35,16 +36,17 @@
             </template>
           </article-body>
 		  <div class="article_footer">
-		    <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
-		      <div style="width: 100%; height: 100%;">
-		        <app-footer />
-		      </div>
+        <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only`" :config="props.config" v-if="viewport < 767" />
+		    <div style="width: 100%; height: 100%;"><app-footer></app-footer></div>
 		  </div>
         </div>
       </div>
       <div v-else-if="(articleStyle === 'photography')">
         <article-body-photography :articleData="articleData" :viewport="viewport" :initFBComment="initializeFBComments">
           <div class="article_fb_comment" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
+          <div slot="slot_dfpFT">
+            <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only`" :config="props.config" v-if="viewport < 767" />
+          </div>
         </article-body-photography>
       </div>
       <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
