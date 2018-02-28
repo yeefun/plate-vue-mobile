@@ -262,7 +262,7 @@ router.get('*', fetchFromRedis, (req, res, next) => {
     res.json(resData)
   } else {
     debug('fetch data from Api.', req.url)
-    res.header('Cache-Control', 'public, max-age=300');
+    res.header('Cache-Control', 'public, max-age=300')
     res.header("Access-Control-Allow-Origin", "*")
     res.header("Access-Control-Allow-Headers", "X-Requested-With")
     console.log(apiHost)
@@ -293,6 +293,7 @@ router.get('*', fetchFromRedis, (req, res, next) => {
           res.send(res_data)
         } else {
           const status = _.get(response, 'status') || _.get(error, 'status') || 500
+          res.header('Cache-Control', 'no-cache')
           res.status(status).send(error)
           if (status !== 404) {
             console.error(`error during fetch data: ${req.url}`)
