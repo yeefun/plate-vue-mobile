@@ -141,10 +141,6 @@
     })
   }
 
-  //const fetchLatestArticle = (store, params) => {
-  //  return store.dispatch('FETCH_LATESTARTICLE', { params: params })
-  //}
-
   const fetchSSRData = (store) => {
     return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] })
   }
@@ -228,42 +224,8 @@
         link: `<link rel="canonical" href="${SITE_URL}/story/${slug}/" />`
       }
     },
-    beforeRouteEnter (to, from, next) {
-      if (process.env.VUE_ENV === 'client' && to.path !== from.path && from.matched && from.matched.length > 0) {
-        next(vm => {
-          const _targetArticle = _.find(_.get(vm.$store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug })
-          if (!_targetArticle) {
-            Promise.all([
-              fetchArticles(vm.$store, to.params.slug)
-              // .then(() => {
-              //   const { sections } = _.get(vm.$store, [ 'state', 'articles', 'items', 0 ], {})
-              //   return fetchLatestArticle(vm.$store, {
-              //     sort: '-publishedDate',
-              //     where: {
-              //       'sections': _.get(sections, [ 0, 'id' ])
-              //     }
-              //  })
-              // })
-              .then(() => {
-                const id = _.get(_.find(_.get(vm.$store, [ 'state', 'articles', 'items' ]), { 'slug': vm.$store.state.route.params.slug }), [ 'id' ], '')
-                return fetchRecommendList(vm.$store, id)
-              }),
-            ])
-          }
-        })
-      } else {
-        next()
-      }
-    },
     beforeRouteUpdate (to, from, next) {
       fetchArticles(this.$store, to.params.slug).then(() => {
-        // const sections = _.get(_.find(_.get(this.$store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug }), [ 'sections' ])
-        // return fetchLatestArticle(this.$store, {
-        //   sort: '-publishedDate',
-        //   where: {
-        //     'sections': _.get(sections, [ 0, 'id' ])
-        //   }
-        // })
       }).then(() => {
         const id = _.get(_.find(_.get(this.$store, [ 'state', 'articles', 'items' ]), { 'slug': this.$store.state.route.params.slug }), [ 'id' ], '')
         this.routeUpateReferrerSlug = _.get(from, [ 'params', 'slug' ], 'N/A')
@@ -280,13 +242,6 @@
       next()
     },
     beforeMount () {
-      // const { sections } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ], {})
-      // fetchLatestArticle(this.$store, {
-      //   sort: '-publishedDate',
-      //   where: {
-      //     'sections': _.get(sections, [ 0, 'id' ])
-      //   }
-      // })
       fetchCommonData(this.$store)
       fetchPartners(this.$store)
       fetchEvent(this.$store, 'embedded')
