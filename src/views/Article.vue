@@ -90,6 +90,7 @@
   import titleMetaMixin from '../util/mixinTitleMeta'
   import truncate from 'truncate'
 
+  const debug = require('debug')('CLIENT:VIEWS:article')
   const fetchArticles = (store, slug) => {
     return store.dispatch('FETCH_ARTICLES', {
       params: {
