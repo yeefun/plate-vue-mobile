@@ -113,7 +113,7 @@
         <div id="herbsapi" hb-width="100" hb-height="auto" hb-icon="https://mediafarmers.org/api/images/icon_2.png"></div>
         <div>喜歡這篇文章嗎？<br>歡迎灌溉支持喔！</div>
       </div>
-      <div class="dfpad-set" style="display: flex; justify-content: space-around;">
+      <div class="dfpad-set">
         <slot name="dfpad-set"></slot>
       </div>
       <slot name="recommendList"></slot>
@@ -876,6 +876,7 @@ export default {
 
       .dfpad-set
         clear both
+        margin 0 auto
 
     &.single-col       
       max-width 660px
