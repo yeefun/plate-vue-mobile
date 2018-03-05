@@ -226,6 +226,9 @@
     },
     beforeRouteUpdate (to, from, next) {
       fetchArticles(this.$store, to.params.slug).then(() => {
+        const theComingArticleSlug = _.get(_.find(_.get(this.$store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug }), [ 'slug' ])
+        debug('this.articleData', theComingArticleSlug)
+        if (!theComingArticleSlug) { location.replace('/404') }
       }).then(() => {
         const id = _.get(_.find(_.get(this.$store, [ 'state', 'articles', 'items' ]), { 'slug': this.$store.state.route.params.slug }), [ 'id' ], '')
         this.routeUpateReferrerSlug = _.get(from, [ 'params', 'slug' ], 'N/A')
