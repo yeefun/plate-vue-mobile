@@ -3,7 +3,7 @@
     <div v-for="(article, index) in highlightArticle">
       <figure class="article-leading-img">
         <a :href="getHref(article)" :id="`leading-${article.id}-img`" target="_blank">
-          <img :src="getImage(article, 'desktop')" :alt="getValue(article, [ 'title' ])">
+          <img :src="getImage(article, 'tablet')" :alt="getValue(article, [ 'title' ])">
         </a>
       </figure>
       <div class="article-leading-post">

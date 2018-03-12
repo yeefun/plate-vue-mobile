@@ -495,7 +495,7 @@ export default {
     switch (type) {
       case SECTION:
         sectionName = this.sectionName
-        const imageURL = _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : _.get(this.section, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], null)
+        const imageURL = _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'tablet', 'url' ], null) ? _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'tablet', 'url' ]) : _.get(this.section, [ 'heroImage', 'image', 'resizedTargets', 'tablet', 'url' ], null)
         ogImage = imageURL || SITE_OGIMAGE
         ogTitle = _.get(this.section, [ 'ogTitle' ]) ? this.getTruncatedVal(_.get(this.section, [ 'ogTitle' ]), 11) : this.getTruncatedVal(_.get(this.section, [ 'title' ], this.title), 11)
         ogDescription = _.get(this.section, [ 'ogDescription' ], null) ? this.getTruncatedVal(_.get(this.section, [ 'ogDescription' ]), 197) : _.get(this.section, [ 'description' ])

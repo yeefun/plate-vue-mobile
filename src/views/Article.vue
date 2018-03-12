@@ -12,7 +12,7 @@
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
         <div class="article-heromedia" v-else-if="heroImage">
-          <img v-if="heroImage && heroImage.image" class="heroimg" :alt="heroCaption" v-lazy="getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
+          <img v-if="heroImage && heroImage.image" class="heroimg" :alt="heroCaption" v-lazy="getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ])"
           :data-srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
           getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w'" />
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
@@ -427,11 +427,11 @@
       },
       jsonLDNewsArticle () {
         return `{ "@context": "http://schema.org", "@type": "NewsArticle", "headline": "${_.get(this.articleData, [ 'title' ])}",
-          "url": "${SITE_URL + _.get(this.$route, [ 'path' ])}", "thumbnailUrl": "${_.get(this.heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])}",
+          "url": "${SITE_URL + _.get(this.$route, [ 'path' ])}", "thumbnailUrl": "${_.get(this.heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ])}",
           "articleSection": "${_.get(this.articleData, [ 'sections', '0', 'title' ])}",
           "keywords": [ ${_.map(_.get(this.articleData, [ 'tags' ]), (t) => { return `"${_.get(t, [ 'name' ])}"` })} ],
           "mainEntityOfPage": { "@type": "WebPage", "@id": "${SITE_URL + _.get(this.$route, [ 'path' ])}" },
-          "image": { "@type": "ImageObject", "url": "${_.get(this.heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])}", "height": ${_.get(this.heroImage, [ 'image', 'resizedTargets', 'desktop', 'height' ])}, "width": ${_.get(this.heroImage, [ 'image', 'resizedTargets', 'desktop', 'width' ])} },
+          "image": { "@type": "ImageObject", "url": "${_.get(this.heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ])}", "height": ${_.get(this.heroImage, [ 'image', 'resizedTargets', 'tablet', 'height' ])}, "width": ${_.get(this.heroImage, [ 'image', 'resizedTargets', 'tablet', 'width' ])} },
           "datePublished": "${_.get(this.articleData, [ 'publishedDate' ])}", "dateModified": "${_.get(this.articleData, [ 'updatedAt' ])}", "author": { "@type": "Person", "name": "${_.get(this.articleData, [ 'writers', '0', 'name' ])}" },
           "publisher": { "@type": "Organization", "name": "${SITE_TITLE}", "logo": { "@type": "ImageObject", "url": "https://www.mirrormedia.mg/assets/images/logo.png" } },
           "description": "${_.get(this.articleData, [ 'brief', 'apiData', '0', 'content', '0' ])}"
