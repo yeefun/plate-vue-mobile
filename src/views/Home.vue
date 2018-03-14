@@ -9,9 +9,10 @@
         <section class="home-mainContent">
           <main>
             <editor-choice :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
-            <vue-dfp :is="props.vueDfp" pos="LMBL1" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="LMBL2" :config="props.config"/>
-            <LatestArticleMain id="latestArticle" :latestList="latestArticlesList" :viewport="viewport" target="_blank"></LatestArticleMain>
+            <vue-dfp :is="props.vueDfp" pos="LMBL1" :config="props.config" />
+            <LatestArticleMain id="latestArticle" :latestList="latestArticlesList" :viewport="viewport" target="_blank">
+              <vue-dfp :is="props.vueDfp" pos="LMBL2" :config="props.config" slot="adl2" />            
+            </LatestArticleMain>
           </main>
         </section>
         <loading :show="loading" />

@@ -8,7 +8,7 @@
             <div class="latest-list_item_img" v-lazy:background-image="getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '')"></div>
             <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
           </router-link>
-          <a :href="getHrefFull(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-1`" v-if="o.style === 'projects' || o.style === 'campaign' || o.style === 'readr'" tid="ee" :target="target">
+          <a :href="getHrefFull(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-1`" v-else-if="o.style === 'projects' || o.style === 'campaign' || o.style === 'readr'" tid="ee" :target="target">
             <div class="latest-list_item_img" v-lazy:background-image="getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '')"></div>
             <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
           </a>
@@ -18,12 +18,13 @@
               <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
               <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"></span>
             </router-link>
-            <a :href="getHrefFull(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-2`" v-if="o.style === 'projects' || o.style === 'campaign' || o.style === 'readr'" :target="target">
+            <a :href="getHrefFull(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-2`" v-else-if="o.style === 'projects' || o.style === 'campaign' || o.style === 'readr'" :target="target">
               <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
               <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"></span>
             </a>
           </div>
         </div>
+        <slot name="adl2" v-if="index === 2"></slot>
         <micro-ad :currEnv="currEnv" :currUrl="currUrl" 
                   :id="`${getValue(microAds, [ 'homepage', index, 'pcId' ])}`"
                   v-if="index < 3 && viewport > 1199"
