@@ -1,0 +1,265 @@
+<!doctype html>
+<html ⚡ lang="en">
+  <head>
+    <meta charset="utf-8">
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+    <script async custom-element="amp-video" src="https://cdn.ampproject.org/v0/amp-video-0.1.js"></script>
+    <title>Hello, AMPs</title>
+    <!-- TODO: ogs -->
+    <!-- TODO: replace canonical link -->
+    <link rel="canonical" href="http://example.ampproject.org/article-metadata.html">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+    <style amp-custom>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      a {
+        text-decoration: none;
+      }
+
+      .app-header {
+        height: 69px;
+        background-color: #f5f5f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .app-header__link {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .story-section {
+        font-size: 19px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.76;
+        letter-spacing: normal;
+        text-align: justify;
+        color: #2f2f2f;
+      }
+      .story-section > p {
+        margin: 30px 0;
+      }
+
+      .story-info {
+        margin: 13.5px 0 32.5px 0;
+        padding: 0 15px;
+      }
+      .story-info__section-date-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+      .story-info__section-name {
+        font-size: 16px;
+        font-weight: 300;
+        line-height: 1.29;
+        text-align: justify;
+        color: #ffffff;
+        padding: 7.7px 5.5px;
+      }
+      .story-info__section-name--news {
+        background-color: #30bac8;
+      }
+      .story-info__section-name--entertainment {
+        background-color: #bf3284;
+      }
+      .story-info__section-name--businessmoney {
+        background-color: #009045;
+      }
+      .story-info__section-name--people {
+        background-color: #efa256;
+      }
+      .story-info__section-name--videohub {
+        background-color: #969696;
+      }
+      .story-info__section-name--international {
+        background-color: #911f27;
+      }
+      .story-info__section-name--foodtravel {
+        background-color: #eac151;
+      }
+      .story-info__section-name--mafalda {
+        background-color: #662d8e;
+      }
+      .story-info__section-name--culture {
+        background-color: #009245;
+      }
+      .story-info__section-name--watch {
+        background-color: #c1d16e;
+      }
+      .story-info__section-name--external {
+        background-color: #ee5a24;
+      }
+      .story-info__date {
+        font-size: 14px;
+        line-height: 1.48;
+        text-align: right;
+        color: #a0a0a0;
+      }
+      .story-info__story-title {
+        font-size: 29px;
+        font-weight: 600;
+        line-height: 1.25;
+        text-align: justify;
+        color: #224f73;
+        margin: 16.5px 0;
+      }
+      .story-info__story-authors {
+        display: flex;
+        flex-wrap: wrap;
+        font-size: 14px;
+        line-height: 1.48;
+        text-align: left;
+        color: #a0a0a0;
+      }
+      .story-info__story-authors > a {
+        color: #a0a0a0;
+      }
+
+      .figure {
+        margin: 32.5px 0 37px 0;
+      }
+      .figure__figcaption {
+        font-size: 16px;
+        line-height: 1.31;
+        text-align: justify;
+        color: #6d6d6d;
+        padding: 11px 16px;
+      }
+      
+      .story-section {
+        padding: 0 15px;
+      }
+      .story-brief {
+        color: #224f73;
+      }
+
+      .story-content-image__container {
+        position: relative;
+        width: 100%;
+        height: 465px;
+      }
+      .story-content-image__image img {
+        object-fit: contain;
+      }
+
+      .story-related {
+        padding: 0 15px;
+      }
+      .story-related__title {
+        font-size: 22px;
+        font-weight: 600;
+        line-height: 1.41;
+        text-align: justify;
+        color: #2a597d;
+        margin: 0 0 23px 0;
+      }
+      .story-related-figure {
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+      }
+      .story-related-figure__title {
+        font-size: 16px;
+        line-height: 1.31;
+        text-align: justify;
+        color: #4d4d4d;
+        margin: 0 0 0 13.5px;
+      }
+
+      .story-footer {
+        height: 45px;
+        background-color: #064f77;
+        margin: 37.5px 0 0 0;
+        display: flex;
+      }
+      .story-footer__item {
+        flex: 1 1 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .story-footer__item + .story-footer__item {
+        border-left: 1px solid white;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('AppHeader') %>
+    <article class="story-article">
+      <%- include('StoryInfo', { storyInfo }) %>
+      <%- include('StoryHeros', { storyHeroVideo, storyHeroImage }) %>
+      <section class="story-section story-brief">
+        <p>時隔4年，炎亞綸再推新EP《最想去的地方》，他透露未發專輯期間，整個人自我懷疑是否適合當藝人，天天活著都有壓力，因此藉由拍戲，尋找一個自在，如今終於破繭而出，不再自我束縛，提及好友倪安東因偷情管罄而遭告，炎亞綸說：「希望他能好好解決。」</p>
+      </section>
+      <section class="story-section story-content">
+        <p>炎亞綸之前曾向倪安東邀歌，2人因此有了私交，倪安東曾對炎亞綸坦白自己的感情世界，不管是結婚或生女，到後期外遇管罄，炎亞綸說：「倪安東在自己的感情世界比較奔放，我們曾經聊過天，希望他能早日解決他的煩惱。」</p>
+        <p>反觀炎亞綸曾因在臉書上仗義直言，遭受正反兩方的批評，他自認是出於演藝圈的一份子，因此有責任，卻也因此變得有壓力，就連當歌手的面貌都變得模糊不清，他說：「2、3年前，我整個人很雜亂，不知道自己的定位，經過了好一陣子的思考，我就是想回到走到哪，想唱歌就唱歌的炎亞綸，那是最舒服的狀態了。」</p>
+        <p>白色情人節推出新作《最想去的地方》，炎亞綸指該同名歌曲是對歌迷的開場白，有種愛回溫的感覺，提及藤井Lena與汪東城的緋聞，炎亞綸說：「他們應該只是一起工作吧。」</p>
+      </section>
+      <figure class="figure story-content-image">
+        <div class="story-content-image__container">
+          <amp-img
+            class="story-content-image__image"
+            srcset="https://www.mirrormedia.com.tw/assets/images/20180314172516-ea09d089448fb080a82fef04ffdde9d6-mobile.jpg 800w,
+                    https://www.mirrormedia.com.tw/assets/images/20180314172516-ea09d089448fb080a82fef04ffdde9d6-tablet.jpg 1200w,
+                    https://www.mirrormedia.com.tw/assets/images/20180314172516-ea09d089448fb080a82fef04ffdde9d6-desktop.jpg 2000w"
+            layout="fill"
+          >
+          </amp-img>
+        </div>
+        <figcaption class="figure__figcaption story-content-image__description">本刊直擊，李毓芬的車子進出柯震東家，而且感覺是停在他家停車場後很久才開出。</figcaption>
+      </figure>
+    </article>
+    <section class="story-related">
+      <h1 class="story-related__title">相關文章</h1>
+      <a href="http://www.google.com">
+        <figure class="story-related-figure">
+          <amp-img
+            srcset="https://www.mirrormedia.com.tw/assets/images/20180619113737-21fd5f3b9610c14365bca3bcf51177f5-mobile.JPG 800w,
+                    https://www.mirrormedia.com.tw/assets/images/20180619113737-21fd5f3b9610c14365bca3bcf51177f5-tablet.JPG 1200w,
+                    https://www.mirrormedia.com.tw/assets/images/20180619113737-21fd5f3b9610c14365bca3bcf51177f5-desktop.JPG 2000w"
+            width="107"
+            height="73"
+          >
+          </amp-img>
+          <figcaption class="story-related-figure__title">搬出前男友救援　李毓芬發片扯出柯震東</figcaption>
+        </figure>
+      </a>
+    </section>
+    <footer class="story-footer">
+      <!-- TODO: share url -->
+      <a class="story-footer__item">
+        <amp-img
+          src="https://www.mirrormedia.mg/public/icon/line_white.png"
+          width="40"
+          height="16"
+        >
+        </amp-img>
+      </a>
+      <a class="story-footer__item">
+        <amp-img
+          src="https://www.mirrormedia.mg/public/icon/facebook_white.png"
+          width="16"
+          height="24"
+        >
+        </amp-img>
+      </a>
+      <a class="story-footer__item">
+        <amp-img
+          src="https://www.mirrormedia.mg/public/icon/google-plus.png"
+          width="24"
+          height="16"
+        >
+        </amp-img>
+      </a>
+    </footer>
+  </body>
+</html>
