@@ -94,7 +94,7 @@ app.use('/service-worker.js', serve('./dist/service-worker.js'))
  
 
 function render (req, res, next) {
-  if (req.url.indexOf('/api/') === 0 || req.url.indexOf('/story') === 0) {
+  if (req.url.indexOf('/api/') === 0 || req.url.indexOf('/story/amp') === 0) {
     next()
     return
   } else if (req.url.indexOf('/404') === 0) {
@@ -208,7 +208,7 @@ function render (req, res, next) {
   })
 }
 
-app.use('/story', require('./api/middle/story/index'))
+app.use('/story/amp', require('./api/middle/story/index'))
 
 app.get('*', isProd ? render : (req, res, next) => {
   readyPromise.then(() => render(req, res, next))

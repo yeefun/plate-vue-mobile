@@ -1,3 +1,4 @@
+const _ = require('lodash')
 const { get, isEmpty, } = require('lodash')
 const superagent = require('superagent')
 const { getDate, getSectionColorModifier, getCredit, getStoryHeroImageSrc } = require('./util')
@@ -84,8 +85,14 @@ const sendArticleData = (req, res, next) => {
     storyHeroImage: {
       src: getStoryHeroImageSrc(req.articleData.heroImage),
       caption: get(req.articleData, [ 'heroCaption' ], '')
-    }
+    },
+    storyBriefs: get(req.articleData, [ 'brief', 'apiData' ], []),
+    storyContent: get(req.articleData, [ 'content', 'apiData' ], []),
+    storyRelateds: get(req.articleData, [ 'relateds' ], [])
   }
+  // Let ejs can use lodash methods
+  res.locals._ = _
+  
   res.status(200).render('amp/index.amp.ejs', articleData)
 }
 
