@@ -1,4 +1,4 @@
-<figure class="figure heroimage">
+<figure class="story-hero-figure">
   <% if (storyHeroVideo.src !== '') { %>
     <amp-video
       controls
@@ -12,7 +12,7 @@
         <p>This browser does not support the video element.</p>
       </div>
     </amp-video>
-      <% } else { %>
+  <% } else { %>
     <amp-img
       src="<%= storyHeroImage.src %>"
       width="1.47"
@@ -21,5 +21,5 @@
     >
     </amp-img>
   <% } %>
-  <figcaption class="figure__figcaption heroimage__caption"><%= storyHeroImage.caption %></figcaption>
+  <figcaption class="story-hero-figure__figcaption"><%= storyHeroImage.caption %></figcaption>
 </figure>

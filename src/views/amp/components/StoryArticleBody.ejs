@@ -1,0 +1,152 @@
+<% body.forEach(function (item) { %>
+  <% switch (item.type) {
+      //
+      case 'unstyled': %>
+      <% item.content.forEach(function (p) { %>
+        <p><%- p %></p>
+      <% }) %>
+    <% break; %>
+    <% case 'youtube': %>
+      <figure class="story-body-youtube">
+        <amp-youtube
+          data-videoid="<%= _.get(item, [ 'content', 0, 'youtubeId' ], '') %>"
+          layout="responsive"
+          width="1.48"
+          height="1"
+        >
+        </amp-youtube>
+        <figcaption class="story-body-youtube__figcaption"><%= _.get(item, [ 'content', 0, 'description' ], '') %></figcaption>
+      </figure>
+    <% break; %>
+    // 
+    <% case 'blockquote': %>
+      <blockquote class="story-body-blockquote">
+        <amp-img
+          src="/public/icon/quote.png"
+          width="40"
+          height="40"
+        >
+        </amp-img>
+        <p class="story-body-blockquote__content"><%- _.get(item, [ 'content', 0 ], '') %></p>
+      </blockquote>
+    <% break; %>
+    // 
+    <% case 'ordered-list-item': %>
+      <ol class="story-body-ol">
+        <% if (_.isArray(item.content[0])){ %>
+          <% item.content[0].forEach(function (listItem, i) { %>
+            <div class="story-body-ol__container">
+              <p class="story-body-ol__index"><%= i + 1 %>.</p>
+              <li class="story-body-ol__li"><%- listItem %></li>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <% item.content.forEach(function (listItem, i) { %>
+            <div class="story-body-ol__container">
+              <p class="story-body-ol__index"><%= i + 1 %>.</p>
+              <li class="story-body-ol__li"><%- listItem %></li>
+            </div>
+          <% }) %>
+        <% } %>
+      </ol>
+    <% break; %>
+    // 
+    <% case 'unordered-list-item': %>
+      <ul class="story-body-ul">
+        <% if (_.isArray(item.content[0])){ %>
+          <% item.content[0].forEach(function (listItem, i) { %>
+            <div class="story-body-ul__container">
+              <p class="story-body-ul__index">&bull;</p>
+              <li class="story-body-ul__li"><%- listItem %></li>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <% item.content.forEach(function (listItem, i) { %>
+            <div class="story-body-ul__container">
+              <p class="story-body-ul__index">&bull;</p>
+              <li class="story-body-ul__li"><%- listItem %></li>
+            </div>
+          <% }) %>
+        <% } %>
+      </ul>
+    <% break; %>
+    // 
+    <% case 'image': %>
+      <%# landscape image %>
+      <% if (_.get(item, [ 'content', 0, 'mobile', 'width' ], 0) >= _.get(item, [ 'content', 0, 'mobile', 'height' ], 0)) { %>
+        <figure class="story-body-image">
+          <amp-img
+            class="story-body-image__image"
+            src="<%= _.get(item, [ 'content', 0, 'mobile', 'url' ], '') %>"
+            width="1.48"
+            height="1"
+            layout="responsive"
+          >
+          </amp-img>
+          <figcaption class="story-body-image__figcaption"><%= _.get(item, [ 'content', 0, 'description' ], '') %></figcaption>
+        </figure>
+      <%# portrait image %>
+      <% } else { %>
+        <figure class="story-body-image">
+          <div class="story-body-image__image-container">
+            <%# portrait image for testing: https://www.mirrormedia.com.tw/assets/images/20180314172516-ea09d089448fb080a82fef04ffdde9d6-mobile.jpg %>
+            <amp-img
+              class="story-body-image__image"
+              src="<%= _.get(item, [ 'content', 0, 'mobile', 'url' ], '') %>"
+              layout="fill"
+            >
+            </amp-img>
+          </div>
+          <figcaption class="story-body-image__figcaption"><%= _.get(item, [ 'content', 0, 'description' ], '') %></figcaption>
+        </figure>
+      <% } %>
+    <% break; %>
+    // 
+    <% case 'video': %>
+      <amp-video
+        controls
+        width="1.48"
+        height="1"
+        layout="responsive"
+        src="<%= _.get(item, [ 'content', 0, 'url' ], '') %>"
+        poster="/public/notImage.png"
+      >
+        <div fallback>
+          <p>This browser does not support the video element.</p>
+        </div>
+      </amp-video>
+    <% break; %>
+    //
+    <% case 'audio': %>
+      <div class="story-body-audio">
+        <p class="story-body-audio__title"><%= _.get(item, [ 'content', 0, 'title' ], '') %></p>
+        <amp-audio 
+          width="auto"
+          height="50"
+          src="<%= _.get(item, [ 'content', 0, 'url' ], '') %>"
+          controlsList="nodownload">
+          <div fallback>
+            <p>Your browser doesn’t support HTML5 audio</p>
+          </div>
+        </amp-audio>
+      </div>
+    <% break; %>
+    // 
+    <% case 'header-two': %>
+      <h2 class="story-body-h2"><%- _.get(item, [ 'content' ], '') %></h2>
+    <% break; %>
+    //
+    <% case 'quoteby': %>
+      <blockquote class="story-body-quoteby">
+        <div class="story-body-quoteby__content">
+          <span class="story-body-quoteby__triangle"></span>
+          <div class="story-body-quoteby__quote"><%- _.get(item, [ 'content', 0, 'quote' ], '') %></div>
+          <div class="story-body-quoteby__quote-by"><%- _.get(item, [ 'content', 0, 'quoteBy' ], '') %></div>
+        </div>
+      </blockquote>
+    <% break; %>
+    // 
+    <% default: %>
+    <% break; %>
+  <% } %>
+<% }) %>

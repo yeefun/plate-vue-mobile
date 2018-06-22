@@ -1,0 +1,6 @@
+<section class="story-relateds">
+  <h1 class="story-relateds__title">相關文章</h1>
+  <% storyRelateds.forEach(function (related) { %>
+    <a class="story-relateds__story-title" href="https://www.mirrormedia.mg/story/<%= _.get(related, 'slug', '') %>" target="_blank"><%= _.get(related, 'title', '') %></a>  
+  <% }) %>
+</section>
