@@ -94,7 +94,7 @@
   const fetchArticles = (store, slug) => {
     return store.dispatch('FETCH_ARTICLES', {
       params: {
-        related: 'full',
+        // related: 'full',
         clean: 'content',
         where: {
           'slug': {
