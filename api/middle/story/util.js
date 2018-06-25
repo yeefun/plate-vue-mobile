@@ -56,9 +56,41 @@ const getStoryHeroImageSrc = (heroImage) => {
   return get(dimensions, 'mobile')
 }
 
+const annotationTextTagStart = '<!--__ANNOTATION__='
+const annotationTextTagEnd = '-->'
+const hasAnnotation = (paragraph) => {
+  const annotationContentStart = paragraph.toString().indexOf(annotationTextTagStart)
+  const annotationContentEnd = paragraph.toString().indexOf(annotationTextTagEnd)
+
+  return (annotationContentStart > -1 && annotationContentEnd > -1)
+}
+
+const composeAnnotation =  (annotationStr) => {
+  const annotationContentStart = annotationStr.toString().indexOf(annotationTextTagStart)
+  const annotationContentEnd = annotationStr.toString().indexOf(annotationTextTagEnd)
+
+  const annotationContent = hasAnnotation(annotationStr) ? annotationStr.toString().substring(annotationContentStart + '<!--__ANNOTATION__='.length, annotationContentEnd) : '{}'
+
+  const annotationContentObj = JSON.parse(annotationContent)
+
+  let paragraph = annotationStr.toString()
+
+  if (get(annotationContentObj, [ 'text' ])) {
+    paragraph = paragraph.replace(`--><!--${annotationContentObj.text}-->`, '')
+  }
+
+  return {
+    annotationPart1: annotationStr.toString().substring(0, annotationContentStart),
+    annotationPart2: annotationContentObj.text,
+    annotationPart3: hasAnnotation(paragraph.substring(annotationContentEnd)) ? composeAnnotation(paragraph.substring(annotationContentEnd)) : paragraph.substring(annotationContentEnd),
+    annotationText: get(annotationContentObj, [ 'pureAnnotationText' ], '')
+  }
+}
+
 module.exports = {
   getDate,
   getSectionColorModifier,
   getCredit,
-  getStoryHeroImageSrc
+  getStoryHeroImageSrc,
+  composeAnnotation
 }

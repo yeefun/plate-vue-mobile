@@ -1,7 +1,7 @@
 const _ = require('lodash')
-const { get, isEmpty, } = require('lodash')
+const { get, isEmpty, find, } = require('lodash')
 const superagent = require('superagent')
-const { getDate, getSectionColorModifier, getCredit, getStoryHeroImageSrc } = require('./util')
+const { getDate, getSectionColorModifier, getCredit, getStoryHeroImageSrc, composeAnnotation } = require('./util')
 const { API_PROTOCOL, API_HOST, API_PORT, API_TIMEOUT, API_DEADLINE } = require('../../config')
 
 const apiHost = API_PROTOCOL + '://' + API_HOST + ':' + API_PORT
@@ -87,9 +87,12 @@ const sendArticleData = (req, res, next) => {
       caption: get(req.articleData, [ 'heroCaption' ], '')
     },
     storyBriefs: get(req.articleData, [ 'brief', 'apiData' ], []),
+    storyBriefAnnotation: composeAnnotation(get(find(get(req.articleData, [ 'brief', 'apiData' ], []), [ 'type', 'annotation' ]), [ 'content' ], '')),
     storyContent: get(req.articleData, [ 'content', 'apiData' ], []),
+    storyContentAnnotation: composeAnnotation(get(find(get(req.articleData, [ 'content', 'apiData' ], []), [ 'type', 'annotation' ]), [ 'content' ], '')),
     storyRelateds: get(req.articleData, [ 'relateds' ], [])
   }
+
   // Let ejs can use lodash methods
   res.locals._ = _
   
