@@ -1,6 +1,5 @@
 <footer class="app-footer">
-  <!-- TODO: share url -->
-  <a class="app-footer__item">
+  <a class="app-footer__item" href="https://line.naver.jp/R/msg/text/?<%= encodeURIComponent(storyInfo.storyTitle) %>%0D%0A<%= encodeURIComponent(storyInfo.storyURL) %>" target="_blank">
     <amp-img
       src="https://www.mirrormedia.mg/public/icon/line_white.png"
       width="40"
@@ -8,7 +7,7 @@
     >
     </amp-img>
   </a>
-  <a class="app-footer__item">
+  <a class="app-footer__item" href="https://www.facebook.com/share.php?u=<%= storyInfo.storyURL %>" target="_blank">
     <amp-img
       src="https://www.mirrormedia.mg/public/icon/facebook_white.png"
       width="16"
@@ -16,7 +15,7 @@
     >
     </amp-img>
   </a>
-  <a class="app-footer__item">
+  <a class="app-footer__item" href="https://plus.google.com/share?url=<%= storyInfo.storyURL %>" target="_blank">
     <amp-img
       src="https://www.mirrormedia.mg/public/icon/google-plus.png"
       width="24"

@@ -1,10 +1,14 @@
 const moment = require('moment')
 const { get } = require('lodash')
+const { SERVER_PROTOCOL, SERVER_HOST } = require('../../config')
 
 const getDate = (date) => {
   const normalizedDt = new Date(date)
   const datetime = moment(normalizedDt).format('YYYY.MM.DD HH:mm')
-  return datetime
+  return {
+    dateFormatted: datetime,
+    dateISO: normalizedDt.toISOString()
+  }
 }
 
 const getSectionColorModifier = (sectionId) => {
@@ -48,10 +52,10 @@ const getCredit = ({ cameraMan = [], designers = [], engineers = [], extendBylin
 
 const getStoryHeroImageSrc = (heroImage) => {
   const dimensions = {
-    desktop: get(heroImage, 'image.resizedTargets.desktop.url', get(heroImage, 'image.url', '/public/notImage.png')),
-    tablet: get(heroImage, 'image.resizedTargets.tablet.url', get(heroImage, 'image.url', '/public/notImage.png')),
-    mobile: get(heroImage, 'image.resizedTargets.mobile.url', get(heroImage, 'image.url', '/public/notImage.png')),
-    tiny: get(heroImage, 'image.resizedTargets.tiny.url', get(heroImage, 'image.url', '/public/notImage.png')),
+    desktop: get(heroImage, 'image.resizedTargets.desktop.url', get(heroImage, 'image.url', `${SERVER_PROTOCOL}://${SERVER_HOST}/public/notImage.png`)),
+    tablet: get(heroImage, 'image.resizedTargets.tablet.url', get(heroImage, 'image.url', `${SERVER_PROTOCOL}://${SERVER_HOST}/public/notImage.png`)),
+    mobile: get(heroImage, 'image.resizedTargets.mobile.url', get(heroImage, 'image.url', `${SERVER_PROTOCOL}://${SERVER_HOST}/public/notImage.png`)),
+    tiny: get(heroImage, 'image.resizedTargets.tiny.url', get(heroImage, 'image.url', `${SERVER_PROTOCOL}://${SERVER_HOST}/public/notImage.png`)),
   }
   return get(dimensions, 'mobile')
 }
