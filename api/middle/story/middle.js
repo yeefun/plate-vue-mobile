@@ -2,7 +2,7 @@ const _ = require('lodash')
 const { get, isEmpty, find, } = require('lodash')
 const superagent = require('superagent')
 const { getDate, getSectionColorModifier, getCredit, getStoryHeroImageSrc, composeAnnotation } = require('./util')
-const { API_PROTOCOL, API_HOST, API_PORT, API_TIMEOUT, API_DEADLINE } = require('../../config')
+const { API_PROTOCOL, API_HOST, API_PORT, API_TIMEOUT, API_DEADLINE, SERVER_PROTOCOL, SERVER_HOST } = require('../../config')
 
 const apiHost = API_PROTOCOL + '://' + API_HOST + ':' + API_PORT
 
@@ -75,8 +75,12 @@ const sendArticleData = (req, res, next) => {
     storyInfo: {
       sectionName: get(req.articleData, [ 'categories', 0, 'title' ], get(req.articleData, [ 'sections', 0, 'title' ], '')),
       sectionColorModifier: getSectionColorModifier(get(req.articleData, [ 'sections', 0, '_id' ])),
-      storyDate: getDate(get(req.articleData, [ 'publishedDate' ], '')),
+      storyDatePublished: getDate(get(req.articleData, [ 'publishedDate' ], '')),
+      storyDateUpdated: getDate(get(req.articleData, [ 'updatedAt' ], '')),
       storyTitle: get(req.articleData, [ 'title' ], ''),
+      storySlug: get(req.articleData, [ 'slug' ], ''),
+      storyURL: `${SERVER_PROTOCOL}://${SERVER_HOST}/story/${get(req.articleData, [ 'slug' ], '')}`,
+      storyURLAMP: `${SERVER_PROTOCOL}://${SERVER_HOST}/story/amp/${get(req.articleData, [ 'slug' ], '')}`,
       storyCredits: getCredit(req.articleData)
     },
     storyHeroVideo: {
