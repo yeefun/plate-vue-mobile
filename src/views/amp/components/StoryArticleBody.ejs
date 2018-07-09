@@ -1,4 +1,4 @@
-<% body.forEach(function (item) { %>
+<% body.forEach(function (item, index) { %>
   <% switch (item.type) {
       case 'unstyled': %>
       <%- include('./StoryArticleBody/Unstyled', { item }) %>
@@ -44,5 +44,11 @@
     <% break; %>
     <% default: %>
     <% break; %>
+  <% } %>
+  <% if (index === storyContentFirstTwoUnstyledParagraph[0]) { %>
+    <%- include('./AppAds', { AMPAds, pos: 'AMPAT1' }) %>
+  <% } %>
+  <% if (index === storyContentFirstTwoUnstyledParagraph[1]) { %>
+    <%- include('./AppAds', { AMPAds, pos: 'AMPAT2' }) %>
   <% } %>
 <% }) %>

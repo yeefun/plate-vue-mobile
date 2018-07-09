@@ -1,9 +1,13 @@
+require('babel-core/register')
+require('babel-polyfill')
+
 const _ = require('lodash')
 const { get, isEmpty, find, } = require('lodash')
 const superagent = require('superagent')
 const { redisFetching, redisWriting, } = require('../redisHandler')
-const { getDate, getSectionColorModifier, getCredit, getStoryHeroImageSrc, composeAnnotation } = require('./util')
+const { getDate, getSectionColorModifier, getCredit, getStoryHeroImageSrc, composeAnnotation, firstTwoUnstyledParagraph } = require('./util')
 const { API_PROTOCOL, API_HOST, API_PORT, API_TIMEOUT, API_DEADLINE, SERVER_PROTOCOL, SERVER_HOST } = require('../../config')
+const { DFP_UNITS, DFP_ID } = require('../../../src/constants')
 
 const apiHost = API_PROTOCOL + '://' + API_HOST + ':' + API_PORT
 
@@ -113,8 +117,17 @@ const sendArticleData = (req, res, next) => {
     storyBriefs: get(res.articleData, [ 'brief', 'apiData' ], []),
     storyBriefAnnotation: composeAnnotation(get(find(get(res.articleData, [ 'brief', 'apiData' ], []), [ 'type', 'annotation' ]), [ 'content' ], '')),
     storyContent: get(res.articleData, [ 'content', 'apiData' ], []),
+
+    // For Ads usage:
+    storyContentFirstTwoUnstyledParagraph: firstTwoUnstyledParagraph(get(res.articleData, [ 'content', 'apiData' ], [])),
+
     storyContentAnnotation: composeAnnotation(get(find(get(res.articleData, [ 'content', 'apiData' ], []), [ 'type', 'annotation' ]), [ 'content' ], '')),
-    storyRelateds: get(res.articleData, [ 'relateds' ], [])
+    storyRelateds: get(res.articleData, [ 'relateds' ], []),
+    showAMPAds: !isEmpty(get(DFP_UNITS, [ get(res.articleData, [ 'sections', 0, '_id' ]), 'AMP' ], {})),
+    AMPAds: {
+      DFP_ID,
+      DFPUnits: get(DFP_UNITS, [ get(res.articleData, [ 'sections', 0, '_id' ]), 'AMP' ], {})
+    }
   }
 
   // Let ejs can use lodash methods

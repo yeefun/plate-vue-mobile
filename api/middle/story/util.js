@@ -48,7 +48,7 @@ const hasAnnotation = (paragraph) => {
   return (annotationContentStart > -1 && annotationContentEnd > -1)
 }
 
-const composeAnnotation =  (annotationStr) => {
+const composeAnnotation = (annotationStr) => {
   const annotationContentStart = annotationStr.toString().indexOf(annotationTextTagStart)
   const annotationContentEnd = annotationStr.toString().indexOf(annotationTextTagEnd)
 
@@ -70,10 +70,28 @@ const composeAnnotation =  (annotationStr) => {
   }
 }
 
+const firstTwoUnstyledParagraph = (apiData) => {
+  // const { content } = articleData
+  const records = []
+  let count = 0
+  let index = 0
+  let lastUnstyled = 0
+  while (count < 2 && index < apiData.length) {
+    if (apiData[ index ][ 'type' ] === 'unstyled' && (lastUnstyled + 4) < index) {
+      count++
+      lastUnstyled = index
+      records.push(index)
+    }
+    index++
+  }
+  return records
+}
+
 module.exports = {
   getDate,
   getSectionColorModifier,
   getCredit,
   getStoryHeroImageSrc,
-  composeAnnotation
+  composeAnnotation,
+  firstTwoUnstyledParagraph
 }
