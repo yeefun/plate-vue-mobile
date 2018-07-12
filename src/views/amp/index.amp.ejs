@@ -69,8 +69,7 @@
       <%- include('components/StoryArticleBrief', { storyBriefs, storyBriefAnnotation }) %>
       <%- include('components/StoryArticleContent', { storyContent, storyContentAnnotation, storyContentFirstTwoUnstyledParagraph, AMPAds }) %>
     </article>
-    <%- include('components/StoryRelateds', { storyRelateds }) %>
-    <%- include('components/AppAds', { AMPAds, pos: 'AMPE1' }) %>
+    <%- include('components/StoryRelateds', { storyRelateds, AMPAds }) %>
     <%- include('components/AppAds', { AMPAds, pos: 'AMPFT' }) %>
     <%- include('components/AppFooter', { storyInfo }) %>
   </body>
