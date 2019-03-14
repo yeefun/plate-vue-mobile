@@ -10,18 +10,46 @@
   import { mmLog } from './util/comm.js'
   import { visibleTracking } from './util/visibleTracking'
   import Tap from 'tap.js'
+  
+  const debug = require('debug')('CLIENT:App')
+
+  const resetAdCoverFlag = store => store.dispatch('RESET_AD_COVER')
+  const updateViewport = (store) => {
+    const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
+    const height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+    const viewport = { width: width, height: height }
+    return store.dispatch('UPDATE_VIEWPORT', viewport)
+  }
 
   export default {
-    computed: {
-      currPath () {
-        return this.$route.fullPath
-      }
-    },
     data () {
       return {
         doc: {},
         globalTapevent: {}
       }
+    },
+    computed: {
+      currPath () {
+        return this.$route.fullPath
+      }
+    },
+    watch: {
+      currPath: function () {
+        this.setUpVisibleTracking()
+        resetAdCoverFlag(this.$store)
+      }
+    },
+    beforeMount () {
+      updateViewport(this.$store)
+    },
+    mounted () {
+      this.doc = document
+      this.launchLogger()
+      this.setUpVisibleTracking()
+      window.addEventListener('resize', this.updateViewport)
+    },
+    beforeDestroy () {
+      window.removeEventListener('resize', this.updateViewport)
     },
     methods: {
       doLog (event) {
@@ -29,12 +57,13 @@
           category: 'whole-site',
           description: '',
           eventType: 'click',
-          target: event.target
-        }).then((log) => {
+          target: event.target,
+        }).then(log => {
+          debug('log', log)
           return this.$store.dispatch('LOG_CLIENT', { params: {
             clientInfo: log
           }})
-        }).catch((err) => {
+        }).catch(err => {
           console.log(err)
         })
       },
@@ -56,18 +85,11 @@
           ]
         )
       },
+      updateViewport () {
+        updateViewport(this.$store)
+      },
       visibleTracking
     },
-    mounted () {
-      this.doc = document
-      this.launchLogger()
-      this.setUpVisibleTracking()
-    },
-    watch: {
-      currPath: function () {
-        this.setUpVisibleTracking()
-      }
-    }
   }
 </script>
 
@@ -201,7 +223,7 @@ button:focus {
       right -16px
       width 32px
       height 32px
-      background-image url(/public/icon/close-btn.png)
+      background-image url(/assets/mirrormedia/icon/close-btn.png)
       background-repeat no-repeat
       background-size contain
       background-position center center

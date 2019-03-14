@@ -1,5 +1,6 @@
+const debug = require('debug')('PLATEVUE:redis')
 const isProd = process.env.NODE_ENV === 'production'
-const isTest = process.env.NODE_ENV === 'test'
+// const isTest = process.env.NODE_ENV === 'test'
 const RedisConnectionPool = require('redis-connection-pool')
 
 const { 
@@ -91,7 +92,7 @@ class TimeoutHandler {
 }
 
 const redisFetching = (url, callback) => {
-  const timeoutHandler = new TimeoutHandler(callback)
+  let timeoutHandler = new TimeoutHandler(callback)
   redisPoolRead.get(decodeURIComponent(url), (error, data) => {
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
@@ -110,43 +111,52 @@ const redisFetching = (url, callback) => {
     })
     if (timeoutHandler.timeout <= 0) { return }
     callback && callback({ error, data })
+    timeoutHandler = null
   })
 }
-const redisWriting = (url, data, callback) => {
-  const timeoutHandler = new TimeoutHandler(callback)
+const redisWriting = (url, data, callback, timeout) => {
+  let timeoutHandler = new TimeoutHandler(callback)
+  debug('Going to Writing things to redis...')
   redisPoolWrite.set(decodeURIComponent(url), data, (err) => {
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
     if(err) {
-      console.log('redis writing in fail. ', decodeURIComponent(url), err)
+      console.error(`\n[ERROR] Write data to Redis in fail. ${decodeURIComponent(url)}`)
+      console.error(`${err}\n`)
     } else {
-      redisPoolWrite.expire(decodeURIComponent(url), REDIS_TIMEOUT, function(error, d) {
+      debug('Set timeout as:', timeout || REDIS_TIMEOUT)
+      redisPoolWrite.expire(decodeURIComponent(url), timeout || REDIS_TIMEOUT || 5000, function(error, d) {
         if(error) {
-          console.log('failed to set redis expire time. ', decodeURIComponent(url), err)
+          console.error(`\n[ERROR] Set redis expire time in fail. ${decodeURIComponent(url)}`)
+          console.error(`${err}\n`)
         } else {
           callback && callback()
         }
       })
     }
+    timeoutHandler = null
   })
 }
-const redisFetchingRecommendNews = (key, field, callback) => {
-  const timeoutHandler = new TimeoutHandler(callback)
-  redisPoolRecommendNews.send_command('HMGET', [ key, ...field ], function (err, data) {
+const redisFetchingRecommendNews = (field, callback) => {
+  let timeoutHandler = new TimeoutHandler(callback)
+  redisPoolRecommendNews.send_command('MGET', [ ...field ], function (err, data) {
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
     if (timeoutHandler.timeout <= 0) { return }
     callback && callback({ err, data })
+    timeoutHandler = null
   })
 }
 
 const insertIntoRedis = (req, res, next) => {
   redisWriting(req.url, res.dataString, () => {
-    next()
+    // next()
   })
 }
+
 const fetchFromRedis = (req, res, next) => {
- redisFetching(req.url, ({ error, data }) => {
+  debug('Trying to fetching data from redis...', req.url)
+  redisFetching(req.url, ({ error, data }) => {
     if (!error) {
       res.redis = data
       next()
@@ -158,8 +168,24 @@ const fetchFromRedis = (req, res, next) => {
   })
 }
 
+const fetchFromRedisForAPI = (req, res, next) => {
+  debug('Trying to fetching data from redis...', req.url)
+  redisFetching(req.url, ({ error, data }) => {
+    if (!error && data) {
+      console.log('Fetch data from Redis.', `${Date.now() - req.startTime}ms\n`, decodeURIComponent(req.url))
+      res.header('Cache-Control', 'public, max-age=300')
+      res.json(JSON.parse(data))
+    } else {
+      console.error(`\n[ERROR] Fetch data from Redis in fail.`)
+      console.error(`${req.url}\n`)
+      next(error)
+    }
+  })
+}
+
 module.exports = {
   fetchFromRedis,
+  fetchFromRedisForAPI,
   insertIntoRedis,
   redisFetching,
   redisFetchingRecommendNews,

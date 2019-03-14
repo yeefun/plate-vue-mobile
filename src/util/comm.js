@@ -1,4 +1,4 @@
-import { SITE_DOMAIN, SITE_URL, SITE_PROJ_URL, VPON_CONFIG } from '../constants'
+import { SITE_DOMAIN, SITE_URL, SITE_PROJ_URL, } from '../constants'
 import _ from 'lodash'
 import Browser from 'bowser'
 import Cookie from 'vue-cookie'
@@ -6,6 +6,36 @@ import moment from 'moment'
 import sanitizeHtml from 'sanitize-html'
 import truncate from 'truncate'
 import uuidv4 from 'uuid/v4'
+
+const debug = require('debug')('CLIENT:comm')
+
+export function getArticleReadTime (paragraphs = []) { // deprecated
+  const REGEX_ONLY_CHINESE = /[\u4E00-\u9FFF]+/g
+  const REGEX_NOT_EN_AND_NUMBER = /([^A-Za-z0-9])/g
+
+  const WPM_ENGLISH = 265
+  const WPM_CHINESE = 250
+
+  const textContents = Array.isArray(paragraphs) ? paragraphs : []
+  const textContentsFiltered = textContents
+    .filter(paragraph => paragraph.type === 'unstyled')
+    .filter(paragraph => paragraph.content[0].trim())
+    .map(paragraph => paragraph.content[0])
+  
+  let min = 0
+  if (textContentsFiltered.length > 0) {
+    const combined = textContentsFiltered.join(' ')
+    const countChinese = combined.match(REGEX_ONLY_CHINESE).join('').length
+    const countEnglishAndNumber = combined
+      .replace(REGEX_ONLY_CHINESE, ' ')
+      .replace(REGEX_NOT_EN_AND_NUMBER, ' ')
+      .split(' ')
+      .filter(word => word).length
+    const readTime = Math.round((countChinese / WPM_CHINESE) + (countEnglishAndNumber / WPM_ENGLISH))
+    min = readTime > 0 ? readTime : 1
+  }
+  return min
+}
 
 export function getAuthor (article, option = '', delimiter = '｜') {
   const writers = (_.get(article, [ 'writers', 'length' ], 0) > 0)
@@ -29,34 +59,32 @@ export function getAuthorHref (author = {}) {
   return '/author/' + author.id
 }
 
-export function getBrief (article, count = 30, allowed_tags = '') {
-  let brief
-  if (_.split(_.get(article, [ 'href' ]), '/')[1] === 'topic') {
-    brief = _.get(article, [ 'ogDescription' ])
-  } else {
-    brief = sanitizeHtml(_.get(article, [ 'brief', 'html' ], _.get(article, [ 'brief' ])), { allowedTags: [ allowed_tags ] })
-  }
+export function getBrief (article, count = 30, allowedTags = []) {
+  const metaBrief =  _.get(article, 'brief')
+  let brief = _.isString(metaBrief) ? metaBrief : (_.get(article, 'brief.html') || _.get(article, [ 'ogDescription' ]) || '')
+  brief = sanitizeHtml(brief, { allowedTags: allowedTags })
   return truncate(brief, count)
 }
 
 export function getHref (relAritlcle = {}) {
-  const { href, style = '', slug } = relAritlcle
+  const { style = '', slug } = relAritlcle
+  
   switch (style) {
     case 'campaign':
       return `/campaigns/${slug}`
     case 'projects':
       return `/projects/${slug}`
     default:
-      if (_.split(href, '/')[1] === 'topic') {
-        return href
-      } else {
-        return `/story/${slug}/`
-      }
+      // if (_.split(href, '/')[1] === 'topic') {
+      //   return href
+      // } else {
+      return `/story/${slug}/`
+      // }
   }
 }
 
 export function getHrefFull (relAritlcle = {}) {
-  const { href, style = '', slug } = relAritlcle
+  const { style = '', slug } = relAritlcle
   switch (style) {
     case 'campaign':
       return `${SITE_URL}/campaigns/${slug}`
@@ -65,60 +93,44 @@ export function getHrefFull (relAritlcle = {}) {
     case 'readr':
       return `${SITE_PROJ_URL}/project/${slug}`
     default:
-      if (_.split(href, '/')[1] === 'topic') {
-        return href
-      } else {
-        return `${SITE_URL}/story/${slug}/`
-      }
+      // if (_.split(href, '/')[1] === 'topic') {
+      //   return href
+      // } else {
+      return `${SITE_URL}/story/${slug}/`
+      // }
   }
 }
 
 export function getImage (article, size) {
   let image
-  if (article.heroVideo && article.heroVideo.coverPhoto && article.heroVideo.coverPhoto.image) {
-    image = _.get(article, [ 'heroVideo', 'coverPhoto', 'image', 'resizedTargets' ])
-  } else if (article.heroImage && article.heroImage.image) {
-    image = _.get(article, [ 'heroImage', 'image', 'resizedTargets' ])
+  if (article.heroImage) {
+    debug('get heroimage')
+    image = article.heroImage.image ? _.get(article, [ 'heroImage', 'image', 'resizedTargets' ]) : _.get(article, 'heroImage')
   } else if (article.ogImage) {
+    debug('get ogImage')
     image = _.get(article, [ 'ogImage', 'image', 'resizedTargets' ])
+  } else if (article.heroVideo && article.heroVideo.coverPhoto && article.heroVideo.coverPhoto.image) {
+    debug('get heroVideo img')
+    image = _.get(article, [ 'heroVideo', 'coverPhoto', 'image', 'resizedTargets' ])
   }
   switch (size) {
     case 'desktop':
-      return _.get(image, [ 'desktop', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'desktop', 'url' ], '/assets/mirrormedia/notImage.png')
     case 'mobile':
-      return _.get(image, [ 'mobile', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'mobile', 'url' ], '/assets/mirrormedia/notImage.png')
     case 'tablet':
-      return _.get(image, [ 'tablet', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'tablet', 'url' ], '/assets/mirrormedia/notImage.png')
     case 'tiny':
-      return _.get(image, [ 'tiny', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'tiny', 'url' ], '/assets/mirrormedia/notImage.png')
     default:
-      return _.get(image, [ 'desktop', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'desktop', 'url' ], '/assets/mirrormedia/notImage.png')
   }
-}
-
-export function getImageCertain (image, size) {
-  switch (size) {
-    case 'desktop':
-      return _.get(image, [ 'desktop', 'url' ], '/public/notImage.png')
-    case 'mobile':
-      return _.get(image, [ 'mobile', 'url' ], '/public/notImage.png')
-    case 'tablet':
-      return _.get(image, [ 'tablet', 'url' ], '/public/notImage.png')
-    case 'tiny':
-      return _.get(image, [ 'tiny', 'url' ], '/public/notImage.png')
-    default:
-      return _.get(image, [ 'desktop', 'url' ], '/public/notImage.png')
-  }
-}
-
-export function getName (article) {
-  return _.get(article, [ 'name' ])
 }
 
 export function getSection (article) {
   switch (_.get(article, [ 'style' ])) {
     case 'article':
-      return _.get(article, 'sections[0].name') ? _.get(article, 'sections[0].name') : ''
+      return _.get(article, 'sections[0].name') || ''
     case 'projects':
       return 'projects'
     default:
@@ -126,14 +138,8 @@ export function getSection (article) {
   }
 }
 
-export function shareGooglePlus ({ route, shared }) {
-  window.open(`https://plus.google.com/share?url=${SITE_URL}${route}`)
-  shared && shared()
-}
-
-export function shareLine ({ title, route, shared }) {
+export function shareLine ({ title, route }) {
   window.open(`https://line.naver.jp/R/msg/text/?${encodeURIComponent(title)}%0D%0A${encodeURIComponent(SITE_URL + route)}`)
-  shared && shared()
 }
 
 export function shareFacebook ({ route, shared }) {
@@ -190,7 +196,7 @@ export function consoleLogOnDev ({ msg }) {
 
 export function currEnv () {
   if (process.env.VUE_ENV === 'client') {
-    if (location.host.indexOf(SITE_DOMAIN) === 0 || location.host.indexOf(`www.${SITE_DOMAIN}`) === 0 || location.host.indexOf(`m.${SITE_DOMAIN}`) === 0) {
+    if (location.host.indexOf(SITE_DOMAIN) === 0 || location.host.indexOf(`www.${SITE_DOMAIN}`) === 0) {
       return 'prod'
     } else {
       return 'dev'
@@ -245,8 +251,21 @@ export function getClientOS () {
   return os
 }
 
-export function mmLog ({ category, eventType, target, description }) {
-  return _normalizeLog({ category, eventType, target, description })
+export function mmLog ({ category, eventType, target, description, referrer, ...rest }) {
+  return _normalizeLog({ category, eventType, target, description, referrer, ...rest })
+}
+
+export function isEleFixed (ele) {
+  let node = ele
+  
+  while (node !== null && node !== undefined && node !== document) {
+    const position = node.currentStyle ? node.currentStyle.position : window.getComputedStyle(node, null).position
+    if (position === 'fixed') {
+      return true
+    }
+    node = node.parentNode
+  }
+  return false  
 }
 
 export function isDescendant (child, { classname = 'none' }) {
@@ -271,7 +290,7 @@ function _isAlinkDescendant (child) {
   return { isAlink: false, href: '' }
 }
 
-function _normalizeLog ({ eventType = 'click', category = '', target = {}, description = '', referrer }) {
+function _normalizeLog ({ eventType = 'click', category = '', target = {}, description = '', referrer, ...rest }) {
   return new Promise((resolve) => {
     const cookieId = Cookie.get('mmid')
     const targ = target
@@ -279,6 +298,9 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
     const clientOs = getClientOS()
     const innerText = targ.innerText ? sanitizeHtml(targ.innerText, { allowedTags: [ '' ] }) : ''
     const isAlinkCheck = targ.tagName === 'A' ? { isAlink: true, href: targ.href } : _isAlinkDescendant(targ)
+
+    const exp_related = /^related/g
+    const exp_recoommend = /^recommend/g
 
     const log = {
       'browser': {
@@ -295,7 +317,9 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
       'datetime': moment(Date.now()).format('YYYY.MM.DD HH:mm:ss'),
       'description': description,
       'event-type': eventType,
-      'redirect-to': isAlinkCheck.href,
+      'redirect-to': isAlinkCheck.isAlink ? isAlinkCheck.href : undefined,
+      'referrer': referrer || (isAlinkCheck.isAlink ? location.href : undefined),
+      'rref': isAlinkCheck.isAlink ? exp_related.test(target.id) ? 'related' : exp_recoommend.test(target.id) ? 'recommend' : undefined : undefined,
       'target-tag-name': targ.tagName,
       'target-tag-class': targ.className,
       'target-tag-id': targ.id,
@@ -303,7 +327,8 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
       'target-window-size': {
         width: document.documentElement.clientWidth || document.body.clientWidth,
         height: document.documentElement.clientWidth || document.body.clientWidth
-      }
+      },
+      ...rest
     }
     if (!cookieId) {
       const dt = Date.now()
@@ -311,14 +336,12 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
       log['client-id'] = thisId
       log['current-runtime-id'] = thisId
       log['current-runtime-start'] = moment(dt).format('YYYY.MM.DD HH:mm:ss')
-      log['referrer'] = document.referrer
       window.mmThisRuntimeClientId = thisId
       window.mmThisRuntimeDatetimeStart = moment(dt).format('YYYY.MM.DD HH:mm:ss')
       resolve(log)
     } else {
       const dt = Date.now()
       log['client-id'] = cookieId
-      log['referrer'] = referrer
       if (!window.mmThisRuntimeClientId) {
         window.mmThisRuntimeClientId = uuidv4()
         window.mmThisRuntimeDatetimeStart = moment(dt).format('YYYY.MM.DD HH:mm:ss')
@@ -336,29 +359,32 @@ export function setMmCookie () {
   return uuid
 }
 
-export function insertMicroAd ({ adId, currEnv, microAdLoded = false }) {
-  if (process.env.VUE_ENV === 'client' && microAdLoded === false) {
+export async function insertMicroAd ({ adId, currEnv, vm }) {
+  if (process.env.VUE_ENV === 'client' && !vm.microAdLoded) {
     const _lgy_lw = document.createElement('script')
+    _lgy_lw.onload = () => {
+      currEnv === 'dev' && console.log('microad', adId, 'loaded')
+      vm.microAdLoded = true
+    }
     _lgy_lw.type = 'text/javascript'
     _lgy_lw.charset = 'UTF-8'
     _lgy_lw.async = true
     _lgy_lw.src = ((document.location.protocol === 'https:') ? 'https://' : 'http://') + `nt.compass-fit.jp/lift_widget.js?adspot_id=${adId}`
     const _lgy_lw_0 = document.getElementsByTagName('script')[0]
     _lgy_lw_0.parentNode.insertBefore(_lgy_lw, _lgy_lw_0)
-    if (currEnv === 'dev') { console.log('microad', adId, 'loaded') }
   }
-  return true
 }
 
-export function insertVponAdSDK ({ currEnv = 'dev', isVponSDKLoaded = false }) {
-  if (process.env.VUE_ENV === 'client' && isVponSDKLoaded === false) {
-    const script = document.createElement('script')
-    script.type = 'text/javascript'
-    script.src = '//m.vpon.com/sdk/vpadn-sdk.js'
-    document.body.appendChild(script)
-  }
-  return true
-}
+// Vpon ad is abandoned 20180810 BY KC
+// export function insertVponAdSDK ({ isVponSDKLoaded = false }) {
+//   if (process.env.VUE_ENV === 'client' && isVponSDKLoaded === false) {
+//     const script = document.createElement('script')
+//     script.type = 'text/javascript'
+//     script.src = '//m.vpon.com/sdk/vpadn-sdk.js'
+//     document.body.appendChild(script)
+//   }
+//   return true
+// }
 
 export function trim (str) {
   return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
@@ -387,20 +413,20 @@ export function removeClass (ele, cls) {
   }
   ele.className = trim(ele.className)
 }
-
-export function vponHtml () {
-  const mode = _.get(VPON_CONFIG, [ 'vpon_ad_test' ], '1')
-  const key = _.get(VPON_CONFIG, [ 'vpon_ad_licensy_key' ], '')
-  const format = _.get(VPON_CONFIG, [ 'vpon_ad_format' ], 'mi')
-  const debug = _.get(VPON_CONFIG, [ 'debug' ], true)
-  return `<vpon vpon_ad_test="${mode}" vpon_ad_licensy_key="${key}" vpon_ad_format="${format}" debug="${debug}"></vpon>`
-}
+// Vpon ad is abandoned 20180810 BY KC
+// export function vponHtml () {
+//   const mode = _.get(VPON_CONFIG, [ 'vpon_ad_test' ], '1')
+//   const key = _.get(VPON_CONFIG, [ 'vpon_ad_licensy_key' ], '')
+//   const format = _.get(VPON_CONFIG, [ 'vpon_ad_format' ], 'mi')
+//   const debug = _.get(VPON_CONFIG, [ 'debug' ], true)
+//   return `<vpon vpon_ad_test="${mode}" vpon_ad_licensy_key="${key}" vpon_ad_format="${format}" debug="${debug}"></vpon>`
+// }
 
 export function updateCookie ({ currEnv }) {
-  return new Promise((resolve) => {
-    const cookie = Cookie.get('visited')
+  return new Promise(resolve => {
+    const cookie = Cookie.get('visited')    
     if (currEnv === 'prod' && !cookie) {
-      Cookie.set('visited', 'true', { expires: '3m' })
+      // Cookie.set('visited', 'true', { expires: '3m' })
     }
     resolve(cookie === 'true')
   })

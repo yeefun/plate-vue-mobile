@@ -6,7 +6,7 @@
         <div class="pop_item">
           <figure>
             <router-link :to="o.slug" :id="'popular-' + i">
-              <img v-lazy="getImage(o, 'mobile')" :alt="getValue(o, [ 'title' ])" />
+              <LazyImage :src="getImage(o, 'mobile')" :caption="getValue(o, [ 'title' ])" />
             </router-link>
             <div class="pop_item--colorBlock" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', '0', 'title' ])" />
           </figure>
@@ -20,19 +20,22 @@
   </div>
 </template>
 <script>
+  import LazyImage from 'src/components/common/LazyImage.vue'
   import { SECTION_MAP } from '../../constants'
-  import { getHref, getImage, getTruncatedVal, getValue } from '../../util/comm'
+  import { getImage, getTruncatedVal, getValue } from '../../util/comm'
   import _ from 'lodash'
   export default {
     name: 'pop-list',
     props: [ 'pop', 'currEnv' ],
+    components: {
+      LazyImage,
+    },
     computed: {
       popArticles () {
         return _.take(this.pop, 6)
       }
     },
     methods: {
-      getHref,
       getImage,
       getTruncatedVal,
       getValue,
@@ -57,12 +60,12 @@
       align-content flex-start
       flex-wrap wrap
       justify-content space-between
+      
 
       .pop_item 
         width 31%
         vertical-align top
         margin-bottom 30px
-
         figure
           position relative
           width 100%
@@ -120,8 +123,26 @@
               color rgba(0, 0, 0, 0.49)
               font-weight normal
               border none
+      & >>> .pop_item, & >>> #compass-fit-widget-content
+        display flex
+        flex-direction row
+        align-items center
+        figure
+          width 33vw
+          min-width 33vw
+          min-height calc(33vw * 0.68)
+          padding-top 0 !important
+        a
+          margin 0 !important
+          min-height calc(33vw * 0.68)
+          display flex
+          align-items center
+      & >>> .pop_item
+        margin 0 0 20px 0
+      & >>> .pop_item_title
+        width 100%
 
-  @media (min-width 0px) and (max-width 499px)
+  @media (min-width 0px) and (max-width 1199px)
     .poplist-container 
       .pop_list 
         .pop_item
@@ -142,12 +163,5 @@
           .pop_item_title
             font-size 1.2rem
             line-height 1.5rem          
-
-  @media (min-width 500px) and (max-width 767px)
-    .poplist-container 
-      .pop_list 
-        .pop_item
-          width 45%
-  
           
 </style>

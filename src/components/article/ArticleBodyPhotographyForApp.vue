@@ -58,7 +58,6 @@
   import { OnePageScroller } from 'kc-scroll'
   import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
   import { getValue, addClass, removeClass } from '../../util/comm'
-  import { shareGooglePlus, shareLine, shareFacebook } from '../../util/comm'
   import _ from 'lodash'
   import RelatedListWithThumbnail from './RelatedListWithThumbnail.vue'
 
@@ -186,7 +185,7 @@
       },
       initOnepage () {
         this.onePageScroll.init('.article_body', {
-          afterMove: (index, next_el) => {
+          afterMove: (index) => {
             this.currIndex = parseInt(index)
             this.updateProgressbar(((this.currIndex - 1) * 100) / this.imgArr.length)
             if (this.currIndex === this.imgArr.length + 1) {
@@ -212,7 +211,7 @@
             }
           },
           animationTime: 500,
-          beforeMove: (index, next_el) => {
+          beforeMove: (index) => {
             this.smoothScroll('.article_body')
             if (parseInt(index) > this.currIndex) {
               this.sideProgressHandler('pass', parseInt(index - 1))
@@ -261,7 +260,7 @@
         }
         this.lastAnimation = timeNow
       },
-      scrollHandler (e) {
+      scrollHandler () {
         const currTop = this.currentYPosition()
         const creditCommentTopY = this.elmYPosition('.credit-comment')
         const tHtml = document.documentElement
@@ -297,20 +296,8 @@
         })
       },
       smoothScroll,
-      shareGooglePlus () {
-        shareGooglePlus({ route: this.$route.path })
-      },
-      shareLine () {
-        shareLine({
-          route: this.$route.path,
-          title: document.querySelector('meta[property="og:title"]').getAttribute('content')
-        })
-      },
-      shareFacebook () {
-        shareFacebook({ route: this.$route.path })
-      },
       sideProgressHandler (action, index) {
-        return new Promise((resolve) => {
+        return new Promise(() => {
           const _targContainer = document.querySelector('.stick-container')
           if (!_targContainer) { return }
           const _targElement = _targContainer.querySelector(`.stick:nth-child(${index})`)
@@ -365,12 +352,13 @@
               this.onePageScroll.pauseToggle()
               this.lastAnimation = timeNow
             }
-          } else if (deltaY <= -50 && !shouldDo) {
           }
+          // else if (deltaY <= -50 && !shouldDo) {
+          // }
         }
       },
       updateProgressbar (percentage) {
-        return new Promise((resolve) => {
+        return new Promise(() => {
           const _progressBar = document.querySelector('.progress-bar')
           _progressBar.setAttribute('style', `left: ${percentage}%;`)
         })
@@ -406,6 +394,7 @@
         removeClass(document.body, 'limited-height')
         removeClass(document.documentElement, 'limited-height')
       }
+      next()
     },
     name: 'ariticle-body-photo',
     props: {
@@ -439,7 +428,7 @@
       &.mm-icon
         width 48px
         height 48px
-        background-image url(/public/favicon-48x48.png)
+        background-image url(/assets/mirrormedia/favicon-48x48.png)
         background-size contain
         background-position center center
         background-repeat no-repeat
@@ -466,24 +455,24 @@
 
             &.share
               margin-left 0
-              background-image url(/public/icon/share-white.png)
+              background-image url(/assets/mirrormedia/icon/share-white.png)
               background-size 50%
             
             &.facebook
-              background-image url(/public/icon/facebook_white.png)
+              background-image url(/assets/mirrormedia/icon/facebook_white.png)
               background-size 35%
               -webkit-transition-delay 50ms
               transition-delay 20ms
               
             &.line
-              background-image url(/public/icon/line_white.png)
+              background-image url(/assets/mirrormedia/icon/line_white.png)
               background-size 70%
               background-color #20b22c   
               -webkit-transition-delay 75ms
               transition-delay 40ms
 
             &.g-plus
-              background-image url(/public/icon/google-plus.png)
+              background-image url(/assets/mirrormedia/icon/google-plus.png)
               background-size 70%
               background-color #c00   
               -webkit-transition-delay 75ms
@@ -538,17 +527,17 @@
       display none
 
     &.on
-      background-image url(/public/icon/caption-on.png)
+      background-image url(/assets/mirrormedia/icon/caption-on.png)
       opacity 0.65
       
     &.off
-      background-image url(/public/icon/caption-off.png)
+      background-image url(/assets/mirrormedia/icon/caption-off.png)
       
     &.hide
       display none
 
     &:hover
-      background-image url(/public/icon/caption-on.png)
+      background-image url(/assets/mirrormedia/icon/caption-on.png)
       opacity 1
 
       .hint
@@ -635,7 +624,7 @@
       height 35px
       bottom 20px
       background-color rgba(218, 218, 218, 0.37)
-      background-image url(/public/icon/continue.png)
+      background-image url(/assets/mirrormedia/icon/continue.png)
       background-repeat no-repeat
       background-size contain
       background-position center center

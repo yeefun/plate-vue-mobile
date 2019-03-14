@@ -1,5 +1,5 @@
 <template>
-  <div class="ad-cover" v-if="switcher">
+  <div class="ad-cover" :class="{ transparent: !showDefaultSet, }" v-if="switcher">
     <div class="ad-cover--wrapper">
       <slot name="ad-cover">
       </slot>
@@ -10,7 +10,9 @@
   </div>
 </template>
 <script>
+  const debug = require('debug')('CLIENT:DfpCover')
   export default {
+    name: 'DfpCover',
     computed: {
       displayBtnClose () {
         return this.showCloseBtn !== undefined ? this.showCloseBtn : true
@@ -18,16 +20,30 @@
     },
     data () {
       return {
-        switcher: true
+        showDefaultSet: true,
+        switcher: true,
       }
     },
-    name: 'dfp-ad-cover',
     methods: {
       closeCover () {
         this.switcher = false
+      },
+      setupCloseEventListener () {
+        const handler = () => {
+          debug('GOT EVENT!!!')
+          this.showDefaultSet = false
+        }
+        return new Promise(resolve => {
+          debug('SETUP setupCloseEventListener!!!')
+          window.addEventListener('hidedefaultset', handler)
+          window.parent.addEventListener('hidedefaultset', handler)
+          resolve()
+        })
       }
     },
-    mounted () {},
+    mounted () {
+      this.setupCloseEventListener()
+    },
     props: [ 'showCloseBtn' ]
   }
 </script>
@@ -45,6 +61,11 @@
       justify-content center
       align-items center
 
+      &.transparent
+        background-color transparent
+        .ad-cover--wrapper_close
+          display none
+
       .ad-cover--wrapper
         position relative
         width 320px
@@ -60,7 +81,7 @@
           > .icon
             width 32px
             height 32px
-            background-image url(/public/icon/close_white.png)
+            background-image url(/assets/mirrormedia/icon/close_white.png)
             background-repeat no-repeat
             background-size contain
             background-position center center

@@ -72,6 +72,7 @@
           <div v-else v-html="paragraphComposer(p)"></div>
           <slot name="dfpad-AR1" v-if="index === firstTwoUnstyledParagraph[ 0 ]"></slot>
           <slot name="dfpad-AR2" v-if="index === firstTwoUnstyledParagraph[ 1 ]"></slot>
+          <slot v-if="index === lastUnstyledParagraph - 1" name="relatedListInContent"></slot>
         </div>
       </article>
       <div class="article_main_related_bottom">
@@ -100,7 +101,7 @@
 <script>
 import _ from 'lodash'
 import { SECTION_MAP } from '../../constants'
-import { getHref, getTruncatedVal, getValue } from '../../util/comm'
+import { getValue } from '../../util/comm'
 import Annotation from './Annotation.vue'
 import ArticleVideo from './Video.vue'
 import AudioBox from '../../components/AudioBox.vue'
@@ -200,6 +201,16 @@ export default {
         index++
       }
       return records
+    },
+    lastUnstyledParagraph () {
+      const regex = /^<\s*a[^>]*>/
+      let last = this.contArr.length - 1
+      this.contArr.map((content, index) => {
+        if (content.type === 'unstyled' && content.content[0] && !content.content[0].match(regex)) {
+          last = index
+        }
+      })
+      return last
     }
   },
   data () {
@@ -208,8 +219,6 @@ export default {
     }
   },
   methods: {
-    getHref,
-    getTruncatedVal,
     getValue,
     isArticleEmpay () {
       return _.isEmpty(this.articleData)
@@ -373,7 +382,7 @@ export default {
       z-index 100002
 
     &-close
-      background-image url(/public/icon/close.png)
+      background-image url(/assets/mirrormedia/icon/close.png)
       background-size contain
       // display block
       position absolute
@@ -515,7 +524,7 @@ export default {
         margin-top 3em
 
         .tags_icon 
-          background-image url(/public/icon/sprite@3x.png)
+          background-image url(/assets/mirrormedia/icon/sprite@3x.png)
           background-position -733px -741px
           background-repeat no-repeat
           background-size 866px 862px
@@ -701,7 +710,7 @@ export default {
         margin 3em 0
 
         i 
-          background-image url(/public/icon/quote.png)
+          background-image url(/assets/mirrormedia/icon/quote.png)
           width 45px
           height 45px
           background-repeat no-repeat
@@ -762,7 +771,11 @@ export default {
             font-size 25px
             margin-bottom 15px
           
-          .info-box-body 
+          .info-box-body
+            ol
+              list-style decimal
+            ul
+              list-style disc 
             p, li 
               color rgba(0, 0, 0, 0.64)
               font-size 16px
@@ -795,7 +808,7 @@ export default {
         letter-spacing 0.3px
         color rgba(0, 0, 0, 0.701961)
         padding-left 45px
-        text-indent -26px
+        // text-indent -26px 
         margin-left 16px
         list-style none
 

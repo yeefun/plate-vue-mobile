@@ -10,7 +10,7 @@ const _host = getHost()
 
 function _buildQuery (params = {}) {
   let query = {}
-  const whitelist = [ 'where', 'embedded', 'max_results', 'page', 'sort', 'related', 'clean', 'clientInfo', 'id' ]
+  const whitelist = [ 'where', 'embedded', 'max_results', 'page', 'sort', 'related', 'clean', 'clientInfo', 'id', 'keyword', 'offset' ]
   whitelist.forEach((ele) => {
     if (params.hasOwnProperty(ele)) {
       if (ele === 'where' || ele === 'embedded') {
@@ -77,17 +77,17 @@ function loadArticles (params = {}, preview) {
   return _doFetch(url)
 }
 
-function loadArticlesGroupedList (params = {}) {
+function loadArticlesGroupedList () {
   const apiHost = `${_host}/api/grouped`
   return _doFetch(apiHost)
 }
 
-function loadArticlesPopList (params = {}) {
+function loadArticlesPopList () {
   const url = `${_host}/api/poplist`
   return _doFetch(url)
 }
 
-function loadArticlesByUuid (uuid = '', type = '', params = {}, isOnlyMeta = true) {
+function loadArticlesByUuid (uuid = '', type = '', params = {}) {
   switch (type) {
     case SECTION:
       params = _setupWhereInParam('sections', [ uuid ], params)
@@ -155,15 +155,9 @@ function loadEvent (params = {}) {
 }
 
 function loadExternals (params = {}) {
-  params.sort = params.sort
   const query = _buildQuery(params)
   let url = `${_host}/api/externals`
   url = `${url}?${query}`
-  return _doFetch(url)
-}
-
-function loadHotWatch (params = {}) {
-  const url = `${_host}/api/hotwatches`
   return _doFetch(url)
 }
 
@@ -191,6 +185,13 @@ function loadImages (uuid = '', type = '', params = {}) {
   return _doFetch(url)
 }
 
+function loadImagesById (params = {}) {
+  const query = _buildQuery(params)
+  let url = `${_host}/api/images`
+  url = `${url}?${query}`
+  return _doFetch(url)
+}
+
 function loadImage (uuid = '') {
   const url = `${_host}/api/images/${uuid}`
   return _doFetch(url)
@@ -203,9 +204,38 @@ function loadLatestArticle (params = {}) {
   return _doFetch(url)
 }
 
+function loadLatestNewsFromJson () {
+  const url = `${_host}/api/latestNews`
+  return _doFetch(url)
+}
+
 function loadNodes (params = {}) {
   const query = _buildQuery(params)
   let url = `${_host}/api/nodes`
+  url = `${url}?${query}`
+  return _doFetch(url)
+}
+
+function loadOathPlaylist ({ id, params }) {
+  let url = `${_host}/api/playlistng/${id}`
+  if (params) {
+    const query = _buildQuery(params)
+    url = `${url}?${query}`
+  }
+  return _doFetch(url)
+}
+
+
+function loadOathVideo ({ id, params }) {
+  const query = _buildQuery(params)
+  let url = `${_host}/api/video/${id}`
+  url = `${url}?${query}`
+  return _doFetch(url)
+}
+
+function loadOathVideoByPlaylist ({ id, params }) {
+  const query = _buildQuery(params)
+  let url = `${_host}/api/video/playlist/${id}`
   url = `${url}?${query}`
   return _doFetch(url)
 }
@@ -217,14 +247,10 @@ function loadPartners (params = {}) {
   return _doFetch(url)
 }
 
-function loadQuestionnaire (id) {
-  const apiHost = `${_host}/api/questionnaire?file=${id}/${id}.json`
-  return _doFetch(apiHost)
-}
-
-function loadSearch (keyword = '', params = {}) {
+function loadSearch (params = {}) {
+  const query = _buildQuery(params)
   let url = `${_host}/api/search`
-  url = `${url}?query=${encodeURIComponent(`"${keyword}"`)}&hitsPerPage=${params.max_results}&page=${params.page - 1}`
+  url = `${url}?${query}`
   return _doFetch(url)
 }
 
@@ -317,10 +343,6 @@ export function fetchExternals (params = {}) {
   return loadExternals(params)
 }
 
-export function fetchHotWatch (params = {}) {
-  return loadHotWatch(params)
-}
-
 export function fetchImage (uuid = '') {
   return loadImage(uuid)
 }
@@ -329,16 +351,32 @@ export function fetchImages (uuid = '', type = '', params = {}) {
   return loadImages(uuid, type, params)
 }
 
+export function fetchImagesById (params = {}) {
+  return loadImagesById(params)
+}
+
 export function fetchLatestArticle (params = {}) {
   return loadLatestArticle(params)
+}
+
+export function fetchLatestNewsFromJson () {
+  return loadLatestNewsFromJson()
 }
 
 export function fetchNodes (params = {}) {
   return loadNodes(params)
 }
 
-export function fetchQuestionnaire (id) {
-  return loadQuestionnaire(id)
+export function fetchOathPlaylist ({ id = '', params }) {
+  return loadOathPlaylist({ id, params })
+}
+
+export function fetchOathVideo ({ id = '', params = {} }) {
+  return loadOathVideo({ id, params })
+}
+
+export function fetchOathVideoByPlaylist ({ id = '', params = {} }) {
+  return loadOathVideoByPlaylist({ id, params })
 }
 
 export function fetchPartners (params = {}) {
@@ -349,8 +387,8 @@ export function fetchRecommendList (params = {}) {
   return loadData(params, 'related_news')
 }
 
-export function fetchSearch (keyword = '', params = {}) {
-  return loadSearch(keyword, params)
+export function fetchSearch (params = {}) {
+  return loadSearch(params)
 }
 
 export function fetchSectionList () {
@@ -367,18 +405,6 @@ export function fetchTimeline (slug = '') {
 
 export function fetchTopic (params = {}) {
   return loadTopic(params)
-}
-
-export function fetchWatch (params = {}) {
-  return loadData(params, 'watches')
-}
-
-export function fetchWatchBrands (params = {}) {
-  return loadData(params, 'watchbrands')
-}
-
-export function fetchWatchFunctions (params) {
-  return loadData(params, 'watchfunctions')
 }
 
 export function fetchYoutubePlaylist (limit = {}, pageToken = '') {

@@ -8,15 +8,28 @@
       </div>
       <article class="article">
         <div class="article__info">
-          <div class="article__info--section">校園</div>
+          <div class="article__info--section">健康醫療</div>
           <div class="article__info--date" v-text="date"></div>
         </div>
         <h1 v-text="title"></h1>
-        <div v-if="credit" class="article__credit">文｜<span v-text="credit"></span></div>
+        <div v-if="credit" class="article__credit">文｜<span v-html="credit"></span></div>
         <main>
           <section class="article__main">
             <p class="article__main--brief" v-text="brief"></p>
-            <div class="article__main--content" v-html="content"></div>
+            <template v-if="contentWithHtmlTag">
+              <div class="article__main--content" v-html="content" id="article-body-content">
+              </div>
+            </template>
+            <template v-else>
+              <div class="article__main--content" id="article-body-content">
+                <template v-for="(p, index) in content">
+                  <p :key="`content-${index}`" v-html="p"></p>
+                  <slot v-if="index === 1" name="dfp-AT1"></slot>
+                  <slot v-if="index === 4" name="dfp-AT2"></slot>
+                </template>
+              </div>
+            </template>
+            <p v-if="source" class="article__main--ref">【<strong>本文經</strong><span v-text="partner"></span><strong>授權轉載</strong><a :href="source" target="_blank">看原文</a>】</p>
             <newsletter></newsletter>
             <p>更多內容，歡迎<a :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a></p>
             <div class="article__main--fbPage">
@@ -30,9 +43,9 @@
               <div id="herbsapi" hb-width="100" hb-height="auto" hb-icon="https://mediafarmers.org/api/images/icon_2.png"></div>
               <div>喜歡這篇文章嗎？<br>歡迎灌溉支持喔！</div>
             </div>
-            <slot name="recommendList"></slot>
             <slot name="dfp-MBE1"></slot>
             <slot name="dfp-PCE1E2"></slot>
+            <slot name="recommendList"></slot>
             <slot name="popularList"></slot>
             <slot name="projectList"></slot>
             <slot name="fbComment"></slot>
@@ -40,18 +53,10 @@
           <section class="article__aside">
             <slot name="dfp-PCR1"></slot>
             <slot name="latestList"></slot>
-            <slot v-if="abIndicator === 'A'" name="dfp-PCR2"></slot>
-            <div v-if="abIndicator === 'A'" class="article__aside--fbPage">
-              <div class="fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-adapt-container-width="true" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
-                <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
-                  <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
-                </blockquote>
-              </div>
-            </div>
             <slot name="articleAsideFixed"></slot>
           </section>
-          <slot name="footer"></slot>
         </main>
+        <slot name="footer"></slot>
       </article>
     </div>
   </section>
@@ -69,10 +74,6 @@
       'newsletter': Newsletter
     },
     props: {
-      abIndicator: {
-        type: String,
-        default: 'A'
-      },
       articleData: {
         type: Object,
         required: true
@@ -83,12 +84,15 @@
         return _.get(this.articleData, [ 'brief' ])
       },
       content () {
-        const orig = _.get(this.articleData, [ 'content' ])
-        if (orig.includes('<p>')) {
+        const orig = _.get(this.articleData, 'content')
+        if (this.contentWithHtmlTag) {
           return orig
         }
-        const addTagContent = _.join(_.map(_.split(orig, `\r\n\r\n`), p => `<p>${p}</p>`), '')
-        return addTagContent
+        return _.split(orig, `\r\n\r\n`)
+      },
+      contentWithHtmlTag () {
+        const orig = _.get(this.articleData, 'content')
+        return orig.includes('<p>')
       },
       credit () {
         const author = _.uniq(_.split(_.get(this.articleData, [ 'extendByline' ]), ','))
@@ -107,13 +111,19 @@
         }
         return
       },
+      partner () {
+        return _.get(this.articleData, [ 'partner', 'display' ])
+      },
       socialLink () {
         return SOCIAL_LINK
+      },
+      source () {
+        return _.get(this.articleData, [ 'source' ])
       },
       title () {
         return _.get(this.articleData, [ 'title' ])
       }
-    }
+    },
   }
 </script>
 
@@ -155,6 +165,7 @@
         font-weight normal
     &__main
       margin-top 30px
+      line-height 36px
       a, a:hover, a:link, a:visited
         padding-bottom 5px
         color #3195b3
@@ -189,6 +200,16 @@
             font-size 15px
             line-height 1.7
             letter-spacing 0.3px
+      &--ref
+        font-size 18px
+        font-weight 700
+        strong
+          color #FF0000
+        a, a:hover, a:link, a:visited
+          padding 0
+          margin-left .8em
+          color #171717
+          border none
       &--fbPage
         width 100%
         margin-top 15px

@@ -143,15 +143,53 @@
     
     .swiper-button
       display none
-      
+      width 30px
+      height 40px
+      margin-top -50px
+      background-color #f5f5f5
+      background-size 15px auto
+      background-position 45% 50%
+      background-repeat no-repeat
+      border-radius 4px
+
+      &:hover
+        background-color #064f77
+        &.swiper-button-prev
+          background-image url(/assets/mirrormedia/icon/arrow-slideshow-white-left.png)
+        &.swiper-button-next
+          background-image url(/assets/mirrormedia/icon/arrow-slideshow-white-right.png)
+
       &.enabled
         display block
       
     
     .swiper-button-prev
-      background-image url(/public/icon/arrow1-2017.png)
+      left 5px
+      background-image url(/assets/mirrormedia/icon/arrow-slideshow-blue-left.png)
+    //   background-image url(/assets/mirrormedia/icon/arrow1-2017.png)
     
     .swiper-button-next
-      background-image url(/public/icon/arrow2-2017.png)
-  
+      right 5px
+      background-image url(/assets/mirrormedia/icon/arrow-slideshow-blue-right.png)
+    //   background-image url(/assets/mirrormedia/icon/arrow2-2017.png)
+
+@media (min-width 900px)
+  .swiper-container
+    .swiper-button-prev
+      left 20px
+    .swiper-button-next
+      right 20px
+
+@media (min-width 1200px)
+  .swiper-container
+    .swiper-button
+      width 60px
+      height 80px
+      margin-top -60px
+      background-size 28px auto
+    .swiper-button-prev
+      left 0
+    .swiper-button-next
+      right 0
+
 </style>

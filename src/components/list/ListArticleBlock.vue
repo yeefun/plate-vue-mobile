@@ -3,7 +3,7 @@
     <template v-if="articleType === 'campaign' || articleType === 'projects' || articleType === 'readr'">
       <figure class="listArticleBlock__figure">
         <a :href="getHrefFull(article)" :id="`latest-${getValue(article, [ 'slug' ])}-img`" target="_blank">
-          <img v-lazy="getImage(article)" :alt="getValue(article, [ 'title' ])" />
+          <LazyImage :src="getImage(article, 'mobile')" :caption="getValue(article, [ 'title' ])" />
         </a>
         <div class="listArticleBlock__figure--colorBlock" :style="{ backgroundColor: sectionColor }" v-text="colorBlockTitle" />
       </figure>
@@ -26,11 +26,11 @@
     </template>
     <template v-else-if="articleType === 'audio'">
       <figure class="listArticleBlock__figure">
-        <img v-lazy="getValue(article, [ 'coverPhoto', 'image', 'resizedTargets', 'mobile', 'url' ], '/public/notImage.png')" :alt="getValue(article, [ 'title' ])" />
+        <img v-lazy="getValue(article, [ 'coverPhoto', 'image', 'resizedTargets', 'mobile', 'url' ], '/assets/mirrormedia/notImage.png')" :alt="getValue(article, [ 'title' ])" />
         <div class="listArticleBlock__figure--audioControl">
-          <img v-lazy="`/public/icon/play-btn@2x.png`" @click="audioPlay()" v-show="!isPlaying && !isEnded" />
-          <img v-lazy="`/public/icon/pause-btn@2x.png`" @click="audioPause()" v-show="isPlaying && !isEnded" />
-          <img v-lazy="`/public/icon/replay-btn@2x.png`" @click="audioReplay()" v-show="isEnded" />
+          <img v-lazy="`/assets/mirrormedia/icon/play-btn@2x.png`" @click="audioPlay()" v-show="!isPlaying && !isEnded" />
+          <img v-lazy="`/assets/mirrormedia/icon/pause-btn@2x.png`" @click="audioPause()" v-show="isPlaying && !isEnded" />
+          <img v-lazy="`/assets/mirrormedia/icon/replay-btn@2x.png`" @click="audioReplay()" v-show="isEnded" />
         </div>
         <div class="listArticleBlock__figure--colorBlock" :style="{ backgroundColor: sectionColor }">Audio</div>
       </figure>
@@ -50,7 +50,7 @@
     <template v-else-if="articleType === 'topic'">
       <figure class="listArticleBlock__figure">
         <router-link :to="`/topic/${getValue(article, [ 'id' ])}`" :id="`latest-${getValue(article, [ 'id' ])}-img`" target="_blank">
-          <img v-lazy="getImage(article)" :alt="getValue(article, [ 'name' ])" />
+          <LazyImage :src="getImage(article, 'mobile')" :caption="getValue(article, [ 'name' ])" />
         </router-link>
       </figure>
       <div class="listArticleBlock__content">
@@ -61,11 +61,12 @@
     <template v-else>
       <figure class="listArticleBlock__figure">
         <router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'slug' ])}-img`" target="_blank">
-          <img v-lazy="getImage(article)" :alt="getValue(article, [ 'title' ])" />
+          <LazyImage :src="getImage(article, 'mobile')" :caption="getValue(article, [ 'title' ])" />
         </router-link>
         <div class="listArticleBlock__figure--colorBlock" :style="{ backgroundColor: sectionColor }" v-text="colorBlockTitle" />
       </figure>
       <div class="listArticleBlock__content">
+        <div class="listArticleBlock__content--colorBlock" :style="{ backgroundColor: sectionColor }" v-text="colorBlockTitle" />
         <h2><router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'slug' ])}-title`" target="_blank" v-text="getValue(article, [ 'title' ])"></router-link></h2>
         <p><router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'slug' ])}-descr`" target="_blank" v-text="getBrief(article, 45)"></router-link></p>
       </div>
@@ -75,9 +76,10 @@
 
 <script>
 
-import { SECTION_MAP } from '../../constants'
+import { SECTION_MAP, MARKETING_CATGORY_ID, } from '../../constants'
 import { getBrief, getHref, getHrefFull, getImage, getTruncatedVal, getValue } from '../../util/comm'
 import _ from 'lodash'
+import LazyImage from 'src/components/common/LazyImage.vue'
 import moment from 'moment'
 
 export default {
@@ -90,6 +92,9 @@ export default {
       isPlaying: false,
       progress: 0
     }
+  },
+  components: {
+    LazyImage,
   },
   computed: {
     article () {
@@ -111,7 +116,11 @@ export default {
       if (this.initialArticle.sections && _.get(this.initialArticle, [ 'sections', 'length' ], 0) > 0) {
         return _.get(this.initialArticle, [ 'sections', '0', 'title' ])
       } else {
-        return _.get(this.initialArticle, [ 'categories', '0', 'title' ])
+        const categoriesLen = _.get(this.initialArticle, 'categories.length', 0)
+        const categoryFirst =  _.get(this.initialArticle, 'categories.0.id')
+        return categoryFirst === MARKETING_CATGORY_ID && categoriesLen > 1
+          ?  _.get(this.initialArticle, 'categories.1.title')
+          :  _.get(this.initialArticle, 'categories.0.title')
       }
     },
     duration () {
@@ -196,11 +205,11 @@ export default {
 
 .listArticleBlock
   width 100%
-  margin-bottom 40px
   background-color #fff
   box-shadow 5px 5px 5px #bcbcbc
   transition all .3s ease-in-out
-  
+  & + .listArticleBlock
+    margin-top 40px
   &__figure
     position relative
     width 100%
@@ -258,6 +267,8 @@ export default {
       line-height 1.5
       a
         color #999
+    &--colorBlock
+      display none
   &__audio
     p
       text-align right
@@ -274,6 +285,8 @@ export default {
   .listArticleBlock
     width calc( (100% - 40px) / 2 )
     margin 0 10px 40px
+    & + .listArticleBlock
+      margin-top 0
     &:hover
       transform translateY(-20px)
       box-shadow 5px 15px 5px #bcbcbc
@@ -288,5 +301,5 @@ export default {
 @media (min-width: 1200px)
   .listArticleBlock
     width calc( (100% - 60px) / 3 )
-
+    
 </style>

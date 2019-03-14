@@ -4,18 +4,18 @@
     <section class="headerContainer">
       <div id="menubar" class="headerContainer__menu" @click="$_header_openSideBar"></div>
       <div class="headerContainer__logo">
-        <router-link id="header-logo" class="headerContainer__logo--orig" :to="'/'"><img src="/public/logo.svg" alt="鏡週刊 Mirror Media"></router-link>
+        <router-link id="header-logo" class="headerContainer__logo--orig" :to="'/'"><img src="/assets/mirrormedia/logo.svg" alt="鏡週刊 Mirror Media"></router-link>
         <a v-show="logoEventImg && !showDfpHeaderLogo" class="headerContainer__logo--event" :href="logoEventHref" target="_blank"><img :src="logoEventImg"></a>
-        <vue-dfp ref="logoDfp" class="headerContainer__logo--dfp" :is="props.vueDfp" pos="LOGO" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" :config="props.config"/>
+        <vue-dfp :is="props.vueDfp" v-if="props" ref="logoDfp" class="headerContainer__logo--dfp"  pos="LOGO" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" :config="props.config"/>
       </div>
-      <div class="headerContainer__search--mobile" @click="$_header_openSearchBar"><img src="/public/icon/search.svg" alt="開啟搜尋列"></div>
+      <div class="headerContainer__search--mobile" @click="$_header_openSearchBar"><img src="/assets/mirrormedia/icon/search.svg" alt="開啟搜尋列"></div>
       <div class="headerContainer__search--desktop">
         <input type="search" v-model="searchVal" @input="$_header_searchValueChange" @keyup.enter="$_header_searchDesktop(searchVal)" placeholder="">
         <button @click="$_header_searchDesktop(searchVal)">
-          <img class="" src="/public/icon/search.svg" alt="搜尋"/>
+          <img class="" src="/assets/mirrormedia/icon/search.svg" alt="搜尋"/>
         </button>
         <div class="headerContainer__more" @click.prevent="$_header_openMoreService">
-          <img src="/public/icon/more_grey@2x.png" alt="更多">
+          <img src="/assets/mirrormedia/icon/more_grey@2x.png" alt="更多">
           <div ref="moreServiceList">
             <a class="headerContainer__more--item" :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a>
             <a class="headerContainer__more--item" :href="socialLink.MAGAZINE" target="_blank">訂閱電子雜誌</a>
@@ -31,16 +31,16 @@
     <nav class="header-menu--section">
       <div class="header-menu">
         <template v-for="item in sections">
-          <div v-if="item.categories.length !== 0" class="header-menu__item dropdown" :class="item.name" :style="{ width: `calc( 100% / ${headerAmount + 1} )`, borderTopColor: $_header_getColor(item) }">
+          <div v-if="item.categories.length !== 0" :key="`menu-${item.name}`" class="header-menu__item dropdown" :class="item.name" :style="{ width: `calc( 100% / ${headerAmount + 1} )`, borderTopColor: $_header_getColor(item) }">
             <router-link :id="`header-${item.id}-menu`" :to="`/section/${item.name}`" v-text="item.title"></router-link>
             <div class="dropdown-content" :class="item.name">
               <router-link :to="`/category/${c.name}`" :id="`header-${c.id}-menu`" v-for="(c, i) in item.categories" v-text="c.title" :key="`${item.id}-menu-${i}`" />
             </div>
           </div>
-          <router-link v-if="item.categories.length === 0" :to="`/section/${item.name}`" class="header-menu__item" :class="item.name" v-text="item.title" :style="{ width: `calc( 100% / ${headerAmount + 1} )`, borderTopColor: $_header_getColor(item) }"></router-link>
+          <router-link v-else :key="`menu-${item.name}`" :to="`/section/${item.name}`" class="header-menu__item" :class="item.name" v-text="item.title" :style="{ width: `calc( 100% / ${headerAmount + 1} )`, borderTopColor: $_header_getColor(item) }"></router-link>
         </template>
         <div class="header-menu__item dropdown external" :style="{ width: `calc( 100% / ${headerAmount + 1} )` }">
-          <a>校園</a>
+          <a>健康醫療</a>
           <div class="dropdown-content external">
             <router-link v-for="p in partners" :id="`header-${p.id}-menu`" :key="`${p.id}-menu`" :to="`/externals/${p.name}`" v-text="getValue(p, [ 'display' ])"></router-link>
           </div>
@@ -54,18 +54,24 @@
           <router-link :to="`/topic/${getValue(item, [ 'id' ])}`" :id="`header-${item.id}-menu`" v-for="(item, i) in topics" v-text="item.name" :key="`${item.id}-menu`" />
           <router-link to="/section/topic">更多</router-link>
         </div>
-        <a href="https://www.mirrorfiction.com/" id="header-mirrorfiction-menu" class="header-menu__item mirrorfiction" target="_blank" :style="{ width: `calc( 100% / ${headerAmount} )` }">
-          <img src="/public/icon/mirrorfiction.png" alt="鏡文學"/>
-        </a>
+        <div class="header-menu-wrapper">
+          <a href="https://www.mirrorfiction.com/" id="header-mirrorfiction-menu" class="header-menu__item mirrorfiction" target="_blank" :style="{ width: `calc( 100% / ${headerAmount} )` }">
+            <img src="/assets/mirrormedia/icon/mirrorfiction.png" alt="鏡文學"/>
+          </a>
+          <a href="https://www.readr.tw/" id="header-readr-menu" class="header-menu__item readr" target="_blank" :style="{ width: `calc( 100% / ${headerAmount} )` }">
+            <img src="/assets/mirrormedia/icon/readrlogo-gary.png" :alt="$t('HEADER.READR')"/>
+          </a>
+        </div>
       </div>
     </nav>
 
     <nav class="header-sidebar" :class="{ open: openSide }">
       <div class="header-sidebar__close">
-        <img @click="$_header_closeSideBar" src="/public/icon/close_white@2x.png" alt="關閉側邊欄" >
+        <img @click="$_header_closeSideBar" src="/assets/mirrormedia/icon/close_white@2x.png" alt="關閉側邊欄" >
       </div>
       <div class="header-sidebar__topic">
         <a :href="`/topic/${getValue(item, [ 'id' ])}`" :id="`header-${item.id}-sidebar`" v-for="(item, i) in topics" v-text="item.name" :key="`${item.id}-sidebar-${i}`"></a>
+        <a href="/section/topic">更多</a>
       </div>
       <div class="header-sidebar__sections">
         <div class="header-sidebar__section" v-for="(item, i) in sections" :style="{ borderLeftColor: $_header_getColor(item) }" :key="`${item.id}-sidebar-${i}`">
@@ -75,13 +81,16 @@
           </div>
         </div>
         <div class="header-sidebar__section external">
-          <a>校園</a>
+          <a>健康醫療</a>
           <div class="header-sidebar__categories">
-            <a v-for="p in partners" :id="`header-${p.id}-sidebar`" :key="`${p.id}-sidebar`" :to="`/externals/${p.name}`" v-text="getValue(p, [ 'display' ])"></a>
+            <a v-for="p in partners" :id="`header-${p.id}-sidebar`" :key="`${p.id}-sidebar`" :href="`/externals/${p.name}`" v-text="getValue(p, [ 'display' ])"></a>
           </div>
         </div>
         <div class="header-sidebar__section mirrorfiction">
           <a href="https://www.mirrorfiction.com/" id="header-mirrorfiction-sidebar" target="_blank">鏡文學</a>
+        </div>
+        <div class="header-sidebar__section readr">
+          <a href="https://www.readr.tw/" id="header-readr-sidebar" target="_blank" v-text="$t('HEADER.READR')"></a>
         </div>
       </div>
       <div class="header-sidebar__other">
@@ -93,12 +102,12 @@
         <a :href="socialLink.DOWNLOADAPP" target="_blank">下載APP</a>
       </div>
       <div class="header-sidebar__socialMedia">
-        <a id="footer-line-sidebar" :href="socialLink.LINE" target="_blank"><img class="sprite sprite-line" src="/public/transperent.png" alt="Line"></a>
-        <a id="footer-weibo-sidebar" :href="socialLink.WEIBO" target="_blank"><img class="sprite sprite-weibo" src="/public/transperent.png" alt="微博"></a>
-        <a id="footer-fb-sidebar" :href="socialLink.FACEBOOK" target="_blank"><img class="sprite sprite-facebook" src="/public/transperent.png" alt="Facebook"></a>
-        <a id="footer-ig-sidebar" :href="socialLink.INSTAGRAM" target="_blank"><img class="sprite sprite-instagram" src="/public/transperent.png" alt="Instagram"></a>
-        <a id="footer-feed-sidebar" :href="socialLink.FEED" target="_blank"><img class="sprite sprite-rss" src="/public/transperent.png" alt="RSS"></a>
-        <a id="footer-mail-sidebar" :href="socialLink.EMAIL" target="_blank"><img class="sprite sprite-mail" src="/public/transperent.png" alt="Email"></a>
+        <a id="footer-line-sidebar" :href="socialLink.LINE" target="_blank"><img class="sprite sprite-line" src="/assets/mirrormedia/transperent.png" alt="Line"></a>
+        <a id="footer-weibo-sidebar" :href="socialLink.WEIBO" target="_blank"><img class="sprite sprite-weibo" src="/assets/mirrormedia/transperent.png" alt="微博"></a>
+        <a id="footer-fb-sidebar" :href="socialLink.FACEBOOK" target="_blank"><img class="sprite sprite-facebook" src="/assets/mirrormedia/transperent.png" alt="Facebook"></a>
+        <a id="footer-ig-sidebar" :href="socialLink.INSTAGRAM" target="_blank"><img class="sprite sprite-instagram" src="/assets/mirrormedia/transperent.png" alt="Instagram"></a>
+        <a id="footer-feed-sidebar" :href="socialLink.FEED" target="_blank"><img class="sprite sprite-rss" src="/assets/mirrormedia/transperent.png" alt="RSS"></a>
+        <a id="footer-mail-sidebar" :href="socialLink.EMAIL" target="_blank"><img class="sprite sprite-mail" src="/assets/mirrormedia/transperent.png" alt="Email"></a>
       </div>
     </nav>
 
@@ -106,13 +115,13 @@
       <form action="." v-on:submit.prevent="$_header_searchMobile(searchVal)" >
         <input type="search" v-model="searchVal" @input="$_header_searchValueChange" @focusout="$_header_searchMobile(searchVal)" placeholder="搜尋">
       </form>
-      <a @click="$_header_closeSearchBar"><img src="/public/icon/close.png" alt="關閉搜尋列"></a>
+      <a @click="$_header_closeSearchBar"><img src="/assets/mirrormedia/icon/close.png" alt="關閉搜尋列"></a>
     </section>
     <section class="header-scrolled mobile-only" v-show="isScrolled">
-      <a @click="$_header_openSideBar"><img src="/public/icon/hamburger@2x.png" alt="開啟側邊欄"></a>
+      <a @click="$_header_openSideBar"><img src="/assets/mirrormedia/icon/hamburger@2x.png" alt="開啟側邊欄"></a>
       <div>
-        <a href="/"><img src="/public/icon/logo@2x.png" alt="鏡週刊 Mirror Media"></a>
-        <a @click="$_header_openSearchBar"><img src="/public/icon/search.svg" alt="開啟搜尋列"></a>
+        <a href="/"><img src="/assets/mirrormedia/icon/logo@2x.png" alt="鏡週刊 Mirror Media"></a>
+        <a @click="$_header_openSearchBar"><img src="/assets/mirrormedia/icon/search.svg" alt="開啟搜尋列"></a>
       </div>
     </section>
   </header>
@@ -256,7 +265,7 @@ export default {
         return false
       }
     },
-    $_header_searchDesktop (searchVal = '') {
+    $_header_searchDesktop () {
       if (this.isChanged) {
         this.$router.push('/search/' + this.searchVal)
         this.openSearch = false
@@ -264,7 +273,7 @@ export default {
         this.openSearch = false
       }
     },
-    $_header_searchMobile (searchVal = '') {
+    $_header_searchMobile () {
       if (this.isChanged) {
         document.activeElement.blur()
         this.$router.push('/search/' + this.searchVal)
@@ -299,9 +308,10 @@ $color-international = #911f27
 $color-foodtravel = #eac151
 $color-mafalda = #662d8e
 $color-culture = #009245
-$color-watch = #c1d16e
+$color-watch = #003153
 $color-external = #ee5a24
 $color-mirrorfiction = #968375
+$color-readr = #968375
 
 .header
   width 100%
@@ -325,6 +335,14 @@ $color-mirrorfiction = #968375
       &.external
         border-color $color-external
       &.mirrorfiction
+        padding 9.5px 0
+        font-size 0
+        line-height 1
+        border none
+        img
+          width auto
+          height 30px
+      &.readr
         padding 9.5px 0
         font-size 0
         line-height 1
@@ -392,7 +410,7 @@ $color-mirrorfiction = #968375
     display inline-block
     width 34px
     height 34px
-    background-image url('/public/icon/hamburger@2x.png')
+    background-image url('/assets/mirrormedia/icon/hamburger@2x.png')
     background-repeat no-repeat
     background-size 24px 24px
     background-position center center
@@ -454,6 +472,11 @@ $color-mirrorfiction = #968375
       background-color $color-external
     &.mirrorfiction
       background-color $color-mirrorfiction
+    &.readr
+      background-color $color-readr
+  &-wrapper
+    display flex
+
   &__item
     &.dropdown
       position relative
@@ -515,6 +538,9 @@ $color-mirrorfiction = #968375
   &.mirrorfiction
     a:hover
       color $color-mirrorfiction
+  &.readr
+    a:hover
+      color $color-readr
 
 .header-sidebar
   position fixed
@@ -600,7 +626,7 @@ $color-mirrorfiction = #968375
     padding 0 .5em
 
 .sprite
-  background-image url('/public/icon/socialMedia_white@2x.png')
+  background-image url('/assets/mirrormedia/icon/socialMedia_white@2x.png')
   background-repeat no-repeat
   background-size 126px 120px
   display block
@@ -632,5 +658,120 @@ $color-mirrorfiction = #968375
 @media (min-width: 600px)
   .headerContainer
     width calc(100% - 4em)
+
+@media (min-width: 1200px)
+  .header
+    &-menu
+      display flex
+      flex-wrap wrap
+      justify-content center
+      width 1024px
+      margin 0 auto
+      > a
+        text-align center
+        color #fff
+        line-height 43px
+        font-size 1rem
+      &--section
+        display flex
+        background-color #064f77
+        a
+          color #fff
+      &--topic
+        display flex
+        justify-content space-between
+        position relative
+        background-color #fff
+        box-shadow 0 0 5px 0 #ccc
+        a
+          min-width 90px
+          font-size 1rem
+          text-align center
+          color rgba(0,0,0,.5)
+          line-height 46px
+        > div
+          display flex
+          justify-content space-between
+          width 1024px
+          margin 0 auto
+        .header-menu
+          width auto
+          margin 0
+          > a
+            padding 0 .5em
+            color rgba(0,0,0,.5)
+            border-bottom 3px solid #000
+            &:hover
+              background-color #000
+              color #fff
+            &:last-of-type
+              border none
+    &-sidebar
+      display none
+  .headerContainer
+    width 1024px
+    padding 10px 0
+    &__menu
+      display none
+    &__logo
+      max-width none
+      &--orig
+        > img
+          max-width none
+      &--event
+        > img
+          max-width none
+          max-height 50px
+    &__search
+      &--mobile
+        display none
+      &--desktop
+        display flex
+        align-items center
+        input
+          float left
+          width 200px
+          height 35px
+          margin 0
+          padding 0 10px
+          text-align right
+          border 1px solid rgb(238, 238, 238)
+          border-radius 2px
+          border-right none
+        button
+          height 35px
+          padding 0
+          margin 0
+          background-color #fff
+          border 1px solid rgb(238, 238, 238)
+          border-radius 2px
+          border-left none
+    &__more
+      display flex
+      justify-content center
+      align-items center
+      position relative
+      width 20px
+      height 35px
+      margin-left 10px
+      cursor pointer
+      img
+        height 20px
+      > div
+        display none
+        flex-direction column
+        position absolute
+        top 0
+        left 0
+        z-index 10
+        width 130px
+        background-color #fff
+        border 1px solid #eee
+        &.active
+          display flex
+        a
+          padding .5em 1em
+          font-size 1rem
+          text-align center
 
 </style>

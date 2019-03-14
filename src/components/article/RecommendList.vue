@@ -1,280 +1,201 @@
 <template>
-  <div class="recommend-main-container">
-    <div class="recommend-list" v-if="(recommendList.length > 0)">
-      <template v-for="(articles, index) in recommendArticleArr">
-        <div class="recommend-list_item" v-for="(o, i) in recommendArticleArr[ index ]" v-if="i < 9">
-          <router-link :to="'/story/' + getValue(o, [ 'slug' ])" :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}-1`">
-            <div class="recommend-list_item_img">
-              <lazy-component>
-                <img :alt="getTruncatedVal(o.title, 22)" :src="getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '')">
-              </lazy-component>
+  <div class="related-list">
+    <div v-if="!(filteredRecommends.length < 1)" class="related-list__list" :style="containerStyle()">
+      <div class="related-list__list__title"><h4 :style="titleStyle()">相關文章</h4></div>
+      <template v-if="!isAd">
+        <template v-for="o in filteredRecommends">
+          <div v-if="o" class="related-list__list__item">
+            <div class="title">
+              <router-link @click.native="recommendsClickHandler(getValue(o, [ 'slug' ]), $event)" :to="routerLinkUrl(o)" v-text="getValue(o, [ 'title' ], '')" :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}`" v-if="shouldShowItem(o)"></router-link>
+              <a @click="recommendsClickHandler(getValue(o, [ 'slug' ]), $event)" :href="getHrefFull(o)" v-text="getValue(o, [ 'title' ], '')" :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}`" v-else></a>
             </div>
-          </router-link>
-          <div class="recommend-list_item_title">
-            <div class="recommend-list_item_label" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
-            <router-link :to="'/story/' + getValue(o, [ 'slug' ])" :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}-2`" :target="target">
-              <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
-            </router-link>
           </div>
-        </div>
+        </template>
       </template>
     </div>
   </div>
 </template>
 <script>
-import _ from 'lodash'
-import { SECTION_MAP, SITE_DOMAIN } from '../../constants'
-import { getHref, getTruncatedVal, getValue } from '../../util/comm'
+  import _ from 'lodash'
+  import { SECTION_MAP, RELATED_LIST_MAX, RECOMM_HITORY_MAX_IN_LOCALSTORAGE } from '../../constants'
+  import { extractSlugFromreferrer, getHref, getHrefFull, getValue } from '../../util/comm'
+  import Deque from 'double-ended-queue'
+  import HashTable from 'jshashtable'
 
-export default {
-  name: 'recommend-list-main',
-  computed: {
-    currUrl () {
-      return this.$route.fullPath
-    },
-    recommendArticleArr () {
-      const origRecommendList = _.map(this.recommendList, (a) => (Object.assign({}, a)))
-      const filteredRecommendList = origRecommendList.length > 9 && (this.referrerSlug !== 'N/A' || this.excludingArticle !== 'N/A')
-        ? _.filter(origRecommendList, (a) => (_.get(a, [ 'slug' ]) !== this.referrerSlug) && (_.get(a, [ 'slug' ]) !== this.excludingArticle))
-        : origRecommendList
-      const excludingArticlesLen = this.excludingArticles.length
-      for (let i = 0; i < excludingArticlesLen; i += 1) {
-        if (filteredRecommendList.length < 9) { return }
-        _.remove(filteredRecommendList, { slug: _.get(this.excludingArticles[ i ], [ 'slug' ]) })
+  const debug = require('debug')('CLIENT:RecommendList')
+  const fetchRecommendList = (store, id) => {
+    debug('id', id)
+    return store.dispatch('FETCH_ARTICLE_RECOMMEND_LIST', {
+      params: {
+        id: id
       }
-      return [ filteredRecommendList ]
-    }
-  },
-  data () {
-    return {
-      currEnv: 'prod',
-      referrerSlug: 'N/A'
-    }
-  },
-  methods: {
-    getHref,
-    getTruncatedVal,
-    getValue,
-    getSectionStyle (sect) {
-      const sectionId = _.get(sect, [ 'id' ])
-      // let device = 'label-width'
-      // if (this.viewport < 600) {
-      //   device = 'label-width-mobile'
-      // } else if (this.viewport > 599 && this.viewport < 1200) {
-      //   device = 'label-width-tablet'
-      // }
+    })
+  }
 
-      const style = {
-        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc')
+  export default {
+    computed: {
+      filteredRecommends () {
+        const dqueue = this.getRecommClickHistory()
+        const excludingArticlesLen = this.relateds.length
+        const recommendListHash = this.recommendsHash
+        if (this.referrerSlug !== 'N/A') { recommendListHash.remove(this.referrerSlug) }
+        if (this.excludingArticle !== 'N/A') { recommendListHash.remove(this.excludingArticle) }
+        for (let i = 0; i < excludingArticlesLen; i += 1) { recommendListHash.remove(_.get(this.relateds[ i ], [ 'slug' ], '')) }
+        dqueue.toArray().map((slug) => { recommendListHash.remove(slug) })
+        debug(recommendListHash.values())
+        return _.take(recommendListHash.values(), RELATED_LIST_MAX - excludingArticlesLen)
+      },
+      recommendsHash () {
+        const hashtable = new HashTable()
+        _.map(this.recommends, (a) => {
+          hashtable.put(_.get(a, [ 'slug' ]), a)
+        })
+        return hashtable
+      },
+    },
+    data () {
+      return {
+        referrerSlug: 'N/A'
       }
-      return style
     },
-    getLabel (article) {
-      const section = _.get(article, [ 'sections', 0, 'title' ], 'ceshi')
-      const category = _.get(article, [ 'categories', 0, 'title' ], 'FASDFF')
-      return (section.length > 0) ? section : category
-    },
-    extracSlugFromreferrer (referrer = '') {
-      const filteredReferrer = referrer.replace(/^https?:\/\//, '').replace(/\?[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]*$/, '')
-      const referrerArr = filteredReferrer.split('/')
-      if ((referrerArr[ 0 ].indexOf(SITE_DOMAIN) > -1 || referrerArr[ 0 ].indexOf('localhost') > -1) && referrerArr[ 1 ] === 'story') {
-        this.referrerSlug = referrerArr[ 2 ]
+    methods: {
+      getHrefFull,
+      getValue,
+      containerStyle () {
+        return { border: `2px solid ${_.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141')}` }
+      },
+      getRecommClickHistory () {
+        const recommsClickHistory = (process.browser) && localStorage.getItem('recommsClickHistory')
+        const dqueue = new Deque(RECOMM_HITORY_MAX_IN_LOCALSTORAGE)
+        recommsClickHistory && dqueue.push(...recommsClickHistory.split(','))
+        return dqueue
+      },
+      routerLinkUrl (article) {
+        return !this.isApp ? getHref(article) : `/app/${getValue(article, [ 'slug' ], '')}`
+      },
+      recommendsClickHandler (slug) {
+        try {
+          const dqueue = this.getRecommClickHistory()
+          debug('Event click detected.', slug)
+          if (dqueue.toArray().length >= RECOMM_HITORY_MAX_IN_LOCALSTORAGE) {
+            dqueue.dequeue()
+          }
+          dqueue.enqueue(slug)
+          setTimeout(() => localStorage.setItem('recommsClickHistory', dqueue.toString()), 1000)
+        } catch (e) {
+          debug(e)
+        }
+      },
+      shouldShowItem (article) {
+        return article.style !== 'projects' && article.style !== 'campaign' && article.style !== 'readr'
+      },
+      titleStyle () {
+        return { color: _.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;') }
       }
-    }
-  },
-  mounted () {
-    this.extracSlugFromreferrer(document.referrer)
-  },
-  props: {
-    excludingArticle: {
-      default: () => ('N/A')
     },
-    excludingArticles: {
-      default: () => ([])
+    beforeMount () {
+      debug('beforeMount')
+      fetchRecommendList(this.$store, this.currArticleId)
     },
-    recommendList: {
-      default: () => ([])
+    mounted () {
+      const customCSS = `.related-list .related-list__list > .related-list__list__title::before { content: ""; border-color: transparent transparent transparent ${_.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
+      const custCss = document.createElement('style')
+      custCss.setAttribute('class', 'relatedBtmStyle')
+      custCss.appendChild(document.createTextNode(customCSS))
+      document.querySelector('body').appendChild(custCss)
+      this.referrerSlug = extractSlugFromreferrer(document.referrer)
     },
-    target: {
-      default: () => ('_self')
+    watch: {
+      currArticleId: function () {
+        debug('currArticleId change detected.')
+        fetchRecommendList(this.$store, this.currArticleId)
+      },
+      sectionId: function () {
+        document.querySelector('.relatedBtmStyle').innerHTML = `.related-list .related-list__list > .related-list__list__title::before { content: ""; border-color: transparent transparent transparent ${_.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
+      },
     },
-    viewport: {
-      default: () => (undefined)
+    name: 'RecommendList',
+    props: {
+      excludingArticle: {
+        default: () => ('N/A')
+      },
+      isApp: {
+        default: () => false
+      },
+      isAd: {
+        default: () => false
+      },
+      recommends: {
+        default: () => ([])
+      },
+      currArticleId: {
+        default: () => ''
+      },
+      relateds: {
+        default: () => ([])
+      },
+      sectionId: {
+        default: () => ('')
+      }
     }
   }
-}
+
 </script>
 <style lang="stylus" scoped>
-  .recommend-main-container
-    font-size 1.1rem
+  .related-list
+    width 100%
+    margin 0 auto
+    clear both
 
-    &_title
-      color #356d9c
-      overflow hidden
-
-      > h3
-        margin .5em 0 0
-        font-size 1.5rem
-
-        &::after
-          content ""
-          display inline-block
-          height .5em
-          vertical-align middle
-          width 100%
-          margin-right -100%
-          margin-left 10px
-          border-top 5px solid #356d9c
-
-    .recommend-list
-      margin-top 10px
-      display flex
-      align-content flex-start
-      flex-wrap wrap
-      justify-content flex-start
-
-      &_item
-        vertical-align top
-        margin-bottom 15px
-
-        display flex
-        padding-bottom 15px 
+    &__list
+      margin-top 20px
+      padding 20px 30px 30px
+      margin 20px auto 0
+      
+      > div
         width 100%
-        height calc((33vw * 3) / 4)
-        overflow hidden
 
-        a
+      &__title 
+        font-size 19px
+        position relative
+
+        h4 
+          margin -20px 0 0
+        
+        &::before 
+          content ''
+          width 0
+          height 0
+          border-style solid
+          border-width 10px 0 10px 20px
           position relative
-          display block 
-          text-decoration none
-          cursor pointer
+          top 0
+          left -30px
+          display block
+
+      &__item 
+        margin 15px 0 0
+        padding-bottom 15px
+        border-bottom 1px solid #c1c1c1
+
+        > .title 
+          font-size 18px
+          line-height 25px
+
+          a, a:hover, a:link, a:visited 
+            color rgba(2, 2, 2, 0.5)
+            text-decoration none
+            cursor pointer
+            border-bottom none
+        
+        > .brief 
+          line-height 20px
+          padding-top 10px
+          
+          a:hover, a:link, a:visited 
+            color #6f6f6f
+          
+        &:last-child
           border-bottom none
           padding-bottom 0
-          width 33%
-
-          .recommend-list_item_img
-            background-repeat no-repeat
-            background-size cover
-            background-position center center
-            padding-top calc(100% - 30px)
-            &[lazy=loading]
-              background-size 40%
-            > div
-              position absolute
-              top 0
-              left 0
-              width 100%
-              height 100%
-              >img
-                object-fit cover
-                object-position center center
-                width 100%
-                height 100%
-            
-
-        &_title
-          background-color #fff
-          border-top-width 0
-          line-height 1.4rem
-          font-size 1rem
-          display block
-          min-height 60px
-          padding-top 0 
-          width 66%
-          position relative
-
-          a
-            width 100%
-            max-height 100%
-            padding-top 19px
-            padding-left 10px
-
-            h3
-              font-size 0.8rem 
-              font-weight 300 
-              line-height 1rem 
-              margin 10px 0
-
-            &:hover, &:link, &:visited
-              color #8c8c8c
-              font-weight normal
-              border none
-
-          .recommend-list_item_label
-            height 20px
-            white-space nowrap
-            padding 0 10px
-            background-color #000
-            color #fff
-            font-size 0.8rem
-            display flex
-            position absolute
-            top 0
-            left 10px
-            align-items flex-start
-            
-
-  @media (min-width: 375px)  
-    .recommend-main-container
-      .recommend-list
-        &_item
-          &_title
-            a
-              h3
-                font-size 1rem
-                line-height 1.4rem
-  @media (min-width: 414px)  
-    .recommend-main-container
-      .recommend-list
-        &_item
-          a
-            .recommend-list_item_img
-              padding-top calc(100% - 45px)
-
-  @media (min-width: 768px)
-    .desktop-hidden
-      display none !important
-
-    .recommend-main-container
-      &_title
-        overflow hidden
-
-        > h3
-          font-size 1.3rem
-          margin 0
-
-          &::after
-            display none
-
-      .recommend-list
-        flex-direction row
-
-        &_item
-          width calc(33% - 10px)
-          height auto
-          display block
-          &:not(:nth-child(3n+3))
-            margin-right 15px
-
-          > a
-            width 100%
-
-          &_title
-            padding-left 0
-            padding-top 5px
-            width 100%
-
-            > a
-              padding-left 0
-              padding-top 0
-              h3
-                font-size 1rem
-                font-weight 300
-            .recommend-list_item_label
-              left 0
-              top -30px
-              height 30px
-              font-size 1rem
-              align-items center
-
 </style>

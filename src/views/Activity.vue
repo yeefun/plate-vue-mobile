@@ -1,11 +1,11 @@
 <template>
   <main class="activity">
     <a href="/" class="activity__logo" id="home">
-      <img src="/public/icon/logo_black.png" srcset="/public/icon/logo_black@2x.png 2x" alt="鏡週刊 Mirror Media" />
+      <img src="/assets/mirrormedia/icon/logo_black.png" srcset="/assets/mirrormedia/icon/logo_black@2x.png 2x" alt="鏡週刊 Mirror Media" />
     </a>
     <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" :sharePath="`/activity/${getValue(activity, [ 'id' ])}`" class="activity__share" />
     <div class="activity__menu" v-if="topicId">
-      <a :href="`/topic/${topicId}`"><img src="/public/icon/home.png" srcset="/public/icon/home@2x.png 2x" /></a>
+      <a :href="`/topic/${topicId}`"><img src="/assets/mirrormedia/icon/home.png" srcset="/assets/mirrormedia/icon/home@2x.png 2x" /></a>
     </div>
     <img :src="getImage(activity, 'desktop')" />
     <h1 v-text="getValue(activity, [ 'name' ])" />
@@ -13,7 +13,7 @@
     <activity-lightbox :initialActivity="activity" :initialNodes="initialNodes" :lightboxIndex="lightboxIndex" :viewport="viewport" v-show="isLightboxOpen" v-on:closeLightbox="closeLightbox" />
     <div class="activity__landscape">
       <figure>
-        <img v-lazy="`/public/icon/landscape_white.svg`" />
+        <img v-lazy="`/assets/mirrormedia/icon/landscape_white.svg`" />
         <p>請將您的裝置轉至直向來繼續閱讀</p>
       </figure>
     </div>
@@ -25,7 +25,8 @@
 
 <script>
 
-import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL } from '../constants'
+import { FB_APP_ID, FB_PAGE_ID } from '../constants'
+import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL } from '../constants'
 import { getImage, getTruncatedVal, getValue } from '../util/comm.js'
 import _ from 'lodash'
 import ActivityLightbox from '../components/activity/ActivityLightbox.vue'
@@ -141,14 +142,13 @@ export default {
   metaSet () {
     const url = `${SITE_URL}/activity/${this.$route.params.activityId}`
     const ogImage = _.get(this.$store.state, [ 'activities', 'items', '0', 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], null)
-    const image = ogImage || '/public/notImage.png'
+    const image = ogImage || '/assets/mirrormedia/notImage.png'
     const ogDescription = sanitizeHtml(_.get(this.$store.state, [ 'activities', 'items', '0', 'brief', 'html' ]), { allowedTags: [] })
     const description = ogDescription !== '' ? this.getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
     return {
-      url: `${SITE_URL}/activity/${this.$route.params.activityId}`,
+      url: `${SITE_MOBILE_URL}/activity/${this.$route.params.activityId}`,
       title: `${_.get(this.activity, [ 'name' ])} - ${SITE_TITLE}`,
       meta: `
-        <meta name="mm-opt" content="">
         <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${description}">

@@ -1,11 +1,15 @@
 <template>
-  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :mode="dfpMode">
+  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :mode="dfpMode" :section="'other'">
     <template slot-scope="props" slot="dfpPos">
-      <app-header :commonData="commonData" :eventLogo="eventLogo" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" ></app-header>
-      <article-body-external :abIndicator="abIndicator" :articleData="articleData">
-        <vue-dfp :is="props.vueDfp" slot="dfp-PCHD" :config="props.config" pos="PCHD" class="dfp dfp--desktop" style="margin: 0 auto 20px;"></vue-dfp>
-        <vue-dfp :is="props.vueDfp" slot="dfp-MBHD" :config="props.config" pos="MBHD" class="dfp dfp--mobile" style="margin: 0 auto 20px;"></vue-dfp>
-        <vue-dfp :is="props.vueDfp" slot="dfp-MBE1" pos="MBE1" :dfpId="props.dfpId" :config="props.config" class="dfp dfp--mobile"/>
+      <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+      <!-- <app-header :commonData="commonData" :eventLogo="eventLogo" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" ></app-header> -->
+      <article-body-external :articleData="articleData">
+        <vue-dfp :is="props.vueDfp" slot="dfp-PCHD" :config="props.config" :dfpId="props.dfpId" pos="PCHD" class="dfp dfp--desktop" style="margin: 0 auto; padding: 20px 0;"></vue-dfp>
+        <vue-dfp :is="props.vueDfp" slot="dfp-MBHD" :config="props.config" :dfpId="props.dfpId" pos="MBHD" class="dfp dfp--mobile" style="margin: 0 auto; padding: 20px 0;"></vue-dfp>
+        <vue-dfp :is="props.vueDfp" v-if="viewport > 1200" slot="dfp-AT1" :config="props.config" :dfpId="props.dfpId" pos="PCAR"  class="dfp dfp--desktop"></vue-dfp>
+        <vue-dfp :is="props.vueDfp" v-if="viewport < 1199" slot="dfp-AT1" :config="props.config" :dfpId="props.dfpId" pos="MBAR1" class="dfp dfp--mobile"></vue-dfp>
+        <vue-dfp :is="props.vueDfp" slot="dfp-AT2" :config="props.config" :dfpId="props.dfpId" pos="MBAR2" class="dfp dfp--mobile"></vue-dfp>
+        <vue-dfp :is="props.vueDfp" slot="dfp-MBE1" pos="MBE1" :dfpId="props.dfpId" :config="props.config" class="dfp dfp--mobile"></vue-dfp>
         <div slot="dfp-PCE1E2" class="dfp--PCE1E2 dfp--desktop">
           <vue-dfp :is="props.vueDfp" pos="PCE1" :dfpId="props.dfpId" :config="props.config"></vue-dfp>
           <vue-dfp :is="props.vueDfp" pos="PCE2" :dfpId="props.dfpId" :config="props.config"></vue-dfp>
@@ -29,9 +33,9 @@
           <div><h3>推薦文章</h3></div>
           <div id="matchedContentContainer" class="matchedContentContainer"></div>
         </template>
-        <article-aside-fixed :abIndicator="abIndicator" slot="articleAsideFixed">
-          <vue-dfp :is="props.vueDfp" v-if="abIndicator === 'B'" slot="dfpR2" pos="PCR2B" class="dfp--desktop" :config="props.config"></vue-dfp>
-          <div v-if="abIndicator === 'B'" slot="fbPage" class="article__aside--fbPage">
+        <article-aside-fixed slot="articleAsideFixed">
+          <vue-dfp :is="props.vueDfp" slot="dfpR2" pos="PCR2" class="dfp--desktop" :config="props.config"></vue-dfp>
+          <div slot="fbPage" class="article__aside--fbPage">
             <div class="fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-adapt-container-width="true" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
               <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
                 <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
@@ -47,20 +51,29 @@
       </article-body-external>
       <share-tools v-if="viewport > 1200"></share-tools>
       <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded"></live-stream>
-      <DfpCover v-show="showDfpCoverAdFlag && viewport < 1199"> 
+      <DfpST v-if="(viewport < 550)" :props="props">
+        <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
+      </DfpST>
+      <DfpCover v-if="isTimeToShowAdCover" v-show="showDfpCoverAdFlag && viewport < 1199"> 
         <vue-dfp :is="props.vueDfp" v-if="(viewport < 550)" slot="ad-cover" pos="MBCVR" :config="props.config"></vue-dfp>
       </DfpCover> 
       <DfpCover v-if="showDfpCoverAd2Flag && viewport < 1199" :showCloseBtn="false" class="raw"> 
         <vue-dfp :is="props.vueDfp" v-if="(viewport < 550)" slot="ad-cover" pos="MBCVR2" :config="props.config"></vue-dfp>
       </DfpCover>
+      <DfpCover v-if="showDfpCoverInnityFlag && viewport < 1199" :showCloseBtn="false" class="raw">
+        <vue-dfp :is="props.vueDfp" pos="MBCVR3" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
+      </DfpCover>      
     </template>
   </vue-dfp-provider>
 </template>
 
 <script>
-  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
+  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID } from '../constants'
+  import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
+  import { MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT } from '../constants'
   import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
-  import { consoleLogOnDev, currEnv, getValue, insertVponAdSDK, sendAdCoverGA, updateCookie, vponHtml } from '../util/comm'
+  import { adtracker } from 'src/util/adtracking'
+  import { consoleLogOnDev, currEnv, getValue, sendAdCoverGA, updateCookie } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
   import { microAds } from '../constants/microAds'
   import _ from 'lodash'
@@ -68,8 +81,10 @@
   import ArticleBodyExternal from '../components/article/ArticleBodyExternal.vue'
   import Cookie from 'vue-cookie'
   import DfpCover from '../components/DfpCover.vue'
+  import DfpST from '../components/DfpST.vue'
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
+  import HeaderR from '../components/HeaderR.vue'
   import LatestList from '../components/article/LatestList.vue'
   import LiveStream from '../components/LiveStream.vue'
   import MicroAd from '../components/MicroAd.vue'
@@ -81,6 +96,7 @@
   import moment from 'moment'
   import titleMetaMixin from '../util/mixinTitleMeta'
   import truncate from 'truncate'
+  import uuidv4 from 'uuid/v4'
 
   const fetchCommonData = (store) => {
     return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'projects' ] })
@@ -164,7 +180,9 @@
       'proj-list': ProjectList,
       'share-tools': ShareTools,
       'vue-dfp-provider': VueDfpProvider,
-      DfpCover
+      DfpCover,
+      DfpST,
+      HeaderR
     },
     mixins: [ titleMetaMixin ],
     metaSet () {
@@ -179,16 +197,15 @@
       const category = _.get(partner, [ 'name' ], '')
       const ogDescription = truncate(brief, 197) || SITE_DESCRIPTION
       const imageUrl = thumb || SITE_OGIMAGE
-      let abIndicator
-      if (process.env.VUE_ENV === 'client') {
-        abIndicator = this.$_external_getMmid()
-      }
+      // let abIndicator
+      // if (process.env.VUE_ENV === 'client') {
+      //   abIndicator = this.$_external_getMmid()
+      // }
 
       return {
-        url: `${SITE_URL}/external/${name}/`,
+        url: `${SITE_MOBILE_URL}/external/${name}/`,
         title: `${title} - ${SITE_TITLE_SHORT}`,
         meta: `
-          <meta name="mm-opt" content="external${abIndicator}">
           <meta name="robots" content="index">
           <meta name="description" content="${ogDescription}">
           <meta name="section-name" content="externals">
@@ -206,22 +223,24 @@
           <meta property="og:description" content="${ogDescription}">
           <meta property="og:url" content="${SITE_URL}/external/${name}/">
           <meta property="og:image" content="${imageUrl}">
-        `
+        ` // <meta name="mm-opt" content="external${abIndicator}">
       }
     },
     data () {
       return {
-        abIndicator: 'A',
+        abIndicator: '',
         clientSideFlag: false,
         dfpid: DFP_ID,
+        dfpHeaderLogoLoaded: false,
         dfpMode: 'prod',
         dfpUnits: DFP_UNITS,
         hasSentFirstEnterGA: false,
         isVponSDKLoaded: false,
         microAds,
+        sectionTempId: `external-${uuidv4()}`,
         showDfpCoverAdFlag: false,
         showDfpCoverAd2Flag: false,
-        showDfpCoverAdVponFlag: false,
+        showDfpCoverInnityFlag: false,
         showDfpFixedBtn: false,
         showDfpHeaderLogo: false,
         viewport: undefined
@@ -241,22 +260,31 @@
         return this.$store.state.route.params.name
       },
       dfpOptions () {
+        const currentInstance = this
         return Object.assign({}, DFP_OPTIONS, {
+          sectionTempId: this.sectionTempId,
           afterEachAdLoaded: (event) => {
             const dfpCurrAd = document.querySelector(`#${event.slot.getSlotElementId()}`)
             const position = dfpCurrAd.getAttribute('pos')
 
+            /**
+            * Because googletag.pubads().addEventListener('slotRenderEnded', afterEachAdLoaded) can't be removed.
+            * We have check if current page gets changed through sectionTempId. If so, dont run this outdated callback.
+            */
+            const sectionTempId = dfpCurrAd.getAttribute('sectionTempId')
+            if (currentInstance.sectionTempId !== sectionTempId) { return }
+
             const adDisplayStatus = dfpCurrAd.currentStyle ? dfpCurrAd.currentStyle.display : window.getComputedStyle(dfpCurrAd, null).display
-            const afVponLoader = () => {
-              if (this.showDfpCoverAd2Flag && !this.isVponSDKLoaded) {
-                sendAdCoverGA('vpon')
-                consoleLogOnDev({ msg: 'noad2 detected' })
-                this.showDfpCoverAdVponFlag = true
-                this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
+            const loadInnityAd = () => {
+              // debug('Event "noad2" is detected!!')
+              if (this.showDfpCoverAd2Flag && !this.showDfpCoverInnityFlag) {
+                sendAdCoverGA('innity')
+                // debug('noad2 detected and go innity')
+                this.showDfpCoverInnityFlag = true
               }
             }
-            window.addEventListener('noad2', afVponLoader)
-            window.parent.addEventListener('noad2', afVponLoader)
+            window.addEventListener('noad2', loadInnityAd)
+            window.parent.addEventListener('noad2', loadInnityAd)
             switch (position) {
               case 'MBCVR':
                 sendAdCoverGA('dfp')
@@ -277,17 +305,29 @@
                   consoleLogOnDev({ msg: 'dfp response no ad2' })
                 }
                 break
+              case 'MBCVR3':
+                // debug('adInnity loaded')
+                sendAdCoverGA('innity')
+                if (adDisplayStatus === 'none') {
+                  // debug('dfp response no innity')
+                }
+                break    
               case 'PCFF':
                 this.showDfpFixedBtn = !(adDisplayStatus === 'none')
                 break
               case 'LOGO':
-                if (adDisplayStatus === 'none') {
-                  this.showDfpHeaderLogo = false
-                } else {
+                if (adDisplayStatus !== 'none') {
                   this.showDfpHeaderLogo = true
                 }
+                this.dfpHeaderLogoLoaded = true
                 break
             }
+            adtracker({
+              el: dfpCurrAd,
+              slot: event.slot.getSlotElementId(),
+              position,
+              isAdEmpty: adDisplayStatus === 'none'
+            })  
           },
           setCentering: true,
           sizeMapping: DFP_SIZE_MAPPING
@@ -314,6 +354,9 @@
         }
         return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
       },
+      isTimeToShowAdCover () {
+        return _.get(this.$store, 'state.isTimeToShowAdCover', false)
+      },      
       latestArticle () {
         return _.get(this.$store.state.latestArticle, [ 'items' ], [])
       },
@@ -429,8 +472,8 @@
         matchedContentContent.setAttribute('class', 'adsbygoogle')
         matchedContentContent.setAttribute('style', 'display:block')
         matchedContentContent.setAttribute('data-ad-format', 'autorelaxed')
-        matchedContentContent.setAttribute('data-ad-client', 'ca-pub-7986335951683342')
-        matchedContentContent.setAttribute('data-ad-slot', '3362911316')
+        matchedContentContent.setAttribute('data-ad-client', MATCHED_CONTENT_AD_CLIENT)
+        matchedContentContent.setAttribute('data-ad-slot', MATCHED_CONTENT_AD_SLOT)
         matchedContentEnd.setAttribute('id', 'matchedContentEnd')
         matchedContentEnd.innerHTML = `(adsbygoogle = window.adsbygoogle || []).push({});`
 
@@ -478,8 +521,6 @@
         this.$_external_insertMatchedContentScript()
       },
       getValue,
-      insertVponAdSDK,
-      vponHtml
     }
   }
 </script>
@@ -506,4 +547,7 @@
     &--mobile
       display none !important
 
+@media (min-width 1200px)
+  .matchedContentContainer
+    margin-bottom 20px
 </style>

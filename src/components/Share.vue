@@ -1,17 +1,16 @@
 <template>
   <div class="share" :class="direction"
     :style="[isTimeline ? { display: 'block' } : {}, { top: `${top}`, right: `${right}`, bottom: `${bottom}`, left: `${left}` } ]">
-    <a class="share__icon share--toggle" @click="toggleShare()" :style="{ backgroundColor: `${color}` }" ><img :src="isOpen ? '/public/icon/close_white.png' : '/public/icon/share-white.png'" :alt="isOpen ? '關閉' : '開啟'"></a>
-    <a id="share-line" class="share__icon share__icon--list share--line" :class="[isOpen ? 'open' : '']" @click="shareLine"><img src="/public/icon/line_white_v2.png" alt="Line"></a>
-    <a id="share-fb" class="share__icon share__icon--list share--fb" :class="[isOpen ? 'open' : '']" @click="shareFacebook"><img src="/public/icon/facebook_white.png" alt="Facebook"></a>
-    <a id="share-google" class="share__icon share__icon--list share--google" :class="[isOpen ? 'open' : '']" @click="shareGooglePlus"><img src="/public/icon/google-plus.png" alt="Google Plus"></a>
+    <a class="share__icon share--toggle" @click="toggleShare()" :style="{ backgroundColor: `${color}` }" ><img :src="isOpen ? '/assets/mirrormedia/icon/close_white.png' : '/assets/mirrormedia/icon/share-white.png'" :alt="isOpen ? '關閉' : '開啟'"></a>
+    <a id="share-line" class="share__icon share__icon--list share--line" :class="[isOpen ? 'open' : '']" @click="shareLine"><img src="/assets/mirrormedia/icon/line_white_v2.png" alt="Line"></a>
+    <a id="share-fb" class="share__icon share__icon--list share--fb" :class="[isOpen ? 'open' : '']" @click="shareFacebook"><img src="/assets/mirrormedia/icon/facebook_white.png" alt="Facebook"></a>
   </div>
 </template>
 
 <script>
 
 import { TOPIC_PROTEST_ID } from '../constants/index'
-import { shareGooglePlus, shareLine, shareFacebook } from '../util/comm'
+import { shareLine, shareFacebook } from '../util/comm'
 import _ from 'lodash'
 
 export default {
@@ -54,9 +53,6 @@ export default {
     }
   },
   methods: {
-    shareGooglePlus () {
-      shareGooglePlus({ route: this.link })
-    },
     shareLine () {
       shareLine({
         route: this.link,
@@ -138,40 +134,40 @@ export default {
   &.top
     .share--line
       &.open
-        transform translate3d(0,-150px,0)
+        transform translate3d(0,-100px,0)
     .share--fb
       &.open
-        transform translate3d(0,-100px,0)
+        transform translate3d(0,-50px,0)
     .share--google
       &.open
         transform translate3d(0,-50px,0)
   &.right
     .share--line
       &.open
-        transform translate3d(150px,0,0)
+        transform translate3d(100px,0,0)
     .share--fb
       &.open
-        transform translate3d(100px,0,0)
+        transform translate3d(50px,0,0)
     .share--google
       &.open
         transform translate3d(50px,0,0)      
   &.bottom
     .share--line
       &.open
-        transform translate3d(0,150px,0)
+        transform translate3d(0,100px,0)
     .share--fb
       &.open
-        transform translate3d(0,100px,0)
+        transform translate3d(0,50px,0)
     .share--google
       &.open
         transform translate3d(0,50px,0)
   &.left
     .share--line
       &.open
-        transform translate3d(-150px,0,0)
+        transform translate3d(-100px,0,0)
     .share--fb
       &.open
-        transform translate3d(-100px,0,0)
+        transform translate3d(-50px,0,0)
     .share--google
       &.open
         transform translate3d(-50px,0,0)

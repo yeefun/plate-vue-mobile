@@ -17,7 +17,7 @@
 
         <template v-else-if="topicType === 'timeline'">
           <a href="/" class="topicTimeline__logo">
-            <img src="/public/icon/logo_black@3x.png" :alt="siteTitle">
+            <img src="/assets/mirrormedia/icon/logo_black@3x.png" :alt="siteTitle">
           </a>
           <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`"></share>
           <timeline-headline :initialTimeline="timeline"></timeline-headline>
@@ -30,7 +30,8 @@
         </template>
 
         <template v-else-if="topicType === 'portraitWall'">
-          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header>
+          <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header> -->
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="portraitWallSlideImages"></leading>
@@ -47,7 +48,8 @@
         </template>
 
         <template v-else-if="topicType === 'group'">
-          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header>
+          <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header> -->
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
@@ -63,28 +65,29 @@
         </template>
 
         <template v-else>
-          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header>
+          <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header> -->
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
           </div>
           <article-list ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='false'></article-list>
-          <!--<section class="container">
-            <more v-if="hasMore" v-on:loadMore="loadMore"></more>
-          </section>-->
-          <loading :show="loading"></loading>
           <div><vue-dfp v-if="hasDFP && (viewport > 1000)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
             :section="props.section" :dfpId="props.dfpId" :unitId="dfp"></vue-dfp></div>
           <div><vue-dfp v-if="hasDFP && (viewport < 900)" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
             :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp"></vue-dfp></div>
           <article-list ref="articleListAutoScroll" id="articleListAutoScroll" :articles='autoScrollArticlesLoadMore' :hasDFP='false'
             v-show="hasAutoScroll"></article-list>
+          <loading :show="loading"></loading>
           <!--<section class="footer container">
             <app-footer style="padding: 0 2rem; margin-bottom: 40px;"></app-footer>
           </section>-->
           <share :right="`20px`" :bottom="`20px`"></share>
         </template>
-
+        
+        <DfpST v-if="(viewport < 550)" :props="props">
+          <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
+        </DfpST>
       </div>
     </template>
   </vue-dfp-provider>
@@ -93,24 +96,27 @@
 <script>
 
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
-import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
+import { FB_APP_ID, FB_PAGE_ID, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
+import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
+import { adtracker } from 'src/util/adtracking'
 import { camelize } from 'humps'
-import { consoleLogOnDev, currEnv, getTruncatedVal, getValue, sendAdCoverGA, unLockJS, updateCookie } from '../util/comm'
+import { currEnv, getTruncatedVal, getValue, unLockJS } from '../util/comm'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { getRole } from '../util/mmABRoleAssign'
 import _ from 'lodash'
 import ArticleList from '../components/ArticleList.vue'
 import ArticleListFull from '../components/ArticleListFull.vue'
 import Cookie from 'vue-cookie'
+import DfpST from '../components/DfpST.vue'
 import Footer from '../components/Footer.vue'
 import FooterFull from '../components/FooterFull.vue'
 import GroupList from '../components/GroupList.vue'
 import Header from '../components/Header.vue'
 import HeaderFull from '../components/HeaderFull.vue'
+import HeaderR from '../components/HeaderR.vue'
 import Leading from '../components/Leading.vue'
 import LeadingWatch from '../components/LeadingWatch.vue'
 import Loading from '../components/Loading.vue'
-import More from '../components/More.vue'
 import MoreFull from '../components/MoreFull.vue'
 import PortraitWallList from '../components/PortraitWallList.vue'
 import ProjectList from '../components/article/ProjectList.vue'
@@ -119,6 +125,7 @@ import TimelineBody from '../components/timeline/TimelineBody.vue'
 import TimelineHeadline from '../components/timeline/TimelineHeadline.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import titleMetaMixin from '../util/mixinTitleMeta'
+import uuidv4 from 'uuid/v4'
 
 const MAXRESULT = 12
 const PAGE = 1
@@ -252,14 +259,15 @@ export default {
     'leading': Leading,
     'leading-watch': LeadingWatch,
     'loading': Loading,
-    'more': More,
     'more-full': MoreFull,
     'portraitWall-list': PortraitWallList,
     'share': Share,
     'timeline-body': TimelineBody,
     'timeline-headline': TimelineHeadline,
     'vue-dfp-provider': VueDfpProvider,
-    ProjectList
+    DfpST,
+    ProjectList,
+    HeaderR
   },
   asyncData ({ store, route }) {
     return fetchData(store, route.params.topicId)
@@ -281,15 +289,15 @@ export default {
     const metaDescription = ogDescription ? this.getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
     const metaImage = ogImage ? _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) : _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], SITE_OGIMAGE)
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
+    const relUrl = `${SITE_MOBILE_URL}${this.$route.fullPath}`
     if (!metaTitle && process.env.VUE_ENV === 'server') {
       return this.pageNotFoundHandler()
     }
 
     return {
-      url: ogUrl,
+      url: relUrl,
       title: `${metaTitle} - ${SITE_TITLE}`,
       meta: `
-        <meta name="mm-opt" content="">
         <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${metaDescription}">
@@ -306,7 +314,7 @@ export default {
         <meta property="og:description" content="${metaDescription}">
         <meta property="og:url" content="${ogUrl}">
         <meta property="og:image" content="${metaImage}">
-      `
+      ` // <meta name="mm-opt" content="">
     }
   },
   data () {
@@ -316,10 +324,12 @@ export default {
       canScrollLoadMord: true,
       commonData: this.$store.state.commonData,
       dfpid: DFP_ID,
+      dfpHeaderLogoLoaded: false,
       dfpMode: 'prod',
       dfpUnits: DFP_UNITS,
       isVponSDKLoaded: false,
       loading: false,
+      sectionTempId: `topic-${uuidv4()}`,
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
       showDfpCoverAdVponFlag: false,
@@ -336,9 +346,15 @@ export default {
       return `${SITE_URL}/topic/${this.currArticleSlug}/`
     },
     autoScrollArticles () {
+      if (this.topicType === 'wide') {
+        return _.take(this.articles, 3)
+      }
       return _.take(this.articles, 12)
     },
     autoScrollArticlesLoadMore () {
+      if (this.topicType === 'wide') {
+        return _.slice(this.articles, 3)
+      }
       return _.slice(this.articles, 12)
     },
     customCSS () {
@@ -354,51 +370,36 @@ export default {
       return _.get(this.topic, [ 'dfp' ], null)
     },
     dfpOptions () {
+      const currentInstance = this
       return Object.assign({}, DFP_OPTIONS, {
+        sectionTempId: this.sectionTempId,
         afterEachAdLoaded: (event) => {
           const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
           const position = dfpCover.getAttribute('pos')
 
+          /**
+           * Because googletag.pubads().addEventListener('slotRenderEnded', afterEachAdLoaded) can't be removed.
+           * We have check if current page gets changed through sectionTempId. If so, dont run this outdated callback.
+           */
+          const sectionTempId = dfpCover.getAttribute('sectionTempId')
+          if (currentInstance.sectionTempId !== sectionTempId) { return }
+          
           const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
-          const afVponLoader = () => {
-            if (this.showDfpCoverAd2Flag && !this.isVponSDKLoaded) {
-              sendAdCoverGA('vpon')
-              consoleLogOnDev({ msg: 'noad2 detected' })
-              this.showDfpCoverAdVponFlag = true
-              this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
-            }
-          }
-          window.addEventListener('noad2', afVponLoader)
-          window.parent.addEventListener('noad2', afVponLoader)
 
           switch (position) {
-            case 'LMBCVR':
-              sendAdCoverGA('dfp')
-              if (adDisplayStatus === 'none') {
-                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
-                  this.showDfpCoverAd2Flag = !isVisited
-                })
-              } else {
-                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
-                  this.showDfpCoverAdFlag = !isVisited
-                })
-              }
-              break
-            case 'LMBCVR2':
-              consoleLogOnDev({ msg: 'ad2 loaded' })
-              sendAdCoverGA('ad2')
-              if (adDisplayStatus === 'none') {
-                consoleLogOnDev({ msg: 'dfp response no ad2' })
-              }
-              break
             case 'LOGO':
-              if (adDisplayStatus === 'none') {
-                this.showDfpHeaderLogo = false
-              } else {
+              if (adDisplayStatus !== 'none') {
                 this.showDfpHeaderLogo = true
               }
+              this.dfpHeaderLogoLoaded = true
               break
           }
+          adtracker({
+            el: dfpCover,
+            slot: event.slot.getSlotElementId(),
+            position,
+            isAdEmpty: adDisplayStatus === 'none'
+          }) 
         },
         setCentering: true
       })
@@ -419,7 +420,7 @@ export default {
       return this.dfp !== '' || this.mobileDfp !== ''
     },
     hasMore () {
-      return _.get(this.articles, [ 'length' ], 0) < _.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'meta', 'total' ], 0)
+      return _.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'items', 'length' ], 0) < _.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'meta', 'total' ], 0)
     },
     mobileDfp () {
       return _.get(this.topic, [ 'mobileDfp' ], null)
@@ -431,7 +432,7 @@ export default {
       return this.$route.params.topicId === TOPIC_PROTEST_ID
     },
     page () {
-      return _.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuidh, 'meta', 'page' ], PAGE)
+      return _.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'meta', 'page' ], PAGE)
     },
     pageStyle () {
       return _.get(this.topic, [ 'pageStyle' ])
@@ -508,27 +509,29 @@ export default {
         fetchAllArticlesByUuid(this.$store, this.uuid, TOPIC, false)
       } else if (this.topicType === 'group') {
         fetchAllArticlesByUuid(this.$store, this.uuid, TOPIC, true)
+      } else if (this.topicType === 'wide') {
+        fetchArticlesByUuid(this.$store, this.uuid, TOPIC, false, false, 3)
       } else {
         fetchArticlesByUuid(this.$store, this.uuid, TOPIC, false, false)
       }
       fetchTopicAllImages(this.$store, this.uuid)
     }
+    this.abIndicator = this.getMmid()
   },
   mounted () {
     this.updateViewport()
     this.insertCustomizedMarkup()
     this.checkIfLockJS()
     this.updateSysStage()
-    // this.abIndicator = this.getMmid()
 
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
-    window.ga('set', 'contentGroup3', '')
-    // window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
+    // window.ga('set', 'contentGroup3', '')
+    window.ga('set', 'contentGroup3', `topic${this.abIndicator}`)
     window.ga('send', 'pageview', { title: `${_.get(this.topic, [ 'name' ])} - ${SITE_TITLE}`, location: document.location.href })
 
     window.addEventListener('resize', this.updateViewport)
-    if (this.topicType === 'list') { window.addEventListener('scroll', this.scrollHandler) }
+    if (this.topicType === 'list' || this.topicType === 'wide') { window.addEventListener('scroll', this.scrollHandler) }
     if (this.topicType === 'timeline') { window.addEventListener('scroll', this.timelineScrollHandler) }
   },
   methods: {
@@ -540,11 +543,15 @@ export default {
     elmYPosition,
     getMmid () {
       const mmid = Cookie.get('mmid')
+      let assisgnedRole = _.get(this.$route, [ 'query', 'ab' ])
+      if (assisgnedRole) {
+        assisgnedRole = assisgnedRole.toUpperCase()
+      }
       const role = getRole({ mmid, distribution: [
         { id: 'A', weight: 50 },
         { id: 'B', weight: 50 } ]
       })
-      return role
+      return assisgnedRole || role
     },
     getTruncatedVal,
     getValue,
@@ -569,11 +576,12 @@ export default {
       }
     },
     loadMore () {
+      const maxResult = this.topicType === 'wide' ? 3 : MAXRESULT
       let currentPage = this.page
       currentPage += 1
       this.loading = true
 
-      fetchArticlesByUuid(this.$store, this.uuid, TOPIC, currentPage, false)
+      fetchArticlesByUuid(this.$store, this.uuid, TOPIC, currentPage, false, maxResult)
       .then(() => {
         this.loading = false
         this.canScrollLoadMord = true
@@ -585,14 +593,13 @@ export default {
       e.code = '404'
       throw e
     },
-    scrollHandler (e) {
+    scrollHandler () {
       if (this.$refs.articleList) {
         const vh = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
         const currentBottom = this.currentYPosition() + vh
         const articleListBottom = this.elmYPosition('#articleList') + this.$refs.articleList.$el.offsetHeight
         this.articleListAutoScrollHeight = this.$refs.articleListAutoScroll.$el.offsetHeight
         const articleListAutoScrollBottom = this.elmYPosition('#articleListAutoScroll') + this.articleListAutoScrollHeight
-
         if (this.hasMore && (this.page === 1) && this.canScrollLoadMord && currentBottom > (articleListBottom - 300)) {
           this.canScrollLoadMord = false
           this.loadMore()
@@ -603,7 +610,7 @@ export default {
         }
       }
     },
-    timelineScrollHandler (e) {
+    timelineScrollHandler () {
       const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
       const timelineBodyBriefHeight = document.querySelector('.timelineBody__brief').offsetHeight
       const activityBoxHeight = document.querySelector('.timelineMenu-activityBox').offsetHeight
@@ -658,6 +665,9 @@ export default {
         } else if (topicType === 'timeline') {
           Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid), fetchTimeline(this.$store, uuid) ])
           .then(next())
+        } else if (topicType === 'wide') {
+          Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false, 3), fetchTopicImages(this.$store, uuid) ])
+          .then(next())
         } else {
           Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid) ])
           .then(next())
@@ -673,6 +683,9 @@ export default {
         .then(next())
       } else if (topicType === 'timeline') {
         Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid), fetchTimeline(this.$store, uuid) ])
+        .then(next())
+      } else if (topicType === 'wide') {
+        Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false, 3), fetchTopicImages(this.$store, uuid) ])
         .then(next())
       } else {
         Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid) ])
@@ -702,7 +715,7 @@ export default {
       this.$forceUpdate()
       if (process.env.VUE_ENV === 'client') {
         window.ga('send', 'pageview', { title: `${_.get(this.topic, [ 'name' ])} - ${SITE_TITLE}`, location: document.location.href })
-        if (this.topicType === 'list') {
+        if (this.topicType === 'list' || this.topicType === 'wide') {
           window.removeEventListener('scroll', this.scrollHandler)
           window.addEventListener('scroll', this.scrollHandler)
         } else {
@@ -794,6 +807,40 @@ export default {
     background-color #fff
 
 @media (min-width: 600px)
+  .topic-view.wide
+    .listArticleBlock
+      display flex
+      width 100%
+      margin 0 10px
+      & + .listArticleBlock
+        margin-top 40px
+        margin-bottom 0
+      &__figure
+        width 50%
+        padding-top 33.33%
+        &--colorBlock
+          display none
+      &__content
+        display flex
+        flex-direction column
+        align-items flex-start
+        width 50%
+        padding 40px 30px 30px
+        h2
+          min-height 0
+          padding 0
+          font-size 1.6rem
+          font-weight bold
+        p
+          margin-top 1em
+          font-size 1.2rem
+        &--colorBlock
+          display block
+          margin-bottom 1em
+          padding .5em
+          color #fff
+          letter-spacing 1px
+          
   .topicTimeline
     &__projects
       padding 5% 10%

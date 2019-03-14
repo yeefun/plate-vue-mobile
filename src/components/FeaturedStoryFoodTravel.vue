@@ -10,7 +10,7 @@
                 <a :href="`${siteUrl}/story/${o.slug}`" :id="'featured-' + o.name" target="_blank">
                   <div class="featured_item_img"
                       :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
-                  <img class="play-btn" src="../../public/icon/play-foodtravel.png" alt="播放">
+                  <img class="play-btn" src="/assets/mirrormedia/icon/play-foodtravel.png" alt="播放">
                   <p>{{ o.title }}</p>
                   </div>
                 </a>
@@ -28,7 +28,7 @@
 <script>
   import ItemsTitleRect from './ItemsTitleRect.vue'
   import { SECTION_MAP, SITE_URL } from '../constants'
-  import { getHref, getImage, getTruncatedVal, getValue } from '../util/comm'
+  import { getImage } from '../util/comm'
   import Slider from './Slider.vue'
   import sanitizeHtml from 'sanitize-html'
 
@@ -77,10 +77,7 @@
           borderLeft: SECTION_MAP[ sect ][ 'borderLeft' ]
         }
       },
-      getHref,
       getImage,
-      getTruncatedVal,
-      getValue,
       goPrev () {
         window.refs[ this.sliderId ].slidePrev()
       },
@@ -281,11 +278,11 @@
 
     &.prev
       left -5%
-      background-image url(/public/icon/arrowl-foodtravel.png)
+      background-image url(/assets/mirrormedia/icon/arrowl-foodtravel.png)
     
     &.next
       right -5%
-      background-image url(/public/icon/arrowr-foodtravel.png)
+      background-image url(/assets/mirrormedia/icon/arrowr-foodtravel.png)
 
 // Tablet
 @media (min-width 752px) and (max-width 1199px)

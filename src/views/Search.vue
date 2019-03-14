@@ -3,13 +3,14 @@
     <template slot-scope="props" slot="dfpPos">
       <div class="search-view">
         <section style="width: 100%;">
-          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/>
+          <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/> -->
         </section>
         <div class="search-title container">
           <span class="search-title__text" v-text="title"></span>
           <div class="search-title__colorBlock"></div>
         </div>
-        <article-list :articles='articles.items' />
+        <article-list :articles='articles' />
         <loading :show="loading" />
         <section class="container">
           <more v-if="hasMore" v-on:loadMore="loadMore" />
@@ -26,17 +27,20 @@
 
 import _ from 'lodash'
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
-import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
-import { consoleLogOnDev, currEnv, sendAdCoverGA, unLockJS, updateCookie } from '../util/comm'
+import { FB_APP_ID, FB_PAGE_ID } from '../constants'
+import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
+import { currEnv, unLockJS } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
 import ArticleList from '../components/ArticleList.vue'
 import Cookie from 'vue-cookie'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
+import HeaderR from '../components/HeaderR.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import titleMetaMixin from '../util/mixinTitleMeta'
+import uuidv4 from 'uuid/v4'
 
 const MAXRESULT = 12
 const PAGE = 1
@@ -45,19 +49,15 @@ const fetchCommonData = (store) => {
   return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] })
 }
 
-const fetchSearch = (store, keyword, params) => {
-  return store.dispatch('FETCH_SEARCH', {
-    'keyword': keyword,
-    'params': params
-  })
-}
+const fetchSearch = (store, params) => store.dispatch('FETCH_SEARCH', { params, })
 
-const fetchData = (store) => {
+const fetchData = (store, route) => {
   return Promise.all([
     fetchCommonData(store),
-    fetchSearch(store, store.state.route.params.keyword, {
+    fetchSearch(store, {
       page: PAGE,
-      max_results: MAXRESULT
+      max_results: MAXRESULT,
+      keyword: route.params.keyword
     }),
     fetchPartners(store)
   ])
@@ -97,20 +97,21 @@ export default {
     'article-list': ArticleList,
     'loading': Loading,
     'more': More,
-    'vue-dfp-provider': VueDfpProvider
+    'vue-dfp-provider': VueDfpProvider,
+    HeaderR
   },
-  asyncData ({ store }) {
-    return fetchData(store)
+  asyncData ({ store, route }) {
+    return fetchData(store, route)
   },
   mixins: [ titleMetaMixin ],
   metaSet () {
     const title = (this.title) ? `${this.title} - ${SITE_TITLE}` : SITE_TITLE
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
+    const relUrl = `${SITE_MOBILE_URL}${this.$route.fullPath}`
     return {
-      url: ogUrl,
+      url: relUrl,
       title: title,
       meta: `
-        <meta name="mm-opt" content="">
         <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${SITE_DESCRIPTION}">
@@ -127,36 +128,21 @@ export default {
         <meta property="og:description" content="${SITE_DESCRIPTION}">
         <meta property="og:url" content="${ogUrl}">
         <meta property="og:image" content="${SITE_OGIMAGE}">
-      `
+      ` // <meta name="mm-opt" content="">
     }
-  },
-  beforeRouteEnter (to, from, next) {
-    next(vm => {
-      fetchSearch(vm.$store, to.params.keyword, {
-        page: PAGE,
-        max_results: MAXRESULT
-      })
-    })
-  },
-  beforeRouteUpdate (to, from, next) {
-    this.page = PAGE
-    fetchSearch(this.$store, to.params.keyword, {
-      page: PAGE,
-      max_results: MAXRESULT
-    }).then(() => {
-      next()
-    })
   },
   data () {
     return {
       abIndicator: 'A',
       commonData: this.$store.state.commonData,
       dfpid: DFP_ID,
+      dfpHeaderLogoLoaded: false,
       dfpMode: 'prod',
       dfpUnits: DFP_UNITS,
       isVponSDKLoaded: false,
       loading: false,
       page: PAGE,
+      sectionTempId: `search-${uuidv4()}`,
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
       showDfpCoverAdVponFlag: false,
@@ -166,61 +152,40 @@ export default {
   },
   computed: {
     articles () {
-      return this.$store.state.searchResult
+      return _.get(this.$store, 'getters.searchResultNormalized', [])
     },
     eventLogo () {
-      return _.get(this.$store.state.eventLogo, [ 'items', '0' ])
+      return _.get(this.$store.state.eventLogo, 'items.0')
     },
     hasMore () {
-      return _.get(this.articles, [ 'items', 'length' ], 0) < _.get(this.articles, [ 'nbHits' ], 0)
+      return _.get(this.articles, 'length', 0) < _.get(this.$store, 'getters.searchResultTotalCount', 0)
     },
     title () {
       return this.$route.params.keyword
     },
     dfpOptions () {
+      const currentInstance = this
       return Object.assign({}, DFP_OPTIONS, {
+        sectionTempId: this.sectionTempId,
         afterEachAdLoaded: (event) => {
           const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
           const position = dfpCover.getAttribute('pos')
 
+          /**
+           * Because googletag.pubads().addEventListener('slotRenderEnded', afterEachAdLoaded) can't be removed.
+           * We have check if current page gets changed through sectionTempId. If so, dont run this outdated callback.
+           */
+          const sectionTempId = dfpCover.getAttribute('sectionTempId')
+          if (currentInstance.sectionTempId !== sectionTempId) { return }
+
           const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
-          const afVponLoader = () => {
-            if (this.showDfpCoverAd2Flag && !this.isVponSDKLoaded) {
-              sendAdCoverGA('vpon')
-              consoleLogOnDev({ msg: 'noad2 detected' })
-              this.showDfpCoverAdVponFlag = true
-              this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
-            }
-          }
-          window.addEventListener('noad2', afVponLoader)
-          window.parent.addEventListener('noad2', afVponLoader)
 
           switch (position) {
-            case 'LMBCVR':
-              sendAdCoverGA('dfp')
-              if (adDisplayStatus === 'none') {
-                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
-                  this.showDfpCoverAd2Flag = !isVisited
-                })
-              } else {
-                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
-                  this.showDfpCoverAdFlag = !isVisited
-                })
-              }
-              break
-            case 'LMBCVR2':
-              consoleLogOnDev({ msg: 'ad2 loaded' })
-              sendAdCoverGA('ad2')
-              if (adDisplayStatus === 'none') {
-                consoleLogOnDev({ msg: 'dfp response no ad2' })
-              }
-              break
             case 'LOGO':
-              if (adDisplayStatus === 'none') {
-                this.showDfpHeaderLogo = false
-              } else {
+              if (adDisplayStatus !== 'none') {
                 this.showDfpHeaderLogo = true
               }
+              this.dfpHeaderLogoLoaded = true
               break
           }
         },
@@ -234,18 +199,23 @@ export default {
     },
     getMmid () {
       const mmid = Cookie.get('mmid')
+      let assisgnedRole = _.get(this.$route, [ 'query', 'ab' ])
+      if (assisgnedRole) {
+        assisgnedRole = assisgnedRole.toUpperCase()
+      }
       const role = getRole({ mmid, distribution: [
         { id: 'A', weight: 50 },
         { id: 'B', weight: 50 } ]
       })
-      return role
+      return assisgnedRole || role
     },
     loadMore () {
       this.page += 1
       this.loading = true
-      fetchSearch(this.$store, this.$route.params.keyword, {
+      fetchSearch(this.$store, {
         page: this.page,
-        max_results: MAXRESULT
+        max_results: MAXRESULT,
+        keyword: this.$route.params.keyword
       }).then(() => {
         this.loading = false
       })
@@ -260,7 +230,7 @@ export default {
     }
   },
   beforeMount () {
-    fetchEvent(this.$store, 'logo')
+    fetchEvent(this.$store, 'logo') 
   },
   mounted () {
     this.checkIfLockJS()
@@ -269,11 +239,11 @@ export default {
       this.updateViewport()
     })
     this.updateSysStage()
-    // this.abIndicator = this.getMmid()
+    this.abIndicator = this.getMmid()
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
-    window.ga('set', 'contentGroup3', '')
-    // window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
+    // window.ga('set', 'contentGroup3', '')
+    window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
     window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: document.location.href })
   },
   updated () {
@@ -283,6 +253,7 @@ export default {
     title: function () {
       if (process.env.VUE_ENV === 'client') {
         window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: document.location.href })
+        this.$forceUpdate()
       }
     }
   }
