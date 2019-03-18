@@ -162,7 +162,6 @@
         filter brightness(200%)
 
   .content-image
-    clear both
     margin 1.5em 0
 
     & >>> img 
@@ -179,28 +178,9 @@
       color rgba(0, 0, 0, 0.498039)
       padding-top 10px
       padding-bottom 10px
-    
-    &.right 
-      float right
-      width 300px
-      margin-left 20px
-      border-bottom 2px solid #255577
-      margin-bottom 30px
-      padding-bottom 10px
-    
-    &.left 
-      float left
-      width 300px
-      margin-right 20px
-      border-bottom 2px solid #255577
-      margin-bottom 30px
-      padding-bottom 10px
-    
-    &.center 
+      padding 10px 20px  
       margin-top 20px
       width 100%
-  @media (min-width 0px) and (max-width 767px)
-    .content-image
-      .caption
-        text-align justify
+      text-align justify
+
 </style>

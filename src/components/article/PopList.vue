@@ -53,7 +53,7 @@
 <style lang="stylus" scoped>
   .poplist-container 
     font-size 18px
-
+    padding 0 20px
     .pop_list 
       margin-top 10px
       display flex

@@ -146,6 +146,8 @@
     width 100%
     margin 0 auto
     clear both
+    background-color #fff
+    padding 0 20px
 
     &__list
       margin-top 20px

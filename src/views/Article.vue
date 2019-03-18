@@ -146,7 +146,7 @@
   import { MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT } from '../constants'
   import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
   import { adtracker } from 'src/util/adtracking'
-  import { currEnv, getImage, getTruncatedVal, lockJS, sendAdCoverGA, unLockJS, updateCookie } from '../util/comm'
+  import { currEnv, getImage, lockJS, sendAdCoverGA, unLockJS, updateCookie } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
   import { microAds } from '../constants/microAds'
   import ArticleBody from '../components/article/ArticleBody.vue'
@@ -179,11 +179,6 @@
   import truncate from 'truncate'
   import uuidv4 from 'uuid/v4'
   import verge from 'verge'
-
-  // const ArticleBody = () => import('../components/article/ArticleBody.vue')
-  // const ArticleBodyPhotography = () => import('../components/article/ArticleBodyPhotography.vue')
-  // const RecommendList = () => import('../components/article/RecommendList.vue')
-  // const RelatedListInContent = () => import('../components/article/RelatedListInContent.vue')
 
   const debug = require('debug')('CLIENT:VIEWS:article')
   const debugDFP = require('debug')('CLIENT:DFP')
@@ -651,7 +646,6 @@
         })
         return assisgnedRole || role
       },
-      getTruncatedVal,
       getValue (o = {}, p = [], d = '') {
         return _.get(o, p, d)
       },

@@ -7,6 +7,10 @@ const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 const config = merge(base, {
   entry: [ './src/entry-client.js' ],
   optimization: {
+    providedExports: true,
+    usedExports: true,
+    sideEffects: true,
+    concatenateModules: true,
     // extract webpack runtime & manifest to avoid vendor chunk hash changing
     // on every build.
     runtimeChunk: {
@@ -14,7 +18,9 @@ const config = merge(base, {
     },
     // extract vendor chunks for better caching
     splitChunks: {
-      chunks: 'initial',
+      chunks: 'all',
+      minSize: 10000,
+      maxSize: 1500000,
       cacheGroups: {
         vendor: {
           name: 'vendor',
@@ -26,7 +32,11 @@ const config = merge(base, {
               // and not a CSS file
               !/\.css$/.test(module.request)
             )
-          }
+          },
+          chunks: 'all',
+          minChunks: 2,
+          maxInitialRequests: 5,
+          // minSize: 0,
         }
       }
     }

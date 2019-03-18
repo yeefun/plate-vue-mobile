@@ -15,6 +15,7 @@ Vue.use(VueLazyload, {
 const Activity = () => import('../views/Activity.vue')
 const Article = () => import('../views/Article.vue')
 const ArticleM = () => import('../views/ArticleM.vue')
+const ArticleN = () => import('../views/ArticleN.vue')
 const External = () => import('../views/External.vue')
 const Headline = () => import('../views/Headline.vue')
 const Home = () => import('../views/Home.vue')
@@ -49,6 +50,14 @@ export function createRouter () {
         children: [ {
           path: 'index.html',
           component: Article
+        } ]
+      },
+      {
+        path: '/storyn/:slug',
+        component: ArticleN,
+        children: [ {
+          path: 'index.html',
+          component: ArticleN
         } ]
       },
       { path: '/app/:slug', component: ArticleM },

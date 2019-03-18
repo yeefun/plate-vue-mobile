@@ -32,6 +32,9 @@ export default {
 <style lang="stylus" scoped>
 .share-light
   display flex
+  justify-content flex-end
+  align-items flex-start
+  margin 0 0 0 auto  
   button
     display inline-block
     width 35px

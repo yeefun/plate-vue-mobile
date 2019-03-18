@@ -60,8 +60,7 @@
 <style lang="stylus" scoped>
   .hero-image
     position relative
-    left -25px
-    width calc(100% + 50px)
+    width 100%
     background-color #fff
     figure
       margin 0
