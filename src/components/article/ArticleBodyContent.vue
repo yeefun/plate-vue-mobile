@@ -1,6 +1,9 @@
 <template>
   <div class="content">
-    <div v-for="(p, index) in content">
+    <div v-for="(p, index) in content"
+      :key="`${id}-content-${index}`"
+      :is="blockWrapper(index)"
+      :position="verge.viewportH()">
       <ArticleImg v-if="p.type === 'image'" :image="get(p, 'content.0')" class="innerImg" />
       <ArticleVideo v-else-if="p.type === 'video'" :id="`latest-${p.id}`"
         :video="get(p, 'content.0', {})" class="video" />
@@ -27,6 +30,8 @@
       </div>
       <div v-else v-html="paragraphComposer(p)" :style="{ backgroundColor: isBrief && bgcolor }"></div>
       <slot v-if="!isBrief && index === lastUnstyledParagraph - 1" name="relatedListInContent"></slot>
+      <slot name="ADAR1" v-if="index === firstTwoUnstyledParagraph[ 0 ]"></slot>
+      <slot name="ADAR2" v-if="index === firstTwoUnstyledParagraph[ 1 ]"></slot>
     </div>
   </div>
 </template>
@@ -36,7 +41,10 @@
   import ArticleImg from 'src/components/article/ArticleImg.vue'
   import AudioBox from 'src/components/AudioBox.vue'
   import ArticleVideo from 'src/components/article/Video.vue'
+  import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
   import Slider from '../Slider.vue'
+  import uuidv4 from 'uuid/v4'
+  import verge from 'verge'
 
   export default {
     name: 'ArticleBodyContent',
@@ -48,6 +56,21 @@
       Slider
     },
     computed: {
+      firstTwoUnstyledParagraph () {
+        const records = []
+        let count = 0
+        let index = 0
+        let lastUnstyled = 0
+        while (count < 2 && index < this.content.length) {
+          if (get(this.content, `${index}.type`) === 'unstyled' && (lastUnstyled + 4) < index) {
+            count++
+            lastUnstyled = index
+            records.push(index)
+          }
+          index++
+        }
+        return records
+      },
       lastUnstyledParagraph () {
         const regex = /^<\s*a[^>]*>/
         let last = this.content.length - 1
@@ -61,6 +84,7 @@
     },
     data () {
       return {
+        id: new uuidv4(),
         sliderOption: {
           initialSlide: 0,
           lazyLoadingInPrevNextAmount: 2,
@@ -68,10 +92,14 @@
           paginationClickable: true,
           paginationHide: false,
           setNavBtn: true
-        }        
+        },
+        verge 
       }
     },
     methods: {
+      blockWrapper (index) {
+        return index <= this.firstTwoUnstyledParagraph[ 0 ] ? 'div' : LazyItemWrapper 
+      },      
       get,
       paragraphComposer (item) {
         switch (item.type) {

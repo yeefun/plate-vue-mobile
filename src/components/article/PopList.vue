@@ -6,9 +6,9 @@
         <div class="pop_item">
           <figure>
             <router-link :to="o.slug" :id="'popular-' + i">
-              <LazyImage :src="getImage(o, 'mobile')" :caption="getValue(o, [ 'title' ])" />
+              <LazyImage :src="getImage(o, 'mobile')" :caption="get(o, 'title')" />
             </router-link>
-            <div class="pop_item--colorBlock" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', '0', 'title' ])" />
+            <div class="pop_item--colorBlock" :style="getSectionStyle(get(o, 'sections.0', ''))" v-text="get(o, 'sections.0.title')" />
           </figure>
           <div class="pop_item_title">
             <router-link :to="o.slug" :id="'popular-' + i" v-text="getTruncatedVal(o.title, 21)" />
@@ -21,9 +21,9 @@
 </template>
 <script>
   import LazyImage from 'src/components/common/LazyImage.vue'
-  import { SECTION_MAP } from '../../constants'
-  import { getImage, getTruncatedVal, getValue } from '../../util/comm'
-  import _ from 'lodash'
+  import { SECTION_MAP } from 'src/constants'
+  import { getImage, getTruncatedVal } from 'src/util/comm'
+  import { get, take } from 'lodash'
   export default {
     name: 'pop-list',
     props: [ 'pop', 'currEnv' ],
@@ -31,18 +31,15 @@
       LazyImage,
     },
     computed: {
-      popArticles () {
-        return _.take(this.pop, 6)
-      }
+      popArticles () { return take(this.pop, 6) }
     },
     methods: {
       getImage,
       getTruncatedVal,
-      getValue,
+      get,
       getSectionStyle (sect) {
-        const sectionId = _.get(sect, [ 'id' ])
-        const style = { backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc') }
-        return style
+        const sectionId = get(sect, 'id')
+        return { backgroundColor: get(SECTION_MAP, `${sectionId}.bgcolor`, '#bcbcbc') }
       },
       getMicroAdName (index) {
         return index === 1 ? 0 : index === 2 ? 1 : 2
@@ -54,18 +51,25 @@
   .poplist-container 
     font-size 18px
     padding 0 20px
+    margin 40px auto
     .pop_list 
       margin-top 10px
       display flex
       align-content flex-start
       flex-wrap wrap
       justify-content space-between
-      
 
       .pop_item 
-        width 31%
+        width 100%
         vertical-align top
         margin-bottom 30px
+
+        > div:not([class="pop_item_title"])
+          height 0
+          position relative          
+          padding-top 66.67%
+
+
         figure
           position relative
           width 100%
@@ -97,18 +101,11 @@
           white-space nowrap
           padding 0 10px
 
-        .pop_item_img 
-          width 100%
-          height 150px
-          background-repeat no-repeat
-          background-size cover
-          background-position center center
-        
         .pop_item_title 
           background-color #fff
           border-top-width 0
           line-height 1.5rem
-          font-size 1.1rem
+          font-size 1.2rem
           display flex
           justify-content center
           align-items flex-start
@@ -141,27 +138,5 @@
         margin 0 0 20px 0
       & >>> .pop_item_title
         width 100%
-
-  @media (min-width 0px) and (max-width 1199px)
-    .poplist-container 
-      .pop_list 
-        .pop_item
-          width 100%
-          
-          > div:not([class="pop_item_title"])
-            height 0
-            position relative          
-            padding-top 66.67%
-
-            > a
-              .pop_item_img
-                position absolute
-                top 0
-                left 0
-                height 100%
-          
-          .pop_item_title
-            font-size 1.2rem
-            line-height 1.5rem          
-          
+                
 </style>

@@ -229,29 +229,4 @@ export default {
           margin-top 1em
           font-size 1rem
           line-height 1rem
-
-@media (min-width: 1200px)
-  .audioBox
-    width calc(100% - 13px)
-    &__info
-      padding 1.5em 0 .5em
-      > h1
-        display block
-        height 3rem
-        margin 0
-        padding-left 15%
-        color #fff
-        font-size 1.3rem
-        text-overflow ellipsis
-        overflow hidden
-      .progress
-        width 89%
-        margin-left 11%
-      .info
-        padding 0 1em 0 15%
-        min-height 32px
-        h1
-          display none
-        p
-          text-align right
 </style>

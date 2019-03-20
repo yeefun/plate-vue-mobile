@@ -32,7 +32,7 @@ export default {
 <style lang="stylus" scoped>
 .share-light
   display flex
-  justify-content flex-end
+  justify-content center
   align-items flex-start
   margin 0 0 0 auto  
   button

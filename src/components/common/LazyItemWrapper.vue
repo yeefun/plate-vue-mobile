@@ -1,6 +1,8 @@
 <template>
-  <div class="plate-vue-lazy-item-wrapper" :id="`lazyitemwrp-${id}`">
-    <div v-show="isVisibleYet || isServerSide" v-if="isVisibleYet || !strict">
+  <div class="plate-vue-lazy-item-wrapper" :id="`lazyitemwrp-${id}`" :key="`lazyitemwrp-${id}-${isVisibleYet}`">
+    <div v-show="isVisibleYet || isServerSide" v-if="isVisibleYet || !strict"
+      :id="`plate-vue-lazy-item-content-${id}-${isVisibleYet}`"
+      :key="`plate-vue-lazy-item-content-${id}-${isVisibleYet}`">
       <slot></slot>
     </div>
   </div>
@@ -47,9 +49,9 @@
             window.removeEventListener('load', this.handler)
             this.handler = null
           }
-          if (document.readyState === 'complete' || document.readyState === 'interactive') {
+          if (document.readyState === 'complete') {
             this.isVisibleYet = true
-            this.handler = null            
+            this.handler = null       
           } else {
             window.addEventListener('load', this.handler)
           }

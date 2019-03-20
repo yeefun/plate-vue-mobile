@@ -8,51 +8,40 @@
         <div class="icon line" @click="shareLine"></div>
       </div>
     </div>
-    <div class="btn-toggle-description" :class="switchStatus" @click="toggleDesc">
-      <div class="hint">開啟／關閉圖說</div>
-    </div>
+    <div class="btn-toggle-description" :class="switchStatus" @click="toggleDesc"><div class="hint">開啟／關閉圖說</div></div>
     <div class="go-next-page" @click="goNextPage" :class="goNextPageClass"></div>
     <div class="progress-wrap progress mobile-only" data-progress-percent="25">
       <div class="progress-bar progress"></div>
     </div>
-    <div class="progress-sidebar desktop-only" v-if="ifRenderProgressSidebar">
-      <div class="stick-container">
-        <div class="stick" v-for="(o, i) in imgArr" :style="stickBottom((i))" :class="{ 'passed' : stickflag[i] }" :index="i" @click="goPage"></div>
-      </div>
-    </div>
-    <div :class="[ 'leading', 'widthDesc' ]">
-      <div :class="[ 'leading_wrapper', leadingWrapperHide ? 'hide' : '' ]">
-        <div class="title">
-          <span><h2 v-text="title"></h2></span>
-        </div>
+    <div class="leading widthDesc" :class="{ inactive: isBrowseringPics }">
+      <div  class="leading_wrapper" :class="{ hide: leadingWrapperHide }">
+        <div class="title"><span><h2 v-text="title"></h2></span></div>
         <div class="brief">
           <div :class="captionStyle">
             <div v-text="heroCaption"></div>
-            <span v-text="getValue(brief, [ 'apiData', 0, 'content', 0 ], '')"></span>
+            <span v-text="get(brief, 'apiData.0.content.0', '')"></span>
           </div>
         </div>
         <div class="img">
-          <img :src="getValue(heroImg, [ 'image', 'url' ])" :class="landscapeClass"
-                :srcset="`${getValue(heroImg, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
-                          ${getValue(heroImg, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
-                          ${getValue(heroImg, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`" />
+          <img :src="get(heroImg, 'image.resizedTargets.tablet.url')" :class="landscapeClass"
+                :srcset="`${get(heroImg, 'image.resizedTargets.mobile.url')} 800w,
+                          ${get(heroImg, 'image.resizedTargets.tablet.url')} 1200w`" />
         </div> 
       </div>  
     </div>
     <div class="article_body">
-      <div class="pic-wrapper" :class="[ picContainerActive ? 'active' : '' ]">
-        <div :class="[ 'pic-container' ]">
+      <div class="pic-wrapper" :class="{ active: picContainerActive }">
+        <div class="pic-container">
           <section :class="[ 'pic-section', i > 0 ? '' : 'active' ]" v-for="(o, i) in imgArr">
             <div class="brief">
               <div :class="captionStyle">
-                <span v-text="getValue(o, [ 'content', 0, 'description' ], '')"></span>
+                <span v-text="get(o, 'content.0.description', '')"></span>
               </div>
             </div>
             <div class="img">
-              <img :src="getValue(o, [ 'content', 0, 'url' ])" :class="landscapeClass"
-                    :srcset="`${getValue(o, [ 'content', 0, 'mobile', 'url' ])} 800w,
-                              ${getValue(o, [ 'content', 0, 'tablet', 'url' ])} 1200w,
-                              ${getValue(o, [ 'content', 0, 'desktop', 'url' ])} 2000w`" />      
+              <img :src="get(o, 'content.0.tablet.url')" :class="landscapeClass"
+                    :srcset="`${get(o, 'content.0.mobile.url')} 800w,
+                              ${get(o, 'content.0.tablet.url')} 1200w`" />      
             </div>
           </section>
         </div>
@@ -60,7 +49,7 @@
     </div>
     <div class="credit-comment" :class="creditCommentClass">
       <div class="credit" v-html="credit"></div>
-      <related-list-thumbnail :relatedList="relatedList" :isApp="isApp" />
+      <RelatedListWithThumbnail :relatedList="relatedList" :isApp="isApp" />
       <!--slot name="slot_dfpFT"></slot-->
       <slot name="slot_fb_comment"></slot>      
     </div>
@@ -69,41 +58,26 @@
 <script>
   import { OnePageScroller } from 'kc-scroll'
   import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
-  import { getClientOS, getValue, addClass, removeClass } from '../../util/comm'
-  import { shareLine, shareFacebook } from '../../util/comm'
-  import _ from 'lodash'
-  import RelatedListWithThumbnail from './RelatedListWithThumbnail.vue'
+  import { getClientOS, addClass, removeClass } from 'src/util/comm'
+  import { getCredit, shareLine, shareFacebook } from 'src/util/comm'
+  import { filter, get, toInteger } from 'lodash'
+  import RelatedListWithThumbnail from 'src/components/article/RelatedListWithThumbnail.vue'
   import verge from 'verge'
 
   export default {
     components: {
-      'related-list-thumbnail': RelatedListWithThumbnail
+      RelatedListWithThumbnail
     },
     computed: {
-      brief () {
-        const { brief } = this.articleData
-        return brief
-      },
+      brief () { return get(this.articleData, 'brief') },
       captionStyle () {
         return {
-          show: (this.descSwitch || (this.viewport < 768 && !this.isLandscape)),
+          show: (this.descSwitch || !this.isLandscape),
           hide: !this.descSwitch
         }
       },
-      contentArr () {
-        const { apiData } = _.get(this.articleData, [ 'content' ], [])
-        return apiData
-      },
-      credit () {
-        const { cameraMan = [], designers = [], engineers = [], extendByline = '', photographers = [], writers = [] } = this.articleData
-        const creditWriterStr = (writers.length > 0) ? '文｜' + writers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"white\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
-        const creditPhotoStr = (photographers.length > 0) ? '攝影｜' + photographers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"white\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
-        const creditDesignStr = (designers.length > 0) ? '設計｜' + designers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"white\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
-        const creditEnginStr = (engineers.length > 0) ? '工程｜' + engineers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"white\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
-        const creditCamStr = (cameraMan.length > 0) ? '影音｜' + cameraMan.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"white\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
-        const creditElse = (extendByline.length > 0) ? extendByline + '&nbsp;' : ''
-        return [ creditWriterStr, creditPhotoStr, creditDesignStr, creditEnginStr, creditCamStr, creditElse ].filter((o) => (o.length > 0)).join('&nbsp;&nbsp;&nbsp;&nbsp;')
-      },
+      contentArr () { return get(this.articleData, 'content.apiData', []) },
+      credit () { return getCredit(this.articleData, 'white') },
       creditCommentClass () {
         return {
           show: this.creditCommentShow,
@@ -112,33 +86,15 @@
       },
       goNextPageClass () {
         return {
-          center: (this.viewport < 768 && !this.isLandscape),
+          center: !this.isLandscape,
           hidden: this.goNextPageHide
         }
       },
-      heroCaption () {
-        const { heroCaption } = this.articleData
-        return heroCaption || ''
-      },
-      heroImg () {
-        const { heroImage } = this.articleData
-        return heroImage
-      },
-      ifRenderProgressSidebar () {
-        return (this.viewport > 1200)
-      },
-      landscapeClass () {
-        return {
-          landscape: this.isLandscape
-        }
-      },
-      imgArr () {
-        return _.filter(this.contentArr, { type: 'image' })
-      },
-      relatedList () {
-        const { relateds } = this.articleData
-        return relateds
-      },
+      heroCaption () { return get(this.articleData, 'heroCaption') },
+      heroImg () { return get(this.articleData, 'heroImage') },
+      landscapeClass () { return { landscape: this.isLandscape } },
+      imgArr () { return filter(this.contentArr, { type: 'image' }) },
+      relatedList () { return get(this.articleData, 'relateds') },
       switchStatus () {
         return {
           on: this.descSwitch,
@@ -146,10 +102,7 @@
           hide: !this.isLandscape || this.descHide
         }
       },
-      title () {
-        const { title } = this.articleData
-        return title
-      }
+      title () { return get(this.articleData, 'title') },
     },
     data () {
       return {
@@ -159,10 +112,11 @@
         creditCommentShow: false,
         creditCommentFixed: false,
         descHide: false,
-        descSwitch: _.get(this.articleData, [ 'isAdvertised' ], false),
+        descSwitch: get(this.articleData, 'isAdvertised', false),
         lastAnimation: 0,
         leadingWrapperHide: false,
         isLandscape: false,
+        isBrowseringPics: false,
         goNextPageHide: false,
         onePageScroll: (new OnePageScroller()),
         picContainerActive: false,
@@ -176,7 +130,7 @@
     methods: {
       currentYPosition,
       elmYPosition,
-      getValue,
+      get,
       goNextPage () {
         const nextPage = this.currIndex <= this.imgArr.length ? this.currIndex + 1 : this.currIndex
         if (this.currIndex < this.imgArr.length) {
@@ -187,7 +141,7 @@
         }
       },
       goHome () {
-        window.location.href = '/'
+        this.$router.push('/')
       },
       goPage (e) {
         const targIndex = Number(e.target.getAttribute('index')) + 1
@@ -196,18 +150,16 @@
         this.onePageScroll.cancelPause()
         while (loopCount !== targIndex) {
           if (this.currIndex < targIndex) {
-            this.sideProgressHandler('pass', loopCount)
             loopCount++
           } else if (this.currIndex > targIndex) {
-            this.sideProgressHandler('back', loopCount)
             loopCount--
           }
         }
       },
       initOnepage () {
         this.onePageScroll.init('.pic-wrapper', {
-          afterMove: (index) => {
-            this.currIndex = parseInt(index)
+          afterMove: index => {
+            this.currIndex = toInteger(index)
             this.updateProgressbar(((this.currIndex - 1) * 100) / this.imgArr.length)
             if (this.currIndex === this.imgArr.length) {
               this.creditCommentShow = true
@@ -216,13 +168,8 @@
             }
           },
           animationTime: 500,
-          beforeMove: (index) => {
+          beforeMove: () => {
             this.smoothScroll('.article_body')
-            if (parseInt(index) > this.currIndex) {
-              this.sideProgressHandler('pass', parseInt(index) - 1)
-            } else {
-              this.sideProgressHandler('back', parseInt(index))
-            }
           },
           defaultInitialPage: 1,
           easing: 'ease',
@@ -306,27 +253,6 @@
       shareFacebook () {
         shareFacebook({ route: this.$route.path })
       },
-      sideProgressHandler (action, index) {
-        return new Promise(() => {
-          const _targContainer = document.querySelector('.stick-container')
-          if (!_targContainer) { return }
-          const _targElement = _targContainer.querySelector(`.stick:nth-child(${index})`)
-          if (!_targElement) { return }
-          switch (action) {
-            case 'pass':
-              _targElement.setAttribute('style', `bottom: ${(_targContainer.offsetHeight - (index * 7))}px;`)
-              break
-            case 'back':
-              _targElement.setAttribute('style', `bottom: ${((this.imgArr.length - index + 1) * 7)}px;`)
-              break
-          }
-        })
-      },
-      stickBottom (index) {
-        return {
-          bottom: `${((this.imgArr.length - index) * 7)}px`
-        }
-      },
       toggleDesc () {
         this.descSwitch = !this.descSwitch
         this.descShowDefault = false
@@ -376,8 +302,7 @@
       },
       updateProgressbar (percentage) {
         return new Promise(() => {
-          const _progressBar = document.querySelector('.progress-bar')
-          _progressBar.setAttribute('style', `left: ${percentage}%;`)
+          document.querySelector('.progress-bar').setAttribute('style', `left: ${percentage}%;`)
         })
       },
       updateIsLandscape () {
@@ -428,23 +353,23 @@
     name: 'ariticle-body-photo',
     props: {
       articleData: {
-        default: () => { return {} }
+        default: () => ({})
       },
       viewport: {
-        default: () => { return {} }
-      },
-      initFBComment: {
-        default: () => {
-          return () => {
-            console.log('init fb comment')
-          }
-        }
+        default: () => ({})
       },
       isApp: {
-        default: () => {
-          return false
-        }
+        default: false
       }
+    },
+    watch: {
+      currIndex () {
+        if (this.currIndex > 1 && this.currIndex <= this.imgArr.length) {
+          this.isBrowseringPics = true
+        } else {
+          this.isBrowseringPics = false
+        }
+      },
     }
   }
 </script>
@@ -458,6 +383,13 @@
     user-select none
   .leading
     height calc(180vh)
+    &.widthDesc
+      background-image linear-gradient(180deg, transparent, rgba(0,0,0,0.7))
+    &.inactive
+      .leading_wrapper
+        .img img, .title
+          display none
+    
     &_wrapper
       position fixed
       top 0
@@ -466,14 +398,18 @@
       width 100vw
       &.hide
         opacity 0
+     
       .title
         position relative
         span
-          position absolute
-          height 100vh
-          width 100vw
-          display flex
-          justify-content center
+          text-align center
+          padding 20px      
+          margin-bottom 0!important 
+          position relative
+          height auto
+          width 100%
+          display inline-block       
+
           padding-top 10%
           z-index 10
           background-image linear-gradient(0deg, transparent, rgba(0,0,0,0.5))
@@ -483,17 +419,31 @@
             font-weight 300
             text-shadow 0.9px 0.5px 0 rgba(0, 0, 0, 0.8)
             font-family 'Noto Sans TC','STHeitiTC-Light','Microsoft JhengHei',sans-serif
-      .brief
-        & > div
+      .img
+          width 100%
+          height 100%
           position absolute
+          top 0
+          left 0
+          img:not([class="landscape"])
+            width 100%
+            height 100%
+            object-fit cover
+            object-position center center
+            background-color #696969
+
+      .brief
+        position relative
+        & > div
+          height auto
+          position relative        
+
           z-index 10
-          height 20vh
           width 100vw
           display flex
           justify-content flex-start
           align-items center
           flex-direction column
-          background-image linear-gradient(180deg,transparent,rgba(0,0,0,0.7))
           bottom 0   
 
           div
@@ -698,35 +648,35 @@
     display none
     z-index 21
     .credit
+      padding 0 20px
+      width 100%
+      display block    
+
       color #fff
-      width 900px
-      display flex
       height 100px
       vertical-align top
       margin 40px auto
-      align-items center
       position relative
       text-shadow 0.9px 0.5px 0 rgba(0, 0, 0, 0.8)
-      justify-content flex-start
       a, a:hover, a:link, a:visited
         color #fff
     
     .related-container
-      width 900px
-      margin 40px auto
+      width 100%
+      margin 0      
     
-    .article_fb_comment
-      margin 40px auto
-      width 900px
+    .article_fb_comment, .facebook-comments
       background-color rgb(255, 255, 255)
       padding 1.5rem
+      width 100%
+      margin 40px auto 0  
+
     &.show
       display block
     &.active
       position fixed
       top 0
       left 0
-
   .go-next-page
       position fixed
       width 35px
@@ -743,6 +693,12 @@
       -webkit-transition all .1s
       transition all .1s
       right 10px
+
+      &.center
+        left 50%
+        margin-left -20px 
+        height 40px
+        width 40px
 
       &:hover
         background-color rgba(240, 240, 240, 0.8)
@@ -775,6 +731,10 @@
           position relative
           background-color #000        
           .img
+            img:not([class="landscape"])
+              object-fit contain
+              object-position 0 20%
+              background-color #696969          
             img
               object-fit contain
               max-height 100%
@@ -787,7 +747,7 @@
       & > div
         position absolute
         z-index 10
-        height 20vh
+        height 40vh
         width 100vw
         display flex
         justify-content flex-start
@@ -819,11 +779,9 @@
 
         &.show
           display flex    
-  @media (min-width 768px)
-    .mobile-only
-      display none !important
 
-  @media screen and (-webkit-min-device-pixel-ratio:0) and (max-width 767px) and (orientation:landscape)
+
+  @media screen and (-webkit-min-device-pixel-ratio:0) and (orientation:landscape)
     .go-next-page
       bottom auto
       top 23px
@@ -835,71 +793,4 @@
       .hint
         top 45px
         left auto
-  @media (max-width 767px)
-    .leading
-      &.widthDesc
-        background-image linear-gradient(180deg, transparent, rgba(0,0,0,0.7))
-      &_wrapper
-        .title
-          span
-            text-align center
-            padding 20px          
-            margin-bottom 0!important
-            position relative
-            height auto
-            width 100%
-            display inline-block
-        .img
-          width 100%
-          height 100%
-          position absolute
-          top 0
-          left 0
-          img:not([class="landscape"])
-            width 100%
-            height 100%
-            object-fit cover
-            object-position center center
-            background-color #696969
-        
-        .brief
-          position relative
-          & > div
-            height auto
-            background-image none
-            position relative
-    .go-next-page
-      &.center
-        left 50%
-        margin-left -20px 
-        height 40px
-        width 40px
-    .credit-comment
-      .credit
-        padding 0 20px
-        width 100%
-        display block
-      
-      .related-container
-        width 100%
-        margin 0
-
-      .article_fb_comment
-        width 100%
-        margin 40px auto 0
-    .article_body
-      > .pic-wrapper
-        > .pic-container
-          > .pic-section
-            .img
-              img:not([class="landscape"])
-                object-fit contain
-                object-position 0 20%
-                background-color #696969
-            
-            .brief
-              & > div
-                height 40vh
-
-
 </style>

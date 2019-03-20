@@ -106,17 +106,5 @@
       overflow hidden
     figcaption
       margin-top .5em
-      // .image-caption
-      //   display block
-      //   margin-top .5em
-      //   color #6e6e6e
-      //   line-height 1.5
-      //   text-align justify
-      // .info-title__category
-      //   display block
-      //   margin 30px 0 0 0
-      //   padding-left 10px
-      //   color #000
-      //   font-size 21px
-      //   border-left 7px solid #989898
+
 </style>

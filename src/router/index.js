@@ -14,8 +14,6 @@ Vue.use(VueLazyload, {
 
 const Activity = () => import('../views/Activity.vue')
 const Article = () => import('../views/Article.vue')
-const ArticleM = () => import('../views/ArticleM.vue')
-const ArticleN = () => import('../views/ArticleN.vue')
 const External = () => import('../views/External.vue')
 const Headline = () => import('../views/Headline.vue')
 const Home = () => import('../views/Home.vue')
@@ -52,15 +50,7 @@ export function createRouter () {
           component: Article
         } ]
       },
-      {
-        path: '/storyn/:slug',
-        component: ArticleN,
-        children: [ {
-          path: 'index.html',
-          component: ArticleN
-        } ]
-      },
-      { path: '/app/:slug', component: ArticleM },
+      { path: '/app/:slug', component: Article },
       { path: '/headlinenews', component: Headline }, // 禾多推播用頁面
       { path: '/project-list/:style?', component: Project },
       // { path: '/homeb', component: HomeB },

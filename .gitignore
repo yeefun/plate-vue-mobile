@@ -6,6 +6,7 @@ npm-debug.log*
 debug.log
 .DS_Store
 .idea
+out.log
 api/config.js
 /tmp
 src/utils/jquery.dfp.min.js

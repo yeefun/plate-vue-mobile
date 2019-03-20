@@ -37,6 +37,30 @@ export function getArticleReadTime (paragraphs = []) { // deprecated
   return min
 }
 
+export function getCredit (articleData, className) {
+  const prefixer = type => {
+    switch (type) {
+      case 'writer': return '文｜'
+      case 'photographer': return '攝影｜'
+      case 'designer': return '設計｜'
+      case 'engineer': return '工程｜'
+      case 'camaeraMan': return '影音｜'
+    }
+  }
+  const constructor = (persons, type) => {
+    const prefix = prefixer(type)
+    const str = _.map(_.filter(persons, o => o !== null && o !== undefined), p => `<a class=\"${className || 'blue'}\" href=\"/author/${p.id}\">${p.name}</a>`).join('&nbsp;')
+    return str.length ? `<span>${prefix}${str}</span>` : ''
+  }
+  const creditWriterStr = constructor(_.get(articleData, 'writers', []), 'writer')
+  const creditPhotoStr = constructor(_.get(articleData, 'photographers', []), 'photographer')
+  const creditDesignStr = constructor(_.get(articleData, 'designers', []), 'designer')
+  const creditEnginStr = constructor(_.get(articleData, 'engineers', []), 'engineer')
+  const creditCamStr = constructor(_.get(articleData, 'cameraMan', []), 'camaeraMan')
+  const creditElse = _.get(articleData, 'extendByline', '')
+  return [ creditWriterStr, creditPhotoStr, creditDesignStr, creditEnginStr, creditCamStr, creditElse ].filter(o => _.get(o, 'length', 0) > 0).join('')
+}
+
 export function getAuthor (article, option = '', delimiter = '｜') {
   const writers = (_.get(article, [ 'writers', 'length' ], 0) > 0)
     ? `文${delimiter}` + _.map(article.writers, (n) => { return '<a href="' + getAuthorHref(n) + '" id="author-' + n.id + '">' + _.get(n, [ 'name' ], null) + '</a>' }).join('、') : ''

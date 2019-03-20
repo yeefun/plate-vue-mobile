@@ -3,13 +3,17 @@
     <transition name="fade" mode="out-in">
       <router-view class="view"></router-view>
     </transition>
+    <LiveStream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
   </div>
 </template>
 
 <script>
-  import { mmLog } from './util/comm.js'
-  import { visibleTracking } from './util/visibleTracking'
+  import { get } from 'lodash'
+  import { mmLog } from 'src/util/comm.js'
+  import { visibleTracking } from 'src/util/visibleTracking'
+  import LiveStream from 'src/components/LiveStream.vue'
   import Tap from 'tap.js'
+  import moment from 'moment'
   
   const debug = require('debug')('CLIENT:App')
 
@@ -28,10 +32,23 @@
         globalTapevent: {}
       }
     },
+    components: {
+      LiveStream
+    },
     computed: {
       currPath () {
         return this.$route.fullPath
-      }
+      },
+      eventEmbedded () { return get(this.$store, 'state.eventEmbedded.items.0') },      
+      hasEventEmbedded () {
+        const _now = moment()
+        const _eventStartTime = moment(new Date(get(this.eventEmbedded, 'startDate')))
+        let _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate')))
+        if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
+          _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate'))).add(12, 'h')
+        }
+        return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
+      }, 
     },
     watch: {
       currPath: function () {
@@ -247,40 +264,11 @@ button:focus {
   object-position center center
   background-size 40% 40%
 
-
 @media (min-width 0px) and (max-width 320px)
   .dfp-cover
     > .ad
       > .close
         right 0
-@media (min-width 600px)
-  .container
-    width 90%
 
-@media (min-width 900px)
-  .container
-    width 768px
-
-@media (max-width 1199px)
-  .mobile-hide
-    display none !important
-
-@media (min-width 1200px)
-  .mobile-only
-    display none !important
-
-  .desktop-only
-    display flex !important
-
-  .container
-    width 1024px
-
-@media only screen and (min-width 0px) and (max-width 1199px)
-  .dfp-desktop
-    display none !important
-
-@media only screen and (min-width 1200px)
-  .dfp-mobile
-    display none !important
 
 </style>
