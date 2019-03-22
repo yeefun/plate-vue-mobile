@@ -61,7 +61,7 @@
   import truncate from 'truncate'
   import uuidv4 from 'uuid/v4'
   import verge from 'verge'
-  const debug = require('CLIENT:External')
+  const debug = require('debug')('CLIENT:External')
   const fetchData = (store, slug) => Promise.all([
     fetchSSRData(store),
     fetchPartners(store),
