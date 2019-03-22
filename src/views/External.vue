@@ -1,110 +1,72 @@
 <template>
-  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :mode="dfpMode" :section="'other'">
+  <vue-dfp-provider
+    :dfpUnits="dfpUnits"
+    :dfpid="dfpid"
+    :options="dfpOptions"
+    :mode="dfpMode"
+    :section="'other'">
     <template slot-scope="props" slot="dfpPos">
       <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
-      <!-- <app-header :commonData="commonData" :eventLogo="eventLogo" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" ></app-header> -->
-      <article-body-external :articleData="articleData">
-        <vue-dfp :is="props.vueDfp" slot="dfp-PCHD" :config="props.config" :dfpId="props.dfpId" pos="PCHD" class="dfp dfp--desktop" style="margin: 0 auto; padding: 20px 0;"></vue-dfp>
-        <vue-dfp :is="props.vueDfp" slot="dfp-MBHD" :config="props.config" :dfpId="props.dfpId" pos="MBHD" class="dfp dfp--mobile" style="margin: 0 auto; padding: 20px 0;"></vue-dfp>
-        <vue-dfp :is="props.vueDfp" v-if="viewport > 1200" slot="dfp-AT1" :config="props.config" :dfpId="props.dfpId" pos="PCAR"  class="dfp dfp--desktop"></vue-dfp>
-        <vue-dfp :is="props.vueDfp" v-if="viewport < 1199" slot="dfp-AT1" :config="props.config" :dfpId="props.dfpId" pos="MBAR1" class="dfp dfp--mobile"></vue-dfp>
-        <vue-dfp :is="props.vueDfp" slot="dfp-AT2" :config="props.config" :dfpId="props.dfpId" pos="MBAR2" class="dfp dfp--mobile"></vue-dfp>
-        <vue-dfp :is="props.vueDfp" slot="dfp-MBE1" pos="MBE1" :dfpId="props.dfpId" :config="props.config" class="dfp dfp--mobile"></vue-dfp>
-        <div slot="dfp-PCE1E2" class="dfp--PCE1E2 dfp--desktop">
-          <vue-dfp :is="props.vueDfp" pos="PCE1" :dfpId="props.dfpId" :config="props.config"></vue-dfp>
-          <vue-dfp :is="props.vueDfp" pos="PCE2" :dfpId="props.dfpId" :config="props.config"></vue-dfp>
-        </div>
-        <vue-dfp :is="props.vueDfp" slot="dfp-PCR1" pos="PCR1" class="dfp--desktop" :config="props.config" ></vue-dfp>
-        <latest-list slot="latestList" :latest="latestArticle"></latest-list>
-        <vue-dfp :is="props.vueDfp" slot="dfp-PCR2" pos="PCR2" class="dfp--desktop" :config="props.config"></vue-dfp>
-        <pop-list slot="popularList" class="popularList" :pop="popularList" >
-          <micro-ad  v-for="(a, i) in getValue(microAds, [ 'article' ])" :currEnv="dfpMode" :currUrl="articleUrl"
-            :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
-            class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
-        </pop-list>
-        <proj-list slot="projectList" :projects="projectList" :viewport="viewport"></proj-list>
-        <div slot="fbComment" class="fbComment" v-html="fbCommentHtml"></div>
-        <div slot="footer" class="footer">
-          <vue-dfp :is="props.vueDfp" :config="props.config" pos="PCFT" class="dfp dfp--desktop"></vue-dfp>
-          <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBFT" class="dfp dfp--mobile" :extClass="`${styleDfpAd}`"></vue-dfp>
-          <app-footer/>
-        </div>
-        <template slot="recommendList">
-          <div><h3>推薦文章</h3></div>
-          <div id="matchedContentContainer" class="matchedContentContainer"></div>
-        </template>
-        <article-aside-fixed slot="articleAsideFixed">
-          <vue-dfp :is="props.vueDfp" slot="dfpR2" pos="PCR2" class="dfp--desktop" :config="props.config"></vue-dfp>
-          <div slot="fbPage" class="article__aside--fbPage">
-            <div class="fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-adapt-container-width="true" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
-              <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
-                <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
-              </blockquote>
-            </div>
-          </div>
-          <pop-list-vert :pop="popularList" slot="popListVert">
-            <micro-ad  v-for="a in getValue(microAds, [ 'articleFixed' ])" :currEnv="dfpMode" :currUrl="articleUrl"
-              :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
-              class="popListVert-list__item" :slot="`microAd${getValue(a, [ 'pos' ])}`"></micro-ad>
-          </pop-list-vert>
-        </article-aside-fixed>
+      <article-body-external :articleData="articleData" :dfpMode="dfpMode">
+        <vue-dfp :is="props.vueDfp" pos="MBHD" class="dfp dfp--mobile center" :config="props.config" style="margin: 0 auto; padding: 20px 0;" slot="ADHD"></vue-dfp>
+        <vue-dfp :is="props.vueDfp" pos="MBE1" class="dfp dfp--mobile center" :config="props.config" slot="ADE1" />
+        <vue-dfp :is="props.vueDfp" pos="MBAR1" class="dfp dfp--mobile center" :config="props.config" slot="ADAR1"/>
+        <vue-dfp :is="props.vueDfp" pos="MBAR2" class="dfp dfp--mobile center" :config="props.config" slot="ADAR2"/>
       </article-body-external>
-      <share-tools v-if="viewport > 1200"></share-tools>
-      <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded"></live-stream>
-      <DfpST v-if="(viewport < 550)" :props="props">
+
+      <div class="article-page-footer">
+        <lazy-item-wrapper :position="verge.viewportH()" :strict="true">
+          <vue-dfp :is="props.vueDfp" pos="MBFT" class="dfp dfp--mobile center" :config="props.config" />
+        </lazy-item-wrapper>
+        <div class="footer"><Footer /></div>
+      </div>
+      <dfp-st :props="props">
         <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
-      </DfpST>
-      <DfpCover v-if="isTimeToShowAdCover" v-show="showDfpCoverAdFlag && viewport < 1199"> 
-        <vue-dfp :is="props.vueDfp" v-if="(viewport < 550)" slot="ad-cover" pos="MBCVR" :config="props.config"></vue-dfp>
-      </DfpCover> 
-      <DfpCover v-if="showDfpCoverAd2Flag && viewport < 1199" :showCloseBtn="false" class="raw"> 
-        <vue-dfp :is="props.vueDfp" v-if="(viewport < 550)" slot="ad-cover" pos="MBCVR2" :config="props.config"></vue-dfp>
-      </DfpCover>
-      <DfpCover v-if="showDfpCoverInnityFlag && viewport < 1199" :showCloseBtn="false" class="raw">
-        <vue-dfp :is="props.vueDfp" pos="MBCVR3" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
-      </DfpCover>      
+      </dfp-st>
+      <dfp-cover v-if="!hiddenAdvertised && isTimeToShowAdCover" v-show="showDfpCoverAdFlag"> 
+        <vue-dfp :is="props.vueDfp" pos="MBCVR" :config="props.config" slot="ad-cover" /> 
+      </dfp-cover> 
+      <dfp-cover v-if="!hiddenAdvertised && showDfpCoverAd2Flag" :showCloseBtn="false" class="raw"> 
+        <vue-dfp :is="props.vueDfp" pos="MBCVR2" :config="props.config" slot="ad-cover" /> 
+      </dfp-cover>
+      <dfp-cover v-if="!hiddenAdvertised && showDfpCoverInnityFlag" :showCloseBtn="false" class="raw">
+        <vue-dfp :is="props.vueDfp" pos="MBCVR3" :config="props.config" slot="ad-cover" />
+      </dfp-cover>      
+      <dfp-fixed v-if="!hiddenAdvertised && hasDfpFixed" v-show="showDfpFixedBtn" v-on:closeDfpFixed="closeDfpFixed">
+        <vue-dfp :is="props.vueDfp" pos="PCFF" slot="dfpFF" :config="props.config"/>
+      </dfp-fixed>
+      <div class="fb-quote"></div>      
     </template>
   </vue-dfp-provider>
 </template>
-
 <script>
-  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID } from '../constants'
-  import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
-  import { MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT } from '../constants'
-  import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
+  import { FB_APP_ID, FB_PAGE_ID, DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE, SITE_TITLE_SHORT, SITE_MOBILE_URL, SITE_URL, SECTION_WATCH_ID } from '../constants'
+  import { MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT } from 'src/constants'
+  import { ScrollTriggerRegister } from 'src/util/scrollTriggerRegister'
   import { adtracker } from 'src/util/adtracking'
-  import { consoleLogOnDev, currEnv, getValue, sendAdCoverGA, updateCookie } from '../util/comm'
-  import { getRole } from '../util/mmABRoleAssign'
-  import { microAds } from '../constants/microAds'
-  import _ from 'lodash'
-  import ArticleAsideFixed from '../components/article/ArticleAsideFixed.vue'
-  import ArticleBodyExternal from '../components/article/ArticleBodyExternal.vue'
+  import { currEnv, sendAdCoverGA, updateCookie } from 'src/util/comm'
+  import { get, isEmpty } from 'lodash'
+  import { getRole } from 'src/util/mmABRoleAssign'
+  import ArticleBodyContainer from 'src/components/article/ArticleBodyContainer.vue'
+  import ArticleBodyExternal from 'src/components/article/ArticleBodyExternal.vue'
   import Cookie from 'vue-cookie'
-  import DfpCover from '../components/DfpCover.vue'
-  import DfpST from '../components/DfpST.vue'
-  import Footer from '../components/Footer.vue'
-  import Header from '../components/Header.vue'
-  import HeaderR from '../components/HeaderR.vue'
-  import LatestList from '../components/article/LatestList.vue'
-  import LiveStream from '../components/LiveStream.vue'
-  import MicroAd from '../components/MicroAd.vue'
-  import PopList from '../components/article/PopList.vue'
-  import PopListVert from '../components/article/PopListVert.vue'
-  import ProjectList from '../components/article/ProjectList.vue'
-  import ShareTools from '../components/article/ShareTools.vue'
+  import DfpCover from 'src/components/DfpCover.vue'
+  import DfpFixed from 'src/components/DfpFixed.vue'
+  import DfpST from 'src/components/DfpST.vue'
+  import Footer from 'src/components/Footer.vue'
+  import HeaderR from 'src/components/HeaderR.vue'
+  import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
-  import moment from 'moment'
-  import titleMetaMixin from '../util/mixinTitleMeta'
+  import titleMetaMixin from 'src/util/mixinTitleMeta'
   import truncate from 'truncate'
   import uuidv4 from 'uuid/v4'
-
-  const fetchCommonData = (store) => {
-    return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'projects' ] })
-  }
-
-  const fetchData = (store, slug) => {
-    return Promise.all([ fetchSSRData(store), fetchPartners(store), fetchExternal(store, slug) ])
-  }
+  import verge from 'verge'
+  const debug = require('CLIENT:External')
+  const fetchData = (store, slug) => Promise.all([
+    fetchSSRData(store),
+    fetchPartners(store),
+    fetchExternal(store, slug)
+  ])
 
   const fetchEvent = (store, eventType = 'embedded') => {
     return store.dispatch('FETCH_EVENT', {
@@ -118,74 +80,50 @@
     })
   }
 
-  const fetchExternal = (store, slug) => {
-    return store.dispatch('FETCH_EXTERNAL', {
+  const fetchExternal = (store, slug) => (
+    store.dispatch('FETCH_EXTERNAL', {
       params: {
         where: {
           name: {
-            $in: [
-              slug
-            ]
+            $in: [ slug ]
           }
         }
       }
     })
-  }
+  )
 
-  const fetchLatestArticle = (store) => {
-    return store.dispatch('FETCH_LATESTARTICLE', {
-      params: {
-        sort: '-publishedDate'
-      }
-    })
-  }
-
-  const fetchPartners = (store) => {
-    const page = _.get(store.state, [ 'partners', 'meta', 'page' ], 0) + 1
+  const fetchPartners = store => {
+    const page = get(store.state, 'partners.meta.page', 0) + 1
     return store.dispatch('FETCH_PARTNERS', {
       params: {
         max_results: 25,
         page: page
       }
     }).then(() => {
-      if (_.get(store.state, [ 'partners', 'items', 'length' ]) < _.get(store.state, [ 'partners', 'meta', 'total' ])) {
+      if (get(store, 'state.partners.items.length') < get(store, 'state.partners.meta.total')) {
         fetchPartners(store)
       }
     })
   }
 
-  const fetchPop = (store) => {
+  const fetchPop = store => {
     return store.dispatch('FETCH_ARTICLES_POP_LIST', {})
   }
 
-  const fetchSSRData = (store) => {
+  const fetchSSRData = store => {
     return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] })
   }
 
   export default {
     name: 'External',
     asyncData ({ store, route: { params: { name }}}) {
+      console.log('name', name)
       return fetchData(store, name)
-    },
-    components: {
-      'app-footer': Footer,
-      'app-header': Header,
-      'article-aside-fixed': ArticleAsideFixed,
-      'article-body-external': ArticleBodyExternal,
-      'latest-list': LatestList,
-      'live-stream': LiveStream,
-      'micro-ad': MicroAd,
-      'pop-list': PopList,
-      'pop-list-vert': PopListVert,
-      'proj-list': ProjectList,
-      'share-tools': ShareTools,
-      'vue-dfp-provider': VueDfpProvider,
-      DfpCover,
-      DfpST,
-      HeaderR
-    },
+    },  
     mixins: [ titleMetaMixin ],
     metaSet () {
+      console.log('this.articleData.name', this.articleData.name)
+      console.log('this.articleData', this.articleData)
       if (!this.articleData.name && process.env.VUE_ENV === 'server') {
         const e = new Error()
         e.massage = 'Page Not Found'
@@ -193,8 +131,8 @@
         throw e
       }
       const { brief, name, partner, thumb } = this.articleData
-      const title = `${_.get(this.articleData, [ 'title' ])} - ${SITE_TITLE_SHORT}`
-      const category = _.get(partner, [ 'name' ], '')
+      const title = `${get(this.articleData, 'title')} - ${SITE_TITLE_SHORT}`
+      const category = get(partner, 'name', '')
       const ogDescription = truncate(brief, 197) || SITE_DESCRIPTION
       const imageUrl = thumb || SITE_OGIMAGE
       // let abIndicator
@@ -225,40 +163,21 @@
           <meta property="og:image" content="${imageUrl}">
         ` // <meta name="mm-opt" content="external${abIndicator}">
       }
-    },
-    data () {
-      return {
-        abIndicator: '',
-        clientSideFlag: false,
-        dfpid: DFP_ID,
-        dfpHeaderLogoLoaded: false,
-        dfpMode: 'prod',
-        dfpUnits: DFP_UNITS,
-        hasSentFirstEnterGA: false,
-        isVponSDKLoaded: false,
-        microAds,
-        sectionTempId: `external-${uuidv4()}`,
-        showDfpCoverAdFlag: false,
-        showDfpCoverAd2Flag: false,
-        showDfpCoverInnityFlag: false,
-        showDfpFixedBtn: false,
-        showDfpHeaderLogo: false,
-        viewport: undefined
-      }
+    },  
+    components: {
+      'article-body-container': ArticleBodyContainer,
+      'article-body-external': ArticleBodyExternal,
+      'dfp-st': DfpST,
+      'dfp-cover': DfpCover,
+      'dfp-fixed': DfpFixed,
+      'lazy-item-wrapper': LazyItemWrapper,
+      'vue-dfp-provider': VueDfpProvider,
+      Footer,
+      HeaderR      
     },
     computed: {
-      articleUrl () {
-        return `${SITE_URL}/external/${this.currArticleSlug}/`
-      },
-      articleData () {
-        return _.get(this.$store, [ 'state', 'external', this.currArticleSlug ], {})
-      },
-      commonData () {
-        return this.$store.state.commonData
-      },
-      currArticleSlug () {
-        return this.$store.state.route.params.name
-      },
+      articleData () { return get(this.$store, `state.external.${this.currArticleSlug}`, {}) },
+      currArticleSlug () { return get(this.$store, 'state.route.params.name') },
       dfpOptions () {
         const currentInstance = this
         return Object.assign({}, DFP_OPTIONS, {
@@ -289,28 +208,24 @@
               case 'MBCVR':
                 sendAdCoverGA('dfp')
                 if (adDisplayStatus === 'none') {
-                  updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
+                  updateCookie().then((isVisited) => {
                     this.showDfpCoverAd2Flag = !isVisited
                   })
                 } else {
-                  updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
+                  updateCookie().then((isVisited) => {
                     this.showDfpCoverAdFlag = !isVisited
                   })
                 }
                 break
               case 'MBCVR2':
-                consoleLogOnDev({ msg: 'ad2 loaded' })
+                debug('ad2 loaded')
                 sendAdCoverGA('ad2')
-                if (adDisplayStatus === 'none') {
-                  consoleLogOnDev({ msg: 'dfp response no ad2' })
-                }
+                adDisplayStatus === 'none' && debug('dfp response no ad2')
                 break
               case 'MBCVR3':
                 // debug('adInnity loaded')
                 sendAdCoverGA('innity')
-                if (adDisplayStatus === 'none') {
-                  // debug('dfp response no innity')
-                }
+                adDisplayStatus === 'none' && debug('dfp response no innity')
                 break    
               case 'PCFF':
                 this.showDfpFixedBtn = !(adDisplayStatus === 'none')
@@ -332,118 +247,38 @@
           setCentering: true,
           sizeMapping: DFP_SIZE_MAPPING
         })
-      },
-      eventEmbedded () {
-        return _.get(this.$store.state.eventEmbedded, [ 'items', '0' ])
-      },
-      eventLogo () {
-        return _.get(this.$store.state.eventLogo, [ 'items', '0' ])
-      },
-      fbAppId () {
-        return _.get(this.$store, [ 'state', 'fbAppId' ])
-      },
-      fbCommentHtml () {
-        return `<div class="fb-comments" data-href="${SITE_URL}/external/${this.currArticleSlug}/" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>`
-      },
-      hasEventEmbedded () {
-        const _now = moment()
-        const _eventStartTime = moment(new Date(_.get(this.eventEmbedded, [ 'startDate' ])))
-        let _eventEndTime = moment(new Date(_.get(this.eventEmbedded, [ 'endDate' ])))
-        if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
-          _eventEndTime = moment(new Date(_.get(this.eventEmbedded, [ 'endDate' ]))).add(12, 'h')
-        }
-        return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
-      },
-      isTimeToShowAdCover () {
-        return _.get(this.$store, 'state.isTimeToShowAdCover', false)
       },      
-      latestArticle () {
-        return _.get(this.$store.state.latestArticle, [ 'items' ], [])
+      fbAppId () { return get(this.$store, 'state.fbAppId') },
+      hasDfpFixed () { return this.sectionId === SECTION_WATCH_ID },
+      hiddenAdvertised () { return get(this.articleData, 'hiddenAdvertised', false) },   
+      isTimeToShowAdCover () { return get(this.$store, 'state.isTimeToShowAdCover', false) },
+      sectionId () {
+        const _sectionId = get(this.articleData, 'sections.0.id')
+        return this.dfpUnits[ _sectionId ] ? _sectionId : 'other'
       },
-      popularList () {
-        return _.get(this.$store, [ 'state', 'articlesPopList', 'report' ], [])
-      },
-      projectList () {
-        return _.get(this.$store.state, [ 'commonData', 'projects', 'items' ])
-      },
-      styleDfpAd () {
-        return (this.viewport < 321) ? 'ad-fit' : ''
+    },
+    data () {
+      return {
+        abIndicator: '',
+        dfpid: DFP_ID,
+        dfpMode: 'prod',
+        dfpUnits: DFP_UNITS,
+        dfpHeaderLogoLoaded: false,
+        hasSentFirstEnterGA: false,
+        sectionTempId: `external-${uuidv4()}`,
+        showDfpHeaderLogo: false,
+        showDfpCoverAdFlag: false,
+        showDfpCoverAd2Flag: false,
+        showDfpCoverInnityFlag: false,
+        showDfpFixedBtn: false,
+        verge
       }
-    },
-    watch: {
-      articleUrl: function () {
-        window.FB && window.FB.init({
-          appId: this.fbAppId,
-          xfbml: true,
-          version: 'v2.0'
-        })
-        window.FB && window.FB.XFBML.parse()
-        this.$_external_updateMatchedContentScript()
-        this.$_external_updateMediafarmersScript()
-        this.$_external_sendGA(this.articleData)
-      },
-      articleData: function () {
-        if (!this.hasSentFirstEnterGA) {
-          this.$_external_sendGA(this.articleData)
-          this.hasSentFirstEnterGA = true
-        }
-      }
-    },
-    beforeMount () {
-      fetchCommonData(this.$store)
-      fetchPop(this.$store)
-      fetchLatestArticle(this.$store)
-      fetchEvent(this.$store, 'embedded')
-      fetchEvent(this.$store, 'logo')
-    },
-    mounted () {
-      this.clientSideFlag = process.env.VUE_ENV === 'client'
-      this.abIndicator = this.$_external_getMmid()
-      this.$_external_updateViewport()
-      this.$_external_updateSysStage()
-      this.$_external_insertMediafarmersScript()
-
-      if (!_.isEmpty(this.articleData)) {
-        this.$_external_sendGA(this.articleData)
-        this.hasSentFirstEnterGA = true
-      }
-      this.$_external_insertMatchedContentScript()
-      const scrollTriggerRegister = new ScrollTriggerRegister([
-        { target: '#matchedContentContainer', offset: 400, cb: this.$_external_insertMatchedContentScript },
-        { target: '#matchedContentContainer', offset: 400, cb: this.$_external_initializeFBComments }
-      ])
-      scrollTriggerRegister.init()
-
-      window.addEventListener('resize', () => {
-        this.$_external_updateViewport()
-      })
-    },
-    updated () {
-      this.$_external_updateSysStage()
-    },
-    beforeRouteLeave (to, from, next) {
-      if (process.env.VUE_ENV === 'client') {
-        const mediafarmersScript = document.querySelector('#mediafarmersJS')
-        if (mediafarmersScript) {
-          document.querySelector('body').removeChild(mediafarmersScript)
-        }
-      }
-      next()
     },
     methods: {
-      $_external_getMmid () {
-        const mmid = Cookie.get('mmid')
-        let assisgnedRole = _.get(this.$route, [ 'query', 'ab' ])
-        if (assisgnedRole) {
-          assisgnedRole = assisgnedRole.toUpperCase()
-        }
-        const role = getRole({ mmid, distribution: [
-          { id: 'A', weight: 50 },
-          { id: 'B', weight: 50 } ]
-        })
-        return assisgnedRole || role
-      },
-      $_external_initializeFBComments () {
+      closeDfpFixed () {
+        this.showDfpFixedBtn = false
+      }, 
+      initializeFBComments () {
         if (window.FB) {
           window.FB && window.FB.init({
             appId: this.fbAppId,
@@ -452,16 +287,21 @@
           })
           window.FB && window.FB.XFBML.parse()
         }
-      },
-      $_external_insertMediafarmersScript () {
-        const mediafarmersScript = document.createElement('script')
-        mediafarmersScript.setAttribute('id', 'mediafarmersJS')
-        mediafarmersScript.setAttribute('src', 'https://mediafarmers.org/api/api.js')
-        if (!document.getElementById('mediafarmersJS')) {
-          document.querySelector('body').appendChild(mediafarmersScript)
+      },      
+      getMmid () {
+        const mmid = Cookie.get('mmid')
+        let assisgnedRole = get(this.$route, 'query.ab')
+        if (assisgnedRole) {
+          assisgnedRole = assisgnedRole.toUpperCase()
         }
-      },
-      $_external_insertMatchedContentScript () {
+        const role = getRole({ mmid, distribution: [
+          { id: 'A', weight: 50 },
+          { id: 'B', weight: 50 } ]
+        })
+        return assisgnedRole || role
+      },  
+      get,
+      insertMatchedContentScript () {
         const matchedContentStart = document.createElement('script')
         const matchedContentContent = document.createElement('ins')
         const matchedContentEnd = document.createElement('script')
@@ -477,7 +317,11 @@
         matchedContentEnd.setAttribute('id', 'matchedContentEnd')
         matchedContentEnd.innerHTML = `(adsbygoogle = window.adsbygoogle || []).push({});`
 
+        /**/
+        /* photography article may not have this container */
         const container = document.querySelector('#matchedContentContainer')
+        /**/
+
         if (!document.querySelector('#matchedContentStart')) {
           container && container.appendChild(matchedContentStart)
         }
@@ -488,66 +332,87 @@
           container && container.appendChild(matchedContentEnd)
         }
       },
-      $_external_sendGA (articleData) {
-        window.ga('set', 'contentGroup1', 'external')
-        window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'partner', 'name' ], '')}`)
-        // window.ga('set', 'contentGroup3', '')
-        window.ga('set', 'contentGroup3', `external${this.abIndicator}`)
-        window.ga('send', 'pageview', { title: `${_.get(articleData, [ 'title' ], '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
-      },
-      $_external_updateMediafarmersScript () {
-        const mediafarmersScript = document.querySelector('#mediafarmersJS')
-        document.querySelector('body').removeChild(mediafarmersScript)
-        this.$_external_insertMediafarmersScript()
-      },
-      $_external_updateSysStage () {
+      insertMediafarmersScript () {
+        const mediafarmersScript = document.createElement('script')
+        mediafarmersScript.setAttribute('id', 'mediafarmersJS')
+        mediafarmersScript.setAttribute('src', 'https://mediafarmers.org/api/api.js')
+        if (!document.getElementById('mediafarmersJS')) {
+          document.querySelector('body').appendChild(mediafarmersScript)
+        }
+      },        
+      updateSysStage () {
         this.dfpMode = currEnv()
       },
-      $_external_updateViewport () {
-        const browser = typeof window !== 'undefined'
-        if (browser) {
-          this.viewport = document.documentElement.clientWidth || document.body.clientWidth
+    },
+    beforeRouteUpdate (to, from, next) {
+      fetchExternal(this.$store, to.params.slug)
+      .then(() => {
+        const thisItem = get(this.$store, `state.external.${to.params.name}`, {})
+        const theComingArticleSlug = get(thisItem, 'name')
+
+        if (!theComingArticleSlug) { location.replace('/404') }
+        return
+      })
+      .then(() => next())
+    },
+    beforeRouteLeave (to, from, next) {
+      if (process.env.VUE_ENV === 'client') {
+        const mediafarmersScript = document.querySelector('#mediafarmersJS')
+        if (mediafarmersScript) {
+          document.querySelector('body').removeChild(mediafarmersScript)
         }
+      }
+      next()
+    },     
+    mounted () {
+      this.updateSysStage()
+      this.abIndicator = this.getMmid()
+      const scrollTriggerRegister = new ScrollTriggerRegister([
+        { target: '#matchedContentContainer', offset: 400, cb: this.insertMatchedContentScript },
+        { target: '#matchedContentContainer', offset: 400, cb: this.initializeFBComments }
+      ])
+      scrollTriggerRegister.init()
+
+      if (isEmpty(this.articleData)) {
+        this.sendGA(this.articleData)
+        this.hasSentFirstEnterGA = true
+      }
+
+      /**
+       * Data's supposed to be loaded later.
+       */
+      const lowPriorityDataLoader = () => {
+        if (this.isLowPriorityDataLoaded) { return }        
+        this.isLowPriorityDataLoaded = true
+
+        Promise.all([
+          fetchPop(this.$store),
+          fetchEvent(this.$store, 'embedded'),
+          fetchEvent(this.$store, 'logo'),
+        ]).then(() => {
+          window.removeEventListener('scroll', lowPriorityDataLoader)
+          this.insertMediafarmersScript()
+        })
+       }
+       window.addEventListener('scroll', lowPriorityDataLoader)      
+    },
+    updated () {
+      this.updateSysStage()
+    },   
+    watch: {
+      '$route.fullPath': function () {
+        this.initializeFBComments()
+        this.updateMatchedContentScript()
+        this.updateMediafarmersScript()
+        this.sendGA(this.articleData)
       },
-      $_external_updateMatchedContentScript () {
-        const matchedContentStart = document.querySelector('#matchedContentStart')
-        const matchedContentContent = document.querySelector('#matchedContentContent')
-        const matchedContentEnd = document.querySelector('#matchedContentEnd')
-        if (matchedContentStart) {
-          document.querySelector('#matchedContentContainer').removeChild(matchedContentStart)
-          document.querySelector('#matchedContentContainer').removeChild(matchedContentContent)
-          document.querySelector('#matchedContentContainer').removeChild(matchedContentEnd)
+      articleData () {
+        if (!this.hasSentFirstEnterGA) {
+          this.sendGA(this.articleData)
+          this.hasSentFirstEnterGA = true
         }
-        this.$_external_insertMatchedContentScript()
-      },
-      getValue,
-    }
+      },      
+    } 
   }
 </script>
-
-<style lang="stylus" scoped>
-
-.dfp
-  margin 20px auto
-  text-align center
-  &--PCE1E2
-    display flex
-    justify-content space-around
-    margin-bottom 15px
-  &--PCHD
-    width 1160px
-    margin 0 auto
-
-@media (max-width 999px)
-  .dfp
-    &--desktop
-      display none !important
-@media (min-width 1000px)
-  .dfp
-    &--mobile
-      display none !important
-
-@media (min-width 1200px)
-  .matchedContentContainer
-    margin-bottom 20px
-</style>
+<style lang="stylus" scoped></style>

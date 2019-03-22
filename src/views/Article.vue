@@ -29,7 +29,7 @@
       </article-body-container>
       <div class="article-page-footer">
         <lazy-item-wrapper :position="verge.viewportH()" :strict="true">
-          <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBFT" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config" />
+          <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBFT" :extClass="'full mobile-only'" :config="props.config" />
         </lazy-item-wrapper>
         <div class="footer"><Footer /></div>
       </div>
@@ -222,20 +222,9 @@
           sizeMapping: DFP_SIZE_MAPPING
         })
       },  
+      fbAppId () { return get(this.$store, 'state.fbAppId') },      
       hasDfpFixed () { return this.sectionId === SECTION_WATCH_ID },   
-      hiddenAdvertised () {
-        return get(this.articleData, 'hiddenAdvertised', false)
-      },   
-      initializeFBComments () {
-        if (window.FB) {
-          window.FB && window.FB.init({
-            appId: this.fbAppId,
-            xfbml: true,
-            version: 'v2.0'
-          })
-          window.FB && window.FB.XFBML.parse()
-        }
-      },
+      hiddenAdvertised () { return get(this.articleData, 'hiddenAdvertised', false) },   
       isAdultContent () {
         return get(this.articleData, 'isAdult', false)
       },
@@ -245,9 +234,7 @@
       isLockJS () {
         return get(this.articleData, 'lockJS')
       },    
-      isTimeToShowAdCover () {
-        return get(this.$store, 'state.isTimeToShowAdCover', false)
-      },
+      isTimeToShowAdCover () { return get(this.$store, 'state.isTimeToShowAdCover', false) },
       sectionName () { return get(this.articleData, 'sections.0.name') },
       sectionId () {
         const _sectionId = get(this.articleData, 'sections.0.id')
@@ -267,7 +254,6 @@
         }
         window.ga('send', 'pageview', { title: `${get(articleData, 'title', '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
-      styleDfpAd () { return (this.viewport < 321) ? 'ad-fit' : '' }
     },
     data () {
       return {
@@ -288,7 +274,10 @@
         verge
       }
     },
-    methods: {   
+    methods: {  
+      closeDfpFixed () {
+        this.showDfpFixedBtn = false
+      }, 
       getMmid () {
         const mmid = Cookie.get('mmid')
         let assisgnedRole = get(this.$route, 'query.ab')
@@ -301,6 +290,16 @@
         })
         return assisgnedRole || role
       },   
+      initializeFBComments () {
+        if (window.FB) {
+          window.FB && window.FB.init({
+            appId: this.fbAppId,
+            xfbml: true,
+            version: 'v2.0'
+          })
+          window.FB && window.FB.XFBML.parse()
+        }
+      },      
       insertMatchedContentScript () {
         const matchedContentStart = document.createElement('script')
         const matchedContentContent = document.createElement('ins')
@@ -465,12 +464,7 @@
     },
     watch: {
       '$route.fullPath': function () {
-        window.FB && window.FB.init({
-          appId: this.fbAppId,
-          xfbml: true,
-          version: 'v2.0'
-        })
-        window.FB && window.FB.XFBML.parse()
+        this.initializeFBComments()
         this.updateMatchedContentScript()
         this.updateMediafarmersScript()
         this.sendGA(this.articleData)

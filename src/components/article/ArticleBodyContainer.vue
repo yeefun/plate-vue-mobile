@@ -37,6 +37,10 @@
       <div class="adsets">
         <slot name="ADE1"></slot>
       </div>
+      <div class="google-recommendeds">
+        <div><h3>推薦文章</h3></div>
+        <div id="matchedContentContainer" class="matchedContentContainer"></div>
+      </div>       
       <PopList :pop="popularlist" v-if="isPoplistActive" :currEnv="dfpMode">
         <MicroAd v-for="(a, i) in get(microAds, 'article')"
           class="pop_item margin-top-0"
@@ -199,7 +203,7 @@
         padding 0
         font-size 0
         border none
-  .facebook-comments
+  .facebook-comments, .google-recommendeds
     padding 0 20px
     margin 25px 0
   a, a:hover, a:link, a:visited

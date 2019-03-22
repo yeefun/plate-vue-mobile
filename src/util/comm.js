@@ -219,12 +219,9 @@ export function consoleLogOnDev ({ msg }) {
 }
 
 export function currEnv () {
+  const exp_domain = new RegExp(`(${[ `www.${SITE_DOMAIN}`, `m.${SITE_DOMAIN}` ].join('|')})`)
   if (process.env.VUE_ENV === 'client') {
-    if (location.host.indexOf(SITE_DOMAIN) === 0 || location.host.indexOf(`www.${SITE_DOMAIN}`) === 0) {
-      return 'prod'
-    } else {
-      return 'dev'
-    }
+    return exp_domain.test(location.host) || location.host === SITE_DOMAIN ? 'prod' : 'dev'
   }
 }
 
