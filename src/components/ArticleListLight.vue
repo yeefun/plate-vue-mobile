@@ -63,7 +63,4 @@ export default {
     width calc(100% - 360px)
     margin-top 20px
 
-@media (min-width: 1200px)
-  .articleListLight
-    width 1024px
 </style>

@@ -274,23 +274,4 @@
     height 100%
     background-color rgba(0, 0, 0, .5)
 
-@media (min-width: 1200px)
-  .headerFoodTravel
-    height 60px
-    &--black
-      height 60px
-
-  .sidebarFull
-    &-container
-      width 365px
-
-  .searchFull
-    &-container
-      top 60px
-      justify-content flex-end
-      height 52px
-      > input
-        text-align right
-      > a
-        margin-left 50px
 </style>

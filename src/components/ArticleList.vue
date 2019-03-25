@@ -101,13 +101,5 @@ export default {
     &:hover
       transform translateY(-20px)
       box-shadow 5px 15px 5px #bcbcbc
-
-@media (min-width: 1200px)
-  .articleList
-    &.container
-      width 1044px
-  .nativeDFP
-    width calc( (100% - 60px) / 3 )
   
-
 </style>

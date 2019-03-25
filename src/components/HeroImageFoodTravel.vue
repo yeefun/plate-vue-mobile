@@ -2,7 +2,7 @@
   <div class="heroimageFoodTravel">
     <div class="heroimage-container">
       <!--<img class="heroimage" src="/assets/mirrormedia/foodtravelheroimg.jpg" alt="">-->
-      <img class="heroimage" :src="getValue(leadingImg, [ 'image', 'resizedTargets', 'desktop', 'url' ])" alt="">
+      <img class="heroimage" :src="getValue(leadingImg, [ 'image', 'resizedTargets', 'tablet', 'url' ])" alt="">
     </div>
     <img class="section-title" :src="getSectionLogoUrl()" alt="">
   </div>
@@ -47,15 +47,5 @@ export default {
     width 40%
     left 5%
     bottom 2%
-
-@media (min-width: 1200px)
-  .heroimageFoodTravel
-    .heroimage-container
-      .heroimage
-        object-fit cover
-        height calc(80vh - 75px)
-    .section-title
-      width 20%
-      left 8.3%
 
 </style>

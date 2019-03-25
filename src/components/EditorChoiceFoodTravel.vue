@@ -156,11 +156,4 @@ export default {
   .editorChoiceFoodBlock
     margin-bottom 0
 
-@media (min-width: 1200px)
-  .editorChoiceFood
-    margin 5% 4.3% 5% 8.3%
-  .editorChoiceFoodBlock
-    &__content
-      padding-right 2em
-
 </style>

@@ -110,33 +110,4 @@ export default {
         color #999
     &__brief
       display none
-
-@media (min-width: 1200px)
-  .articleListFull
-    &-post-container
-      > h2
-        margin-left 25px
-    &-posts
-      flex-direction row
-      flex-wrap wrap
-      > div:last-child
-        margin 0 25px 30px
-    &-post
-      width calc( (100% - 150px) / 3 )
-      margin 0 25px 30px
-      &__img
-        position relative
-        width 100%
-        padding-top 66.66%
-        left auto
-        figure
-          position absolute
-          top 0
-          left 0
-          width 100%
-          height 100%
-          margin 0
-          padding 0
-      &__brief
-        display block
 </style>

@@ -179,41 +179,4 @@ export default {
         a + a
           margin-left 30px
 
-@media (min-width 1200px)
-  .footer-foodtravel
-    flex-direction row
-    align-items stretch
-    padding 25px 8.3%
-    &__logo
-      width 20%
-      margin-bottom 0
-      a
-        img
-          width 100%
-    &__menu
-      width 445px
-      margin-bottom 0
-      flex-direction row
-      justify-content flex-start
-      > a
-        width 25%
-        font-size 20px
-        text-align left
-    &__vertDivider
-      display block
-    &--horizDivider
-      display none
-    &__link
-      width 180px
-      flex-direction column
-      justify-content center
-      align-items center
-      &--subscribe
-        margin-bottom 25px
-        width initial
-      &--socialMedia
-        justify-content space-between
-        .facebook, .line, .weibo
-          height 22px
-
 </style>

@@ -42,13 +42,17 @@
         </div>
       </div>
       </div>
-      <vue-dfp v-if="index === 2" :is="props.vueDfp" pos="LMBSL1" extClass="mobile-only" :config="props.config" />
+      <LazyItemWrapper :position="viewpostH" :strict="true" v-if="index === 2" >
+        <vue-dfp :is="props.vueDfp" pos="LMBSL1" extClass="mobile-only" :config="props.config" />
+      </LazyItemWrapper>
     </template>
     </div>
   </div>
 
   <div class="topicsArticle-foodtravel-container desktop-only" v-if="!this.showLatestOnly">
-    <vue-dfp :is="props.vueDfp" pos="LPCSR1" extClass="mobile-hide" :config="props.config" />
+    <LazyItemWrapper :position="viewpostH" :strict="true">
+      <vue-dfp :is="props.vueDfp" pos="LPCSR1" extClass="mobile-hide" :config="props.config" />
+    </LazyItemWrapper>
     <div class="topicsArticle-full-posts">
     <template v-for="(article, index) in topics">
       <div class="topicsArticle-full-post">
@@ -72,8 +76,9 @@
 </template>
 
 <script>
-import { SECTION_FOODTRAVEL_ID } from '../constants/index'
+import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import ItemsTitleRect from './ItemsTitleRect.vue'
+import { SECTION_FOODTRAVEL_ID } from '../constants/index'
 import {
   getAuthor,
   getBrief,
@@ -81,20 +86,20 @@ import {
   getImage,
   getTruncatedVal
 } from '../util/comm'
-import moment from 'moment'
+
 export default {
   name: 'latestArticle-foodtravel',
   props: [ 'articles', 'props', 'commonData', 'showLatestOnly' ],
   components: {
-    'items-title-rect': ItemsTitleRect
+    'items-title-rect': ItemsTitleRect,
+    LazyItemWrapper
   },
   methods: {
     getAuthor,
     getBrief,
     getHref,
     getImage,
-    getTruncatedVal,
-    moment
+    getTruncatedVal
   },
   computed: {
     latestArticle () {
@@ -104,6 +109,9 @@ export default {
       return this.commonData.topics.items.filter((o) => {
         if (o.hasOwnProperty('sections')) return o.sections[0] === SECTION_FOODTRAVEL_ID // foodtravel
       })
+    },
+    viewpostH () {
+      return this.$store.state.viewport.height
     }
   }
 }
@@ -279,84 +287,5 @@ export default {
             z-index 1
             width img_width
             height 300px 
-
-// PC
-@media (min-width: 1200px)
-  .latestArticle-foodtravel
-    flex-direction row
-    align-items flex-start
-         
-    .latestArticle-foodtravel-container
-      margin-left 8.3%
-      margin-right 4.3%
-      width 88%
-      .header-rect
-        margin 0
-
-      .latestArticle-full-posts
-        margin-top 0
-        .latestArticle-full-post
-          img_width = 56%
-          content_width = 100% - img_width
-          border_style = 1px solid #4d4d4d
-
-          // Img at left side, content at right side
-          &-0
-            width 60vw
-            flex-direction row
-            .latestArticle-full-post__content
-              margin 0
-              border-top border_style
-              border-right border_style
-              border-bottom border_style
-              border-left none
-              width content_width
-              height auto
-              height 38vh
-              padding 0 2% 10px 2%
-          
-          // Img at right side, content at left side
-          &-1
-            width 60vw
-            flex-direction row-reverse
-            justify-content flex-end
-            align-items center
-            .latestArticle-full-post__content
-              margin 0
-              border-top border_style
-              border-right none
-              border-bottom border_style
-              border-left border_style
-              width content_width
-              height 38vh
-              padding 0 2% 0 2%
-
-          &__img
-            width img_width
-            height 46vh
-
-    .topicsArticle-foodtravel-container
-      flex-direction column
-      margin-top 50px
-      margin-right 9.5%
-      width 300px
-      .topicsArticle-full-posts
-        margin-top 5vh
-        .topicsArticle-full-post
-          margin 0
-          margin-top 5vh
-          // padding 0 0 50% 0
-          flex-direction column
-
-          img_width = 295px
-          content_width = 90%
-
-          .topicsArticle-full-post__content
-            height auto
-            padding 10% 1.5%
-            width content_width
-          &__img
-            width img_width
-            height 200px
 
 </style>

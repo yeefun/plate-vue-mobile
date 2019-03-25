@@ -39,9 +39,7 @@ export function createRouter () {
       { path: '/activity/:activityId/', component: Activity },
       { path: '/activity/:activityId/:topicId', component: Activity },
       { path: '/author/:authorId/', component: List },
-      // { path: '/category/:title', component: List },
       { path: '/external/:name', component: External },
-      // { path: '/externals/:name', component: List },
       {
         path: '/story/:slug',
         component: Article,
@@ -53,7 +51,6 @@ export function createRouter () {
       { path: '/app/:slug', component: Article },
       { path: '/headlinenews', component: Headline }, // 禾多推播用頁面
       { path: '/project-list/:style?', component: Project },
-      // { path: '/homeb', component: HomeB },
       { path: '/search/:keyword', component: Search },
       { path: '/section/videohub', component: Video, alias: [ ...oathCategories, '/video/:slug' ] },
       { path: '/section/:title', component: List, alias: [ '/category/:title', '/externals/:title' ] },
