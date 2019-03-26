@@ -3,62 +3,67 @@
     <a
       class="group__hero-image"
       :id="createId(groupedArticle, true)"
-      :href="_getHref(groupedArticle)"
+      :href="getHref(groupedArticle)"
       target="_blank"
-      rel="noopener"
-    >
-      <img v-lazy="getImage(groupedArticle, 'mobile')" alt="">
+      rel="noopener">
+      <LazyImage :src="getImage(groupedArticle, 'mobile')" />
     </a>
     <div class="group__articles articles">
       <a
         class="articles__item"
         :id="createId(groupedArticle)"
-        :href="_getHref(groupedArticle)"
+        :href="getHref(groupedArticle)"
         target="_blank"
         rel="noopener"
-        v-text="getTruncatedVal(groupedArticle.title, 22)"
-      >
+        v-text="getTruncatedVal(groupedArticle.title, 22)">
       </a>
       <a
-        v-for="(article, i) in getValue(groupedArticle, [ 'relateds' ]).slice(0, 3)"
+        v-for="(article, i) in get(groupedArticle, 'relateds').slice(0, 3)"
         :key="i"
         class="articles__item"
         :id="createId(article)"
-        :href="_getHref(article)"
+        :href="getHref(article)"
         target="_blank"
         rel="noopener"
-        v-text="getTruncatedVal(article.title, 22)"
-      >
+        v-text="getTruncatedVal(article.title, 22)">
       </a>
     </div>
   </div>
 </template>
 
 <script>
-import { getHref, getHrefFull, getImage, getTruncatedVal, getValue } from '../util/comm'
+import { getHref, getHrefFull, getImage, getTruncatedVal } from 'src/util/comm'
+import { get, } from 'lodash'
+import LazyImage from 'src/components/common/LazyImage.vue'
+
 
 export default {
+  name: 'LatestArticleFocus',
   props: {
     groupedArticle: {
       type: Object,
       required: true
     }
   },
+  components: {
+    LazyImage
+  },
   computed: {
     shouldGetHrefFull () {
-      return this.groupedArticle.style === 'projects' || this.groupedArticle.style === 'campaign' || this.groupedArticle.style === 'readr'
+      const exp = /(projects|campaign|readr)/
+      return exp.test(this.groupedArticle.style)
     }
   },
   methods: {
-    _getHref (group) {
+    getHref (group) {
       return this.shouldGetHrefFull ? getHrefFull(group) : getHref(group)
     },
 
     getImage,
     getTruncatedVal,
-    getValue,
+    get,
     createId (article, isImg = false) {
-      return `group-latest-0-${getValue(article, [ 'slug' ], Date.now())}${isImg ? '-img' : ''}-mobile-b`
+      return `group-latest-0-${get(article, 'slug', Date.now())}${isImg ? '-img' : ''}`
     }
   }
 }

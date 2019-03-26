@@ -2,72 +2,51 @@
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" section="home" :options="dfpOptions" :mode="dfpMode" :key="`homepage`">
     <template slot-scope="props" slot="dfpPos">
       <div class="home-view">
-        <section style="width: 100%;">
+        <section class="home-header">
           <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" activeSection="home" />
-          <!-- <app-Header v-if="true" :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/> -->
         </section>
         <LazyItemWrapper :loadAfterPageLoaded="true">
-          <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)" :config="props.config"/>
-          <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
+          <vue-dfp :is="props.vueDfp" pos="LMBHD" :config="props.config" />
         </LazyItemWrapper>
         <section class="home-mainContent">
           <editor-choice :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
           <main>
             <LazyItemWrapper :loadAfterPageLoaded="true">
-              <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LMBL1" :config="props.config"/>
             </LazyItemWrapper>
-            <MirrorMediaTVAside v-if="viewport < 1200 && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
-            <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2 v-text="$t('homepage.focus')"></h2></div>
+            <MirrorMediaTVAside v-if="hasEventEmbedded" :mediaData="eventMod" />
+            <div class="aside-title" ref="aside_title"><h2 v-text="$t('homepage.focus')"></h2></div>
             <div class="focusNewsContainer" id="homepage-focus-news">
-              <div v-show="viewport < 1200"
-                class="focusNewsContainer__latest-mobile-b"
-              >
-                <LatestArticleAsideMobileB
+              <div class="focusNewsContainer__latest-mobile-b">
+                <LatestArticleFocus
                   v-for="(o, i) in groupedArticle"
                   :key="`${i}-groupedlist-mobile-b`"
-                  :groupedArticle="o"
-                />
+                  :groupedArticle="o" />
               </div>
             </div>
             <LazyItemWrapper :loadAfterPageLoaded="true">
-              <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
-              <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LMBL2" :config="props.config"/>
             </LazyItemWrapper>
             <LatestArticleMain id="latestArticle" target="_blank"
               :abIndicator="abIndicator"
               :latestList="latestArticle"
               :viewport="viewport">
             </LatestArticleMain>
-            
           </main>
-          <aside v-show="viewport >= 1200">
-            <div>
-              <MirrorMediaTVAside v-if="viewport >= 1200 && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
-              <div class="aside-title" ref="aside_title"><h2 v-text="$t('homepage.focus')"></h2></div>
-              <LatestArticleAside v-for="(o, i) in groupedArticle" target="_blank"
-                :groupedArticle="o"
-                :index="i"
-                :needStick="false"
-                :viewport="viewport"
-                :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''"
-                :class="{ last: i === (groupedArticle.length - 1), secondLast: i === (groupedArticle.length - 2), first: i === 0 }"
-                :key="`${i}-groupedlist`" />
-            </div>
-          </aside>
         </section>
         <loading :show="loading" />
-        <LazyItemWrapper :position="verge.viewportH()" :strict="true">
+        <LazyItemWrapper :position="$store.state.viewport.height" :strict="true">
           <live-stream v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
           <live-stream v-else-if="!hasEventEmbedded && hasEventMod" :mediaData="eventMod" type="mod" />
         </LazyItemWrapper>
-        <DfpCover v-if="isTimeToShowAdCover" v-show="showDfpCoverAdFlag && viewport < 1199">
-          <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
+        <DfpCover v-if="isTimeToShowAdCover" v-show="showDfpCoverAdFlag">
+          <vue-dfp :is="props.vueDfp" pos="LMBCVR" :config="props.config" slot="ad-cover" />
         </DfpCover>
-        <DfpCover v-if="showDfpCoverAd2Flag && viewport < 1199" :showCloseBtn="false" class="raw">
-          <vue-dfp :is="props.vueDfp" pos="LMBCVR2" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
+        <DfpCover v-if="showDfpCoverAd2Flag" :showCloseBtn="false" class="raw">
+          <vue-dfp :is="props.vueDfp" pos="LMBCVR2" :config="props.config" slot="ad-cover" />
         </DfpCover>
-        <DfpCover v-if="showDfpCoverInnityFlag && viewport < 1199" :showCloseBtn="false" class="raw">
-          <vue-dfp :is="props.vueDfp" pos="LMBCVR3" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
+        <DfpCover v-if="showDfpCoverInnityFlag" :showCloseBtn="false" class="raw">
+          <vue-dfp :is="props.vueDfp" pos="LMBCVR3" :config="props.config" slot="ad-cover" />
         </DfpCover>
       </div>
     </template>
@@ -75,53 +54,45 @@
 </template>
 
 <script>
-import { DFP_ID, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID } from '../constants'
-import { SECTION_MAP, SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
+import { DFP_ID, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID } from 'src/constants'
+import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from 'src/constants'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import { currEnv, sendAdCoverGA, unLockJS, updateCookie } from '../util/comm'
-import { getRole } from '../util/mmABRoleAssign'
+import { currEnv, sendAdCoverGA, unLockJS, updateCookie } from 'src/util/comm'
+import { getRole } from 'src/util/mmABRoleAssign'
 import { adtracker } from 'src/util/adtracking'
-import _ from 'lodash'
+import { concat, drop, dropRight, flatten, get, includes, map, remove, slice, union, unionBy, uniqBy } from 'lodash'
 import Cookie from 'vue-cookie'
-import DfpCover from '../components/DfpCover.vue'
-import EditorChoice from '../components/EditorChoice.vue'
-import Header from '../components/Header.vue'
-import HeaderR from '../components/HeaderR.vue'
-import LatestArticleAside from '../components/LatestArticleAside.vue'
-import LatestArticleAsideMobileB from '../components/LatestArticleAsideMobileB.vue'
-import LatestArticleBySection from '../components/LatestArticleBySection.vue'
-import LatestArticleMain from '../components/LatestArticleMain.vue'
+import DfpCover from 'src/components/DfpCover.vue'
+import EditorChoice from 'src/components/EditorChoice.vue'
+import HeaderR from 'src/components/HeaderR.vue'
+import LatestArticleFocus from 'src/components/list/LatestArticleFocus.vue'
+import LatestArticleMain from 'src/components/list/LatestArticleMain.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
-import LiveStream from '../components/LiveStream.vue'
-import Loading from '../components/Loading.vue'
-import MirrorMediaTVAside from '../components/MirrorMediaTVAside.vue'
+import LiveStream from 'src/components/LiveStream.vue'
+import Loading from 'src/components/Loading.vue'
+import MirrorMediaTVAside from 'src/components/MirrorMediaTVAside.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
-import titleMetaMixin from '../util/mixinTitleMeta'
+import titleMetaMixin from 'src/util/mixinTitleMeta'
 import uuidv4 from 'uuid/v4'
-import verge from 'verge'
 
-// const MAXRESULT = 20
-// const PAGE = 1
 const showAdCover = store => store.dispatch('SHOW_AD_COVER')
 const debugDFP = require('debug')('CLIENT:DFP')
 const debug = require('debug')('CLIENT:Home')
-const fetchSSRData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections' ] }).then(() => {
-    return Promise.all([
+const fetchSSRData = store => (
+  store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections' ] }).then(() => (
+    Promise.all([
       fetchCommonData(store),
       fetchArticlesGroupedList(store),
       fetchPartners(store)
     ])
-  })
-}
+  ))
+)
 
-const fetchCommonData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'posts-vue', 'projects', 'topics' ] })
-}
+const fetchCommonData = store => store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'posts-vue', 'projects', 'topics' ] })
 
-const fetchEvent = (store, eventType = 'embedded') => {
-  return store.dispatch('FETCH_EVENT', {
+const fetchEvent = (store, eventType = 'embedded') => (
+  store.dispatch('FETCH_EVENT', {
     params: {
       'max_results': 1,
       'where': {
@@ -130,25 +101,19 @@ const fetchEvent = (store, eventType = 'embedded') => {
       }
     }
   })
-}
+)
 
-const fetchArticlesGroupedList = (store) => {
-  return store.dispatch('FETCH_ARTICLES_GROUPED_LIST', { params: {}})
-}
+const fetchArticlesGroupedList = store => store.dispatch('FETCH_ARTICLES_GROUPED_LIST', { params: {}})
 
-// const fetchLatestNewsFromJson = (store) => {
-//   return store.dispatch('FETCH_LATEST_NEWS_FROM_JSON')
-// }
-
-const fetchPartners = (store) => {
-  const page = _.get(store.state, [ 'partners', 'meta', 'page' ], 0) + 1
+const fetchPartners = store => {
+  const page = get(store, 'state.partners.meta.page', 0) + 1
   return store.dispatch('FETCH_PARTNERS', {
     params: {
       max_results: 25,
       page: page
     }
   }).then(() => {
-    if (_.get(store.state, [ 'partners', 'items', 'length' ]) < _.get(store.state, [ 'partners', 'meta', 'total' ])) {
+    if (get(store, 'state.partners.items.length', 0) < get(store, 'state.partners.meta.total', 0)) {
       fetchPartners(store)
     }
   })
@@ -156,27 +121,24 @@ const fetchPartners = (store) => {
 
 const MAXRESULT = 20
 const PAGE = 1
-const fetchLatestArticle = (store, page) => {
-  return store.dispatch('FETCH_LATESTARTICLES', {
+const fetchLatestArticle = (store, page) => (
+  store.dispatch('FETCH_LATESTARTICLES', {
     params: {
       'max_results': MAXRESULT,
       'page': page,
       'sort': '-publishedDate'
     }
   })
-}
+)
 
 export default {
   name: 'home-view',
   components: {
-    'app-Header': Header,
     'editor-choice': EditorChoice,
     'live-stream': LiveStream,
     'loading': Loading,
     DfpCover,
-    LatestArticleAside,
-    LatestArticleAsideMobileB,
-    LatestArticleBySection,
+    LatestArticleFocus,
     LatestArticleMain,
     LazyItemWrapper,
     MirrorMediaTVAside,
@@ -222,32 +184,27 @@ export default {
       dfpHeaderLogoLoaded: false,
       dfpMode: 'prod',
       dfpUnits: DFP_UNITS,
-      hasScrollLoadMore: _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], PAGE) > 1,
+      hasScrollLoadMore: get(this.$store, 'state.latestArticles.meta.page', PAGE) > 1,
       isVponSDKLoaded: false,
       isAdCoverCalledYet: false,
       loading: false,
-      page: _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], PAGE),
+      page: get(this.$store, 'state.latestArticles.meta.page', PAGE),
       sectionTempId: `homepage-${uuidv4()}`,
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
       showDfpCoverInnityFlag: false,
       showDfpHeaderLogo: false,
       viewport: undefined,
-      verge
     }
   },
   computed: {
-    articlesGroupedList () {
-      return this.$store.state.articlesGroupedList
-    },
-    commonData () {
-      return this.$store.state.commonData
-    },
+    articlesGroupedList () { return this.$store.state.articlesGroupedList },
+    commonData () { return this.$store.state.commonData },
     dfpOptions () {
       const currentInstance = this
       return Object.assign({}, DFP_OPTIONS, {
         sectionTempId: this.sectionTempId,
-        afterEachAdLoaded: (event) => {
+        afterEachAdLoaded: event => {
           const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
           const position = dfpCover.getAttribute('pos')
 
@@ -285,16 +242,12 @@ export default {
             case 'LMBCVR2':
               debug('ad2 loaded')
               sendAdCoverGA('ad2')
-              if (adDisplayStatus === 'none') {
-                debug('dfp response no ad2')
-              }
+              adDisplayStatus === 'none' && debug('dfp response no ad2')
               break
             case 'LMBCVR3':
               debug('adInnity loaded')
               sendAdCoverGA('innity')
-              if (adDisplayStatus === 'none') {
-                debug('dfp response no innity')
-              }
+              adDisplayStatus === 'none' && debug('dfp response no innity')
               break
             case 'LOGO':
               if (adDisplayStatus !== 'none') {
@@ -313,119 +266,59 @@ export default {
         setCentering: true
       })
     },
-    editorChoice () {
-      return _.get(this.articlesGroupedList, [ 'choices' ])
-    },
-    eventEmbedded () {
-      return _.get(this.$store.state.eventEmbedded, [ 'items', '0' ])
-    },
-    eventLogo () {
-      return _.get(this.$store.state.eventLogo, [ 'items', '0' ])
-    },
-    eventMod () {
-      return _.get(this.$store, [ 'state', 'eventMod', 'items', '0' ])
-    },
-    groupedArticle () {
-      return _.slice(_.get(this.articlesGroupedList, [ 'grouped' ]))
-    },
+    editorChoice () { return get(this.articlesGroupedList, 'choices') },
+    eventEmbedded () { return get(this.$store, 'state.eventEmbedded.items.0') },
+    eventLogo () { return get(this.$store, 'state.eventLogo.items.0') },
+    eventMod () { return get(this.$store, 'state.eventMod.items.0') },
+    groupedArticle () { return slice(get(this.articlesGroupedList, 'grouped')) },
     hasEventEmbedded () {
       const _now = moment()
-      const _eventStartTime = moment(new Date(_.get(this.eventEmbedded, [ 'startDate' ])))
-      let _eventEndTime = moment(new Date(_.get(this.eventEmbedded, [ 'endDate' ])))
+      const _eventStartTime = moment(new Date(get(this.eventEmbedded, 'startDate')))
+      let _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate')))
       if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
-        _eventEndTime = moment(new Date(_.get(this.eventEmbedded, [ 'endDate' ]))).add(12, 'h')
+        _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate'))).add(12, 'h')
       }
       return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
     },
     hasEventMod () {
       const _now = moment()
-      const _eventStartTime = moment(new Date(_.get(this.eventMod, [ 'startDate' ])))
-      let _eventEndTime = moment(new Date(_.get(this.eventMod, [ 'endDate' ])))
+      const _eventStartTime = moment(new Date(get(this.eventMod, 'startDate')))
+      let _eventEndTime = moment(new Date(get(this.eventMod, 'endDate')))
       if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
-        _eventEndTime = moment(new Date(_.get(this.eventMod, [ 'endDate' ]))).add(12, 'h')
+        _eventEndTime = moment(new Date(get(this.eventMod, 'endDate'))).add(12, 'h')
       }
       return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
     },
-    latestArticlesList () {
-      return _.get(this.$store.state, [ 'latestArticles', 'items' ])
-    },
-    latestArticlesBySection () {
-      const latestArticlesBySection = Object.values(_.get(this.$store.state, 'latestNewsFromJson.sections', {})) || []
-      return latestArticlesBySection.sort((a, b) => (_.get(SECTION_MAP, [ a.id, 'latestNewsOrder' ]) || 10) - (_.get(SECTION_MAP, [ b.id, 'latestNewsOrder' ]) || 10))
-    },
-    latestEndIndex () {
-      return _.get(this.$store.state, [ 'articlesGroupedList', 'latestEndIndex' ])
-    },
+    latestArticlesList () { return get(this.$store, 'state.latestArticles.items') },
+    latestEndIndex () { return get(this.$store, 'state.articlesGroupedList.latestEndIndex') },
     latestArticle () {
       const { articlesGroupedList, latestEndIndex, latestArticlesList } = this
-
-      const latestFirstPage = _.dropRight(_.get(articlesGroupedList, [ 'latest' ]), 3)
-      const latestAfterFirstPage = _.drop(latestArticlesList, latestEndIndex)
-      const choices = _.get(articlesGroupedList, [ 'choices' ])
-      const groupedTitle = _.get(articlesGroupedList, [ 'grouped' ])
-      const groupedRelateds = _.flatten(_.map(_.get(articlesGroupedList, [ 'grouped' ]), (o) => o.relateds))
-      const grouped = _.union(groupedTitle, groupedRelateds)
-      const choicesAndGrouped = _.unionBy(choices, grouped, 'slug')
-      const choicesAndGrouped_slugs = choicesAndGrouped.map((o) => o.slug)
-
-      const latest = _.uniqBy(
-        _.concat(latestFirstPage, latestAfterFirstPage),
+      const latestFirstPage = dropRight(get(articlesGroupedList, 'latest'), 3)
+      const latestAfterFirstPage = drop(latestArticlesList, latestEndIndex)
+      const choices = get(articlesGroupedList, 'choices')
+      const groupedTitle = get(articlesGroupedList, 'grouped')
+      const groupedRelateds = flatten(map(get(articlesGroupedList, 'grouped'), o => o.relateds))
+      const grouped = union(groupedTitle, groupedRelateds)
+      const choicesAndGrouped = unionBy(choices, grouped, 'slug')
+      const choicesAndGrouped_slugs = choicesAndGrouped.map(o => o.slug)
+      const latest = uniqBy(
+        concat(latestFirstPage, latestAfterFirstPage),
         'slug'
       )
-
-      _.remove(latest, (o) => {
-        return _.includes(choicesAndGrouped_slugs, o.slug)
-      })
-
-      if (this.notFirstPageNow) {
-        return latest
-      } else {
-        return latestFirstPage
-      }
+      remove(latest, o => includes(choicesAndGrouped_slugs, o.slug))
+      return this.notFirstPageNow ? latest : latestFirstPage
     },
-    isTimeToShowAdCover () {
-      return _.get(this.$store, 'state.isTimeToShowAdCover', false)
-    },
-    notFirstPageNow () {
-      return _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], 1) !== 1
-    },
-    popularlist () {
-      const { report = [] } = _.get(this.$store, [ 'state', 'articlesPopList' ])
-      return report
-    },
-    projects () {
-      return _.get(this.commonData, [ 'projects', 'items' ])
-    }
+    isTimeToShowAdCover () { return get(this.$store, 'state.isTimeToShowAdCover', false) },
+    notFirstPageNow () { return get(this.$store, 'state.latestArticles.meta.page', 1) !== 1 },
   },
   methods: {
     checkIfLockJS () {
       unLockJS()
     },
-    detectFixProject: function () {
-      const secondLastFocusNews = document.querySelector('aside .latest-aside-container.secondLast')
-      const secondLastFocusNewsBottomPos = elmYPosition('aside .latest-aside-container.secondLast') + secondLastFocusNews.offsetHeight
-      const lastFocusNews = document.querySelector('aside .latest-aside-container.last')
-      const lastFocusNewsBottomPos = elmYPosition('aside .latest-aside-container.last') + lastFocusNews.offsetHeight
-      const project = document.querySelector('.projectListVert')
-      // const mirrorMediaTVAsideMod = document.querySelector('.mmtv-aside')
-      if (project) {
-        if (this.viewport >= 1200 && (currentYPosition() > lastFocusNewsBottomPos)) {
-          project.classList.add('fixed')
-        } else {
-          project.classList.remove('fixed')
-        }
-      } else {
-        if (this.viewport >= 1200 && (currentYPosition() > secondLastFocusNewsBottomPos)) {
-          lastFocusNews.classList.add('fixed')
-        } else {
-          lastFocusNews.classList.remove('fixed')
-        }
-      }
-    },
-    get: _.get,
+    get,
     getMmid () {
       const mmid = Cookie.get('mmid')
-      let assisgnedRole = _.get(this.$route, [ 'query', 'ab' ])
+      let assisgnedRole = get(this.$route, 'query.ab')
       if (assisgnedRole) {
         assisgnedRole = assisgnedRole.toUpperCase()
       }
@@ -473,7 +366,7 @@ export default {
       if (this.isAdCoverCalledYet) { return }
       const currentTop = currentYPosition()
       const eleTop = elmYPosition('#homepage-focus-news')
-      const device_height = verge.viewportH()
+      const device_height = this.$store.state.viewport.height
       if (currentTop + device_height > eleTop) {
         debugDFP('SHOW ADCOVER!')
         showAdCover(this.$store)
@@ -500,8 +393,6 @@ export default {
     this.checkIfLockJS()
     this.updateSysStage()
 
-    window.addEventListener('scroll', this.detectFixProject)
-
     /**
      * Have ad-cover be rendered as soon as #homepage-focus-news gets visible.
      */
@@ -521,9 +412,6 @@ export default {
     this.handleScrollForLoadmore()
     this.updateSysStage()
   },
-  destroyed () {
-    window.removeEventListener('scroll', this.detectFixProject)
-  },
   watch: {
     abIndicator: function () {
       this.$forceUpdate()
@@ -533,6 +421,9 @@ export default {
 
 </script>
 <style lang="stylus" scoped>
+.home-header
+  width 100%
+
 .editorChoice
   margin-top 40px
 
@@ -723,73 +614,4 @@ section.footer
     padding 0 2rem
 
 
-@media (min-width: 1200px)
-  .home-view
-    h2
-      &.project-title--desktop
-        display block
-        margin-bottom 10px
-        color #356d9c
-        font-size 1.3rem
-        font-weight 400
-    .project-title--mobile
-      display none
-    .footer
-      width 1024px
-      margin 70px auto 0 
-  .list
-    &.container
-      width 1024px
-      padding 0
-      flex-direction row
-      flex-wrap wrap
-      align-items flex-start
-
-      main
-        width 75%
-        #latestArticle
-          margin-top 30px
-
-      aside
-        width 25%
-        padding 0 30px 0 0
-
-        .aside-title
-          margin-top 0
-          padding 0
-          h2
-            margin-bottom 0
-            font-size 1.3rem
-            &::after
-              display none
-  .editorChoice
-    margin-top 0
-  .home-mainContent
-    display flex
-    width 1024px
-    margin 40px auto 0
-    padding 0
-
-    main
-      width 75%
-    aside
-      width 25%
-      padding-left 30px
-      .aside-title
-        margin-top 0
-        margin-bottom 10px
-        padding 0
-        h2
-          margin-bottom 0
-          font-size 1.3rem
-          line-height 1.15
-          &::after
-            display none
-
-    .latest-main-container
-      margin-top 25px
-
-  section.footer
-    width 1024px
-    
 </style>

@@ -9,15 +9,15 @@
             data-gtm-category="home"
             data-gtm="latest"
             :target="target">
-            <LatestAriticleImg class="latest-list_item_img" :src="getImage(o, 'mobile')" :id="getValue(o, [ 'heroImage', 'id' ], Date.now())" :key="getValue(o, [ 'heroImage', 'id' ], Date.now())"></LatestAriticleImg>
-            <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
+            <LatestAriticleImg class="latest-list_item_img" :src="getImage(o, 'mobile')" :id="get(o, 'heroImage.id', Date.now())" :key="get(o, 'heroImage.id', Date.now())" />
+            <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(get(o, 'sections.0', ''))" v-text="getLabel(o)"></div>
           </router-link>
-          <a :href="getHrefFull(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-1`" v-if="!shouldShowItem(o)" tid="ee" :target="target">
-            <LatestAriticleImg class="latest-list_item_img" :src="getImage(o, 'mobile')" :id="getValue(o, [ 'heroImage', 'id' ], Date.now())" :key="getValue(o, [ 'heroImage', 'id' ], Date.now())"></LatestAriticleImg>
-            <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
+          <a :href="getHrefFull(o)" :id="`latest-${get(o, 'slug', Date.now())}-1`" v-if="!shouldShowItem(o)" tid="ee" :target="target">
+            <LatestAriticleImg class="latest-list_item_img" :src="getImage(o, 'mobile')" :id="get(o, 'heroImage.id', Date.now())" :key="get(o, 'heroImage.id', Date.now())" />
+            <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(get(o, 'sections.0', ''))" v-text="getLabel(o)"></div>
           </a>
           <div class="latest-list_item_title">
-            <div class="latest-list_item_label tablet-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
+            <div class="latest-list_item_label tablet-hidden" :style="getSectionStyle(get(o, 'sections.0', ''))" v-text="getLabel(o)"></div>
             <router-link
               v-if="shouldShowItem(o)"
               :to="getHref(o)"
@@ -25,20 +25,20 @@
               data-gtm-category="home"
               data-gtm="latest">
               <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
-              <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"></span>
+              <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( get(o, 'brief.html', ''), { allowedTags: [ ] }), 60)"></span>
             </router-link>
-            <a :href="getHrefFull(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-2`" v-if="!shouldShowItem(o)" :target="target">
+            <a :href="getHrefFull(o)" :id="`latest-${get(o, 'slug', Date.now())}-2`" v-if="!shouldShowItem(o)" :target="target">
               <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
-              <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"></span>
+              <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( get(o, 'brief.html', ''), { allowedTags: [ ] }), 60)"></span>
             </a>
           </div>
         </div>
         <micro-ad :currEnv="currEnv" :currUrl="currUrl" 
-                  :id="`${getValue(microAds, [ 'homepage', index, 'pcId' ])}`"
+                  :id="`${get(microAds, `homepage.${index}.pcId`)}`"
                   v-if="index < 3 && viewport > 1199"
                   class="latest-list_item nativeDFP margin-top-0"></micro-ad>        
         <micro-ad :currEnv="currEnv" :currUrl="currUrl" 
-                  :id="`${getValue(microAds, [ 'homepage', index, 'mobileId' ])}`"
+                  :id="`${get(microAds, `homepage.${index}.mobileId`)}`"
                   v-if="index < 3 && viewport < 600"
                   class="latest-list_item nativeDFP margin-top-0"></micro-ad>        
       </template>
@@ -46,12 +46,12 @@
   </div>
 </template>
 <script>
-import _ from 'lodash'
-import { SECTION_MAP, MARKETING_CATGORY_ID, } from '../constants'
-import { currEnv, getHref, getHrefFull, getImage, getTruncatedVal, getValue } from '../util/comm'
-import { microAds } from '../constants/microAds'
-import LatestAriticleImg from 'src/components/LatestAriticleImg.vue'
-import MicroAd from '../components/MicroAd.vue'
+import { SECTION_MAP, MARKETING_CATGORY_ID, } from 'src/constants'
+import { currEnv, getHref, getHrefFull, getImage, getTruncatedVal } from 'src/util/comm'
+import { get, slice, take } from 'lodash'
+import { microAds } from 'src/constants/microAds'
+import LatestAriticleImg from 'src/components/list/LatestAriticleImg.vue'
+import MicroAd from 'src/components/MicroAd.vue'
 import sanitizeHtml from 'sanitize-html'
 
 export default {
@@ -61,16 +61,16 @@ export default {
       return this.$route.fullPath
     },
     latestListBeforeDFPNA3 () {
-      return _.take(this.latestList, 2)
+      return take(this.latestList, 2)
     },
     latestListBeforeDFPNA5 () {
-      return _.slice(this.latestList, 2, 3)
+      return slice(this.latestList, 2, 3)
     },
     latestListBeforeDFPNA9 () {
-      return _.slice(this.latestList, 3, 6)
+      return slice(this.latestList, 3, 6)
     },
     latestListAfterDFPNA9 () {
-      return _.slice(this.latestList, 6)
+      return slice(this.latestList, 6)
     },
     latestArticleArr () {
       return [ this.latestListBeforeDFPNA3, this.latestListBeforeDFPNA5, this.latestListBeforeDFPNA9, this.latestListAfterDFPNA9 ]
@@ -92,31 +92,32 @@ export default {
     getHrefFull,
     getImage,
     getTruncatedVal,
-    getValue,
+    get,
     getSectionStyle (sect) {
-      const sectionId = _.get(sect, [ 'id' ]) || sect
+      const sectionId = get(sect, 'id') || sect
       const style = {
-        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc')
+        backgroundColor: get(SECTION_MAP, `${sectionId}.bgcolor`, '#bcbcbc')
       }
       return style
     },
     getLabel (article) {
-      const section = _.get(article, 'sections.0.title', '')
-      const categoriesLen = _.get(article, 'categories.length', 0)
-      const categoryFirst =  _.get(article, 'categories.0.id')
+      const section = get(article, 'sections.0.title', '')
+      const categoriesLen = get(article, 'categories.length', 0)
+      const categoryFirst =  get(article, 'categories.0.id')
 
       return (section.length > 0)
         ? section
         : categoryFirst === MARKETING_CATGORY_ID && categoriesLen > 1
-        ? _.get(article, 'categories.1.title')
-        : _.get(article, 'categories.0.title')
+        ? get(article, 'categories.1.title')
+        : get(article, 'categories.0.title')
     },
     updateSysStage () {
       this.currEnv = currEnv()
     },
     sanitizeHtml,
     shouldShowItem (article) {
-      return article.style !== 'projects' && article.style !== 'campaign' && article.style !== 'readr'
+      const exp = /(projects|campaign|readr)/
+      return !exp.test(article.style)
     },
   },
   mounted () {
@@ -127,14 +128,12 @@ export default {
       type: String
     },
     latestList: {
-      default: () => { return [] }
+      default: () => ([])
     },
     target: {
-      default: () => ('_self')
+      default: () => '_self'
     },
-    viewport: {
-      default: () => { return undefined }
-    }
+    viewport: {}
   }
 }
 </script>
@@ -196,6 +195,7 @@ export default {
             background-size cover
             background-position center center
             padding-top 100%
+            width 100%
 
           .latest-list_item_label
             position absolute
@@ -311,102 +311,4 @@ export default {
                 margin 0 0 10px
                 font-size 1.3rem
 
-  @media (min-width: 1200px)
-    .desktop-hidden
-      display none !important
-
-    .latest-main-container
-      &_title
-        overflow hidden
-
-        > h3
-          font-size 1.3rem
-          margin 0
-
-          &::after
-            display none
-
-      .latest-list
-        flex-direction row
-
-        .ad-container
-          width 31%
-
-        &_item
-          width 31%
-          display block
-
-          > a
-            .latest-list_item_label
-              height 25px
-              white-space normal
-              padding 0 10px
-              top auto
-              bottom 0
-              left 0
-              right auto
-              font-size 0.9rem
-
-          &_title
-            padding-left 0
-            padding-top 5px
-
-            > a
-              h3
-                font-size 1rem
-                font-weight 300
-
-    .tablet-only
-      display none
-    
-    .latest-main-container.b
-      .latest-list_item
-        position relative
-        padding 0
-        > a
-          .latest-list_item_label
-            display none !important
-        &_title
-          position absolute
-          left 0
-          right 0
-          bottom 0
-          padding 0
-          background-color transparent
-          > a
-            display flex
-            align-items center
-            padding 10px
-            background-color rgba(0, 0, 0, .7)
-            h3
-              flex 1
-              margin 0
-              color #fff
-
-          .latest-list_item_label
-            display flex !important
-            height 25px
-            font-size 1rem
-        > a
-          .latest-list_item_img
-            padding-top 100%
-      .latest-list_item
-        >>> .latest-list_item
-          display flex
-          flex-direction column
-          height 100%
-          .latest-list_item_img
-            height 100%
-            padding-top 0
-          .latest-list_item_label
-            font-size 1rem
-          .latest-list_item_title
-            flex 0 1 auto
-            padding 0 !important
-            background-color #000 !important
-            a
-              padding 10px
-              color #fff
-              h3
-                margin 0
 </style>

@@ -39,7 +39,7 @@
     }
   }
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
 
 .nativeDFP.latest-list_item 
   vertical-align top 
@@ -48,7 +48,7 @@
   border-bottom 1px solid rgba(0, 0, 0, 0.28) 
   padding-bottom 15px  
   width 100% 
-  a 
+  >>> a 
     position relative 
     display block  
     flex 1 
@@ -71,7 +71,7 @@
       display flex  
       justify-content center 
       align-items center 
-  .latest-list_item_title 
+  >>> .latest-list_item_title 
     background-color #fff 
     border-top-width 0 
     line-height 1.4rem 
@@ -105,13 +105,13 @@
       display flex  
       justify-content center 
       align-items center 
-  .tablet-only 
+  >>> .tablet-only 
     display none !important 
  
  
 .pop_item 
-  #compass-fit-widget-content 
-    figure 
+  >>> #compass-fit-widget-content 
+    >>> figure 
       position relative 
       width 100% 
       padding-top 66.66% 
@@ -127,7 +127,7 @@
         height 100% 
         object-fit cover 
         object-position 50% 50% 
-    .pop_item--colorBlock 
+    >>> .pop_item--colorBlock 
       display flex 
       justify-content center 
       align-items center 
@@ -140,7 +140,7 @@
       letter-spacing 1px 
       white-space nowrap 
       padding 0 10px 
-    .pop_item_title  
+    >>> .pop_item_title  
       background-color #fff 
       border-top-width 0 
       line-height 1.5rem 
@@ -160,7 +160,7 @@
  
 @media (min-width: 600px)   
   .nativeDFP.latest-list_item 
-    a 
+    >>> a 
       .latest-list_item_img 
         padding-top 60% 
       .latest-list_item_label 
@@ -168,7 +168,7 @@
         right -60px 
         height 60px 
         font-size 1.2rem 
-    .latest-list_item_title 
+    >>> .latest-list_item_title 
       flex 1.5 
       padding-left 80px 
       font-weight 300 
@@ -176,38 +176,17 @@
         h3 
           margin 0 0 10px 
           font-size 1.3rem
-    .tablet-only 
+    >>> .tablet-only 
       display block !important 
       &.latest-list_item_label 
         display flex !important 
-    .tablet-hidden 
+    >>> .tablet-hidden 
       display none !important 
          
-@media (min-width: 1200px) 
-  .nativeDFP.latest-list_item 
-    display block 
-    .desktop-hidden 
-      display none !important 
-    a 
-      .latest-list_item_label 
-        height 25px 
-        white-space normal 
-        padding 0 10px 
-        top auto 
-        bottom 0 
-        left 0 
-        right auto 
-        font-size 0.9rem 
-    .latest-list_item_title 
-      padding-left 0 
-      padding-top 5px 
-      > a 
-        h3 
-          font-size 1rem 
-          font-weight 300 
+
 @media (min-width 0px) and (max-width 499px) 
   .pop_item 
-    #compass-fit-widget-content 
+    >>> #compass-fit-widget-content 
       .pop_item_title 
         font-size 1.2rem 
         line-height 1.5rem                                       

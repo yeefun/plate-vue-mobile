@@ -77,8 +77,8 @@
 
 <script>
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
-import ItemsTitleRect from './ItemsTitleRect.vue'
-import { SECTION_FOODTRAVEL_ID } from '../constants/index'
+import ItemsTitleRect from 'src/components/ItemsTitleRect.vue'
+import { SECTION_FOODTRAVEL_ID } from 'src/constants/index'
 import {
   getAuthor,
   getBrief,

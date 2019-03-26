@@ -6,7 +6,7 @@
   </div>
 </template>
 <script>
-  import _ from 'lodash'
+  import { get } from 'lodash'
   export default {
     computed: {
       containerClass () {
@@ -15,7 +15,7 @@
         }
       },
       mediaDataEmbed () {
-        return _.get(this.mediaData, [ 'embed' ])
+        return get(this.mediaData, 'embed')
       }
     },
     data () {
@@ -140,19 +140,4 @@
             margin-right -100%
             margin-left 10px
             border-top 5px solid #356d9c
-
-  @media (min-width: 1200px)
-    .mmtv-aside
-      margin-top 0
-      &--title
-        margin-top 0
-        padding 0
-        h2
-          margin 0 auto
-          font-size 1.3rem
-          &::after
-            display none
-      &--container
-        margin-bottom 30px
-
 </style>
