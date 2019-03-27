@@ -9,7 +9,7 @@
 
 <script>
 
-import _ from 'lodash'
+import { get } from 'lodash'
 import TimelineMenu from '../../components/timeline/TimelineMenu.vue'
 
 export default {
@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     getBrief () {
-      return _.get(this.timeline, [ 'topic', 'brief', 'html' ])
+      return get(this.timeline, [ 'topic', 'brief', 'html' ])
     }
   }
 }

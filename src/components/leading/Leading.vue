@@ -7,17 +7,17 @@
             <swiper-slide :is="props.slide" v-for="(o, i) in slideshowImgs" :key="`${i}-${Date.now()}`">
               <template v-if="$_leading_detectImgHref(o)">
                 <a :href="$_leading_getHref(o)" target="_blank">
-                  <img  :src="getValue(o, [ 'image', 'url' ])"
-                        :srcset="`${getValue(o, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
-                                    ${getValue(o, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
-                                    ${getValue(o, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`" />
+                  <img  :src="get(o, [ 'image', 'url' ])"
+                        :srcset="`${get(o, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
+                                    ${get(o, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
+                                    ${get(o, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`" />
                 </a>
               </template>
               <template v-else>
-                <img  :src="getValue(o, [ 'image', 'url' ])"
-                        :srcset="`${getValue(o, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
-                                    ${getValue(o, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
-                                    ${getValue(o, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`" />
+                <img  :src="get(o, [ 'image', 'url' ])"
+                        :srcset="`${get(o, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
+                                    ${get(o, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
+                                    ${get(o, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`" />
               </template>
             </swiper-slide>
           </template>
@@ -25,16 +25,16 @@
       </div>
       <div class="leading-image" v-else-if="type === 'image' && leadingImg">
         <div class="img">
-          <img :src="getValue(leadingImg, [ 'image', 'url' ])"
-                :srcset="`${getValue(leadingImg, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
-                          ${getValue(leadingImg, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
-                          ${getValue(leadingImg, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`" />
+          <img :src="get(leadingImg, [ 'image', 'url' ])"
+                :srcset="`${get(leadingImg, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
+                          ${get(leadingImg, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
+                          ${get(leadingImg, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`" />
         </div>
       </div>
       <div class="leading-video" v-else-if="type === 'video' && leadingVideo">
         <div class="video">
           <video controls ref="video">
-            <source :src="getValue(leadingVideo, [ 'video', 'url' ])" :type="getValue(leadingVideo, [ 'video', 'filetype' ])" />
+            <source :src="get(leadingVideo, [ 'video', 'url' ])" :type="get(leadingVideo, [ 'video', 'filetype' ])" />
           </video>
         </div>
       </div>
@@ -46,9 +46,8 @@
 </template>
 
 <script>
-import { getValue } from '../util/comm'
-import _ from 'lodash'
-import Slider from './Slider.vue'
+import { get, indexOf, split } from 'lodash'
+import Slider from 'src/components/Slider.vue'
 
 export default {
   components: {
@@ -65,26 +64,26 @@ export default {
       }
     },
     slideshowImgs () {
-      return _.get(this.mediaData, [ 'images', 'items' ], [])
+      return get(this.mediaData, [ 'images', 'items' ], [])
     },
     leadingImg () {
-      return _.get(this.mediaData, [ 'heroImage' ])
+      return get(this.mediaData, [ 'heroImage' ])
     },
     leadingVideo () {
-      return _.get(this.mediaData, [ 'heroVideo' ])
+      return get(this.mediaData, [ 'heroVideo' ])
     },
     leadingEmedded () {
-      return _.get(this.mediaData, [ 'embed' ])
+      return get(this.mediaData, [ 'embed' ])
     }
   },
   methods: {
     $_leading_detectImgHref (item) {
-      return _.indexOf(item.keywords, '@') !== -1
+      return indexOf(item.keywords, '@') !== -1
     },
     $_leading_getHref (item) {
-      return _.split(item.keywords, '@-')[1]
+      return split(item.keywords, '@-')[1]
     },
-    getValue
+    get
   },
   name: 'leading',
   props: {

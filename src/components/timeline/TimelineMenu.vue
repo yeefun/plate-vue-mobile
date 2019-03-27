@@ -17,7 +17,7 @@
 
 <script>
 
-import _ from 'lodash'
+import { get } from 'lodash'
 
 export default {
   props: [ 'initialHighlightNodes', 'viewport' ],
@@ -26,10 +26,10 @@ export default {
       return this.initialHighlightNodes
     },
     topicId () {
-      return _.get(this.$route.params, [ 'topicId' ])
+      return get(this.$route.params, [ 'topicId' ])
     },
     nodesAmount () {
-      return _.get(this.highlightNodes, [ 'length' ])
+      return get(this.highlightNodes, [ 'length' ])
     },
     windowViewport () {
       return this.viewport
@@ -40,12 +40,10 @@ export default {
       let viewportTarget
       if (this.windowViewport < 600) {
         viewportTarget = 'mobile'
-      } else if (this.windowViewport > 600 && this.windowViewport < 1200) {
-        viewportTarget = 'tablet'
       } else {
-        viewportTarget = 'desktop'
+        viewportTarget = 'tablet'
       }
-      return _.get(node, [ 'activity', 'heroImage', 'image', 'resizedTargets', viewportTarget, 'url' ])
+      return get(node, [ 'activity', 'heroImage', 'image', 'resizedTargets', viewportTarget, 'url' ])
     }
   }
 }

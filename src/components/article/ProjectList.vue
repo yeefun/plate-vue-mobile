@@ -7,7 +7,7 @@
             <div class="proj_item">
               <div>
                 <a :href="`${getHrefFull(o)}`" :id="'projects-' + o.name + '-1'" :target="target">
-                  <div class="proj_item_img" :title="getValue(o, [ 'title' ])"
+                  <div class="proj_item_img" :title="get(o, [ 'title' ])"
                       :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
                   </div>
                 </a>
@@ -19,7 +19,7 @@
               </div>
               <div class="proj_item_desc">
                 <a :href="`${getHrefFull(o)}`" :id="'projects-' + o.name + '-3'" :target="target">
-                  {{ getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 20) }}
+                  {{ getTruncatedVal(sanitizeHtml( get(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 20) }}
                 </a>
               </div>
             </div>
@@ -32,9 +32,9 @@
   </div>
 </template>
 <script>
-  import _ from 'lodash'
   import { SECTION_MAP, SITE_URL } from '../../constants'
-  import { getHrefFull, getImage, getTruncatedVal, getValue } from '../../util/comm'
+  import { getHrefFull, getImage, getTruncatedVal } from '../../util/comm'
+  import { filter, get, includes } from 'lodash'
   import ProjectListNavBtn from './ProjectListNavBtn.vue'
   import Slider from '../Slider.vue'
   import sanitizeHtml from 'sanitize-html'
@@ -50,8 +50,8 @@
         return (browser && this.viewport)
       },
       filteredProjects () {
-        return _.filter(this.projects, (o) => {
-          return !_.includes(this.excludingProjects, o.slug)
+        return filter(this.projects, (o) => {
+          return !includes(this.excludingProjects, o.slug)
         })
       },
       slidesPerView () {
@@ -86,7 +86,7 @@
       getHrefFull,
       getImage,
       getTruncatedVal,
-      getValue,
+      get,
       goPrev () {
         window.refs[ this.sliderId ].slidePrev()
       },
@@ -98,16 +98,14 @@
     name: 'project-list',
     props: {
       excludingProjects: {
-        default: () => { return [] }
+        default: () => ([])
       },
       projects: {
-        default: () => { return [] }
+        default: () => ([])
       },
-      viewport: {
-        default: () => { return undefined }
-      },
+      viewport: {},
       target: {
-        default: () => ('_self')
+        default: () => '_self'
       }
     }
   }

@@ -3,7 +3,7 @@
 
     <template v-for="(item, index) in articles">
       <listArticle-block :index="index" :initialArticle="item" :id="`list-item-${index}`"
-        :initialTogglePause="togglePause" v-on:pauseAllAudio="pauseAllAudio" :key="getValue(item, [ 'id' ], Date.now())"/>
+        :initialTogglePause="togglePause" v-on:pauseAllAudio="pauseAllAudio" :key="get(item, [ 'id' ], Date.now())"/>
       <slot :name="`microAd${getMicroAdName(index)}`" v-if="(index === 1 || index === 2 || index === 5) && hasDFP"></slot>
     </template>
     
@@ -13,7 +13,7 @@
 <script>
 
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import { getValue } from '../util/comm'
+import { get } from 'lodash'
 import ListArticleBlock from './list/ListArticleBlock.vue'
 import verge from 'verge'
 
@@ -35,7 +35,7 @@ export default {
     getMicroAdName (index) {
       return index === 1 ? 0 : index === 2 ? 1 : 2
     },
-    getValue,
+    get,
     pauseAllAudio (index) {
       this.togglePause = index
     },

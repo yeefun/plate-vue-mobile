@@ -26,7 +26,7 @@
 <script>
 
 import { SOCIAL_LINK } from '../constants/index'
-import _ from 'lodash'
+import { forEach, find, get, } from 'lodash'
 
 export default {
   name: 'footer-full',
@@ -49,10 +49,10 @@ export default {
       if (!this.commonData.sections) {
         return menuItem
       }
-      _.forEach(this.commonData.sections.items, (s) => {
+      forEach(this.commonData.sections.items, (s) => {
         s.href = '/section/' + s.name
         s.isFeatured ? menuItem.section.push(s) : ''
-        _.forEach(s.categories, (c) => {
+        forEach(s.categories, (c) => {
           c.href = '/category/' + c.name
           c.section = s.name
           c.isFeatured ? menuItem.category.push(c) : ''
@@ -61,18 +61,18 @@ export default {
       return menuItem
     },
     sectionLogo () {
-      return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { name: this.sectionName }), [ 'image' ], null)
+      return get(find(get(this.commonData, [ 'sections', 'items' ]), { name: this.sectionName }), [ 'image' ], null)
     }
   },
   methods: {
     getSectionLogoUrl () {
-      return _.get(this.sectionLogo, [ 'image', 'url' ]) ? _.get(this.sectionLogo, [ 'image', 'url' ]) : '/asset/logo.png'
+      return get(this.sectionLogo, [ 'image', 'url' ]) ? get(this.sectionLogo, [ 'image', 'url' ]) : '/asset/logo.png'
     },
     getSectionLogoWidth () {
-      return _.get(this.sectionLogo, [ 'image', 'width' ])
+      return get(this.sectionLogo, [ 'image', 'width' ])
     },
     getSectionLogoHeight () {
-      return _.get(this.sectionLogo, [ 'image', 'height' ])
+      return get(this.sectionLogo, [ 'image', 'height' ])
     }
   }
 }
@@ -141,31 +141,5 @@ export default {
 
       .facebook, .line, .weibo
         height 22px
-      
-
-@media (min-width 1200px)
-  .footerFull
-    flex-direction row
-    align-items stretch
-    padding 25px 95px
-    &__logo
-      margin-bottom 0
-    &__menu
-      width 445px
-      margin-bottom 0
-      > a
-        width 25%
-        font-size 15px
-        text-align left
-    &__vertDivider
-      display block
-    &__link
-      width 180px
-      &--subscribe
-        margin-bottom 25px
-      &--horizDivider
-        display none
-      &--socialMedia
-        justify-content space-between
 
 </style>

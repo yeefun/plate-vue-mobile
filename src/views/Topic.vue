@@ -31,15 +31,12 @@
 
         <template v-else-if="topicType === 'portraitWall'">
           <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
-          <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header> -->
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
-            <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="portraitWallSlideImages"></leading>
+            <leading :type="get(topic, 'leading')" v-if="get(topic, 'leading')" :mediaData="portraitWallSlideImages"></leading>
           </div>
           <portraitWall-list :articles="articles" :initialMediaData="portraitWallListImages"></portraitWall-list>
-          <div><vue-dfp v-if="hasDFP && (viewport > 1000)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
-            :section="props.section" :dfpId="props.dfpId" :unitId="dfp"></vue-dfp></div>
-          <div><vue-dfp v-if="hasDFP && (viewport < 900)" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
+          <div><vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
             :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp"></vue-dfp></div>
           <section class="footer container">
             <app-footer style="padding: 0 2rem; margin-bottom: 40px;"></app-footer>
@@ -49,15 +46,12 @@
 
         <template v-else-if="topicType === 'group'">
           <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
-          <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header> -->
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
-            <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
+            <leading :type="get(topic, 'leading')" v-if="get(topic, 'leading')" :mediaData="mediaData"></leading>
           </div>
           <group-list :articles='articles' :tags="tags" :viewport="viewport"></group-list>
-          <div><vue-dfp v-if="hasDFP && (viewport > 1000)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
-            :section="props.section" :dfpId="props.dfpId" :unitId="dfp"></vue-dfp></div>
-          <div><vue-dfp v-if="hasDFP && (viewport < 900)" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
+          <div><vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
             :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp"></vue-dfp></div>
           <section class="footer container">
             <app-footer style="padding: 0 2rem; margin-bottom: 40px;"></app-footer>
@@ -66,26 +60,20 @@
 
         <template v-else>
           <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
-          <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header> -->
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
-            <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
+            <leading :type="get(topic, [ 'leading' ])" v-if="get(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
           </div>
           <article-list ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='false'></article-list>
-          <div><vue-dfp v-if="hasDFP && (viewport > 1000)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
-            :section="props.section" :dfpId="props.dfpId" :unitId="dfp"></vue-dfp></div>
-          <div><vue-dfp v-if="hasDFP && (viewport < 900)" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
+          <div><vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
             :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp"></vue-dfp></div>
           <article-list ref="articleListAutoScroll" id="articleListAutoScroll" :articles='autoScrollArticlesLoadMore' :hasDFP='false'
             v-show="hasAutoScroll"></article-list>
           <loading :show="loading"></loading>
-          <!--<section class="footer container">
-            <app-footer style="padding: 0 2rem; margin-bottom: 40px;"></app-footer>
-          </section>-->
           <share :right="`20px`" :bottom="`20px`"></share>
         </template>
         
-        <DfpST v-if="(viewport < 550)" :props="props">
+        <DfpST :props="props">
           <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
         </DfpST>
       </div>
@@ -100,10 +88,10 @@ import { FB_APP_ID, FB_PAGE_ID, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '
 import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { adtracker } from 'src/util/adtracking'
 import { camelize } from 'humps'
-import { currEnv, getTruncatedVal, getValue, unLockJS } from '../util/comm'
+import { currEnv, getTruncatedVal, unLockJS } from '../util/comm'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
+import { camelCase, filter, find, includes, indexOf, get, slice, split, take, uniqBy } from 'lodash'
 import { getRole } from '../util/mmABRoleAssign'
-import _ from 'lodash'
 import ArticleList from '../components/ArticleList.vue'
 import ArticleListFull from '../components/ArticleListFull.vue'
 import Cookie from 'vue-cookie'
@@ -114,8 +102,8 @@ import GroupList from '../components/GroupList.vue'
 import Header from '../components/Header.vue'
 import HeaderFull from '../components/HeaderFull.vue'
 import HeaderR from '../components/HeaderR.vue'
-import Leading from '../components/Leading.vue'
-import LeadingWatch from '../components/LeadingWatch.vue'
+import Leading from '../components/leading/Leading.vue'
+import LeadingWatch from '../components/leading/LeadingWatch.vue'
 import Loading from '../components/Loading.vue'
 import MoreFull from '../components/MoreFull.vue'
 import PortraitWallList from '../components/PortraitWallList.vue'
@@ -136,12 +124,12 @@ const fetchData = (store, id) => {
     fetchPartners(store)
   ])
   .then(() => {
-    if (!(_.find(_.get(store.getters.topics, [ 'items' ]), { 'id': id }))) {
+    if (!(find(get(store.getters.topics, [ 'items' ]), { 'id': id }))) {
       return fetchTopicByUuid(store, id)
     }
   })
   .then(() => {
-    const topicType = _.get(_.find(_.get(store.getters.topics, [ 'items' ]), { 'id': id }), [ 'type' ]) || _.get(store.getters.topic, [ 'items', '0', 'type' ])
+    const topicType = get(find(get(store.getters.topics, [ 'items' ]), { 'id': id }), [ 'type' ]) || get(store.getters.topic, [ 'items', '0', 'type' ])
     if (topicType === 'timeline') {
       return fetchTimeline(store, id)
     }
@@ -161,14 +149,14 @@ const fetchEvent = (store, eventType = 'embedded') => {
 }
 
 const fetchPartners = (store) => {
-  const page = _.get(store.state, [ 'partners', 'meta', 'page' ], 0) + 1
+  const page = get(store.state, [ 'partners', 'meta', 'page' ], 0) + 1
   return store.dispatch('FETCH_PARTNERS', {
     params: {
       max_results: 25,
       page: page
     }
   }).then(() => {
-    if (_.get(store.state, [ 'partners', 'items', 'length' ]) < _.get(store.state, [ 'partners', 'meta', 'total' ])) {
+    if (get(store.state, [ 'partners', 'items', 'length' ]) < get(store.state, [ 'partners', 'meta', 'total' ])) {
       fetchPartners(store)
     }
   })
@@ -201,7 +189,7 @@ const fetchTopicImages = (store, uuid) => {
 }
 
 const fetchTopicAllImages = (store, uuid) => {
-  const page = _.get(store.state, [ 'images', 'meta', 'page' ], 0) + 1
+  const page = get(store.state, [ 'images', 'meta', 'page' ], 0) + 1
   return store.dispatch('FETCH_IMAGES', {
     'uuid': uuid,
     'type': TOPIC,
@@ -210,7 +198,7 @@ const fetchTopicAllImages = (store, uuid) => {
       page: page
     }
   }).then(() => {
-    if (_.get(store.state, [ 'images', 'items', 'length' ]) < _.get(store.state, [ 'images', 'meta', 'total' ])) {
+    if (get(store.state, [ 'images', 'items', 'length' ]) < get(store.state, [ 'images', 'meta', 'total' ])) {
       fetchTopicAllImages(store, uuid)
     }
   })
@@ -230,7 +218,7 @@ const fetchArticlesByUuid = (store, uuid, type, isLoadMore, useMetaEndpoint, max
 }
 
 const fetchAllArticlesByUuid = (store, uuid, type, useMetaEndpoint) => {
-  const page = _.get(store.state, [ 'articlesByUUID', 'TOPIC', uuid, 'meta', 'page' ], 0) + 1
+  const page = get(store.state, [ 'articlesByUUID', 'TOPIC', uuid, 'meta', 'page' ], 0) + 1
   return store.dispatch('FETCH_ARTICLES_BY_UUID', {
     'uuid': uuid,
     'type': type,
@@ -240,7 +228,7 @@ const fetchAllArticlesByUuid = (store, uuid, type, useMetaEndpoint) => {
       useMetaEndpoint: useMetaEndpoint
     }
   }).then(() => {
-    if (_.get(store.state, [ 'articlesByUUID', 'TOPIC', uuid, 'items', 'length' ]) < _.get(store.state, [ 'articlesByUUID', 'TOPIC', uuid, 'meta', 'total' ])) {
+    if (get(store.state, [ 'articlesByUUID', 'TOPIC', uuid, 'items', 'length' ]) < get(store.state, [ 'articlesByUUID', 'TOPIC', uuid, 'meta', 'total' ])) {
       fetchAllArticlesByUuid(store, uuid, type, useMetaEndpoint)
     }
   })
@@ -287,7 +275,7 @@ export default {
 
     const metaTitle = ogTitle || name
     const metaDescription = ogDescription ? this.getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
-    const metaImage = ogImage ? _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) : _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], SITE_OGIMAGE)
+    const metaImage = ogImage ? get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) : get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], SITE_OGIMAGE)
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
     const relUrl = `${SITE_MOBILE_URL}${this.$route.fullPath}`
     if (!metaTitle && process.env.VUE_ENV === 'server') {
@@ -340,34 +328,34 @@ export default {
   },
   computed: {
     articles () {
-      return _.uniqBy(_.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'items' ]), 'slug')
+      return uniqBy(get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'items' ]), 'slug')
     },
     articleUrl () {
       return `${SITE_URL}/topic/${this.currArticleSlug}/`
     },
     autoScrollArticles () {
       if (this.topicType === 'wide') {
-        return _.take(this.articles, 3)
+        return take(this.articles, 3)
       }
-      return _.take(this.articles, 12)
+      return take(this.articles, 12)
     },
     autoScrollArticlesLoadMore () {
       if (this.topicType === 'wide') {
-        return _.slice(this.articles, 3)
+        return slice(this.articles, 3)
       }
-      return _.slice(this.articles, 12)
+      return slice(this.articles, 12)
     },
     customCSS () {
-      return _.get(this.topic, [ 'style' ], null)
+      return get(this.topic, [ 'style' ], null)
     },
     customJS () {
-      return _.get(this.topic, [ 'javascript' ], null)
+      return get(this.topic, [ 'javascript' ], null)
     },
     currArticleSlug () {
       return this.$store.state.route.params.topicId
     },
     dfp () {
-      return _.get(this.topic, [ 'dfp' ], null)
+      return get(this.topic, [ 'dfp' ], null)
     },
     dfpOptions () {
       const currentInstance = this
@@ -405,46 +393,46 @@ export default {
       })
     },
     eventLogo () {
-      return _.get(this.$store.state.eventLogo, [ 'items', '0' ])
+      return get(this.$store.state.eventLogo, [ 'items', '0' ])
     },
     fbCommentDiv () {
       return `<div class="fb-comments" data-href="${this.articleUrl}" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>`
     },
     fbAppId () {
-      return _.get(this.$store, [ 'state', 'fbAppId' ])
+      return get(this.$store, [ 'state', 'fbAppId' ])
     },
     hasAutoScroll () {
-      return _.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'meta', 'page' ], PAGE) !== 1
+      return get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'meta', 'page' ], PAGE) !== 1
     },
     hasDFP () {
       return this.dfp !== '' || this.mobileDfp !== ''
     },
     hasMore () {
-      return _.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'items', 'length' ], 0) < _.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'meta', 'total' ], 0)
+      return get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'items', 'length' ], 0) < get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'meta', 'total' ], 0)
     },
     mobileDfp () {
-      return _.get(this.topic, [ 'mobileDfp' ], null)
+      return get(this.topic, [ 'mobileDfp' ], null)
     },
     highlightNodes () {
-      return _.get(this.$store.state, [ 'timeline', 'nodes' ])
+      return get(this.$store.state, [ 'timeline', 'nodes' ])
     },
     isTimeline () {
       return this.$route.params.topicId === TOPIC_PROTEST_ID
     },
     page () {
-      return _.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'meta', 'page' ], PAGE)
+      return get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'meta', 'page' ], PAGE)
     },
     pageStyle () {
-      return _.get(this.topic, [ 'pageStyle' ])
+      return get(this.topic, [ 'pageStyle' ])
     },
     portraitWallListImages () {
-      return _.filter(_.get(this.mediaData, [ 'images', 'items' ]), (i) => {
-        return _.indexOf(i.keywords, '@') === -1
+      return filter(get(this.mediaData, [ 'images', 'items' ]), (i) => {
+        return indexOf(i.keywords, '@') === -1
       })
     },
     portraitWallSlideImages () {
-      const slideImages = _.filter(_.get(this.$store.state, [ 'images', 'items' ]), (i) => {
-        return _.indexOf(i.keywords, '@') !== -1
+      const slideImages = filter(get(this.$store.state, [ 'images', 'items' ]), (i) => {
+        return indexOf(i.keywords, '@') !== -1
       })
       return {
         images: {
@@ -453,7 +441,7 @@ export default {
       }
     },
     projects () {
-      return _.get(this.commonData, [ 'projects', 'items' ])
+      return get(this.commonData, [ 'projects', 'items' ])
     },
     sectionId () {
       return 'other'
@@ -467,26 +455,26 @@ export default {
       }
     },
     tags () {
-      return _.filter(_.get(this.$store.state, [ 'tags' ]), (t) => {
-        return _.includes(_.get(this.topic, [ 'tags' ]), t.id)
+      return filter(get(this.$store.state, [ 'tags' ]), (t) => {
+        return includes(get(this.topic, [ 'tags' ]), t.id)
       })
     },
     timeline () {
-      return _.get(this.$store.state, [ 'timeline' ])
+      return get(this.$store.state, [ 'timeline' ])
     },
     topic () {
-      if (_.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': this.uuid })) {
-        return _.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': this.uuid })
+      if (find(get(this.$store.state.topics, [ 'items' ]), { 'id': this.uuid })) {
+        return find(get(this.$store.state.topics, [ 'items' ]), { 'id': this.uuid })
       } else {
-        return _.get(this.$store.state, [ 'topic', 'items', '0' ])
+        return get(this.$store.state, [ 'topic', 'items', '0' ])
       }
     },
     topicType () {
-      return this.camelize(_.get(this.topic, [ 'type' ]))
+      return this.camelize(get(this.topic, [ 'type' ]))
     },
     mediaData () {
       return {
-        images: _.get(this.$store.state, [ 'images', this.uuid ])
+        images: get(this.$store.state, [ 'images', this.uuid ])
       }
     },
     uuid () {
@@ -495,10 +483,8 @@ export default {
     viewportTarget () {
       if (this.viewport < 600) {
         return 'mobile'
-      } else if (this.viewport > 600 && this.viewport < 1200) {
-        return 'tablet'
       } else {
-        return 'desktop'
+        return 'tablet'
       }
     }
   },
@@ -528,7 +514,7 @@ export default {
     window.ga('set', 'contentGroup2', '')
     // window.ga('set', 'contentGroup3', '')
     window.ga('set', 'contentGroup3', `topic${this.abIndicator}`)
-    window.ga('send', 'pageview', { title: `${_.get(this.topic, [ 'name' ])} - ${SITE_TITLE}`, location: document.location.href })
+    window.ga('send', 'pageview', { title: `${get(this.topic, [ 'name' ])} - ${SITE_TITLE}`, location: document.location.href })
 
     window.addEventListener('resize', this.updateViewport)
     if (this.topicType === 'list' || this.topicType === 'wide') { window.addEventListener('scroll', this.scrollHandler) }
@@ -543,7 +529,7 @@ export default {
     elmYPosition,
     getMmid () {
       const mmid = Cookie.get('mmid')
-      let assisgnedRole = _.get(this.$route, [ 'query', 'ab' ])
+      let assisgnedRole = get(this.$route, [ 'query', 'ab' ])
       if (assisgnedRole) {
         assisgnedRole = assisgnedRole.toUpperCase()
       }
@@ -554,7 +540,7 @@ export default {
       return assisgnedRole || role
     },
     getTruncatedVal,
-    getValue,
+    get,
     insertCustomizedMarkup () {
       const custCss = document.createElement('style')
       const custScript = document.createElement('script')
@@ -649,13 +635,13 @@ export default {
   },
   beforeRouteUpdate (to, from, next) {
     let topicType
-    const uuid = _.split(to.path, '/')[2]
-    const topic = _.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': uuid }, undefined)
+    const uuid = split(to.path, '/')[2]
+    const topic = find(get(this.$store.state.topics, [ 'items' ]), { 'id': uuid }, undefined)
 
     if (!topic) {
       fetchTopicByUuid(this.$store, uuid)
       .then(() => {
-        topicType = _.camelCase(_.get(this.$store.state.topic, [ 'items', '0', 'type' ]))
+        topicType = camelCase(get(this.$store.state.topic, [ 'items', '0', 'type' ]))
         if (topicType === 'group') {
           Promise.all([ fetchAllArticlesByUuid(this.$store, uuid, TOPIC, true), fetchTopicImages(this.$store, uuid) ])
           .then(next())
@@ -674,7 +660,7 @@ export default {
         }
       })
     } else {
-      topicType = _.camelCase(_.get(topic, [ 'type' ]))
+      topicType = camelCase(get(topic, [ 'type' ]))
       if (topicType === 'group') {
         Promise.all([ fetchAllArticlesByUuid(this.$store, uuid, TOPIC, true), fetchTopicImages(this.$store, uuid) ])
         .then(next())
@@ -714,7 +700,7 @@ export default {
     uuid: function () {
       this.$forceUpdate()
       if (process.env.VUE_ENV === 'client') {
-        window.ga('send', 'pageview', { title: `${_.get(this.topic, [ 'name' ])} - ${SITE_TITLE}`, location: document.location.href })
+        window.ga('send', 'pageview', { title: `${get(this.topic, [ 'name' ])} - ${SITE_TITLE}`, location: document.location.href })
         if (this.topicType === 'list' || this.topicType === 'wide') {
           window.removeEventListener('scroll', this.scrollHandler)
           window.addEventListener('scroll', this.scrollHandler)
@@ -844,16 +830,5 @@ export default {
   .topicTimeline
     &__projects
       padding 5% 10%
-
-@media (min-width: 900px)
-  .topic
-    height 600px
-    padding-top 0
-    &-title
-      height 200px
-      width 400px
-      color #fff
-      background-size contain
-      background-position center center
 
 </style>

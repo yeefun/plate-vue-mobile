@@ -15,7 +15,7 @@ export default {
   },
   props: {
     className: {
-      default: () => { return 'moreFull' }
+      default: () => 'moreFull'
     }
   }
 }
@@ -46,17 +46,4 @@ button-style(letter-spacing)
   margin 50px 5%
   > button
     button-style(1px)
-
-@media (min-width: 1200px)
-  .moreFull
-    margin-bottom 70px
-    > button
-      height 48px
-      font-size 20px
-  .moreFoodTravel
-    margin 50px 8.3%
-    margin-bottom 70px
-    > button
-      height 48px
-      font-size 20px
 </style>

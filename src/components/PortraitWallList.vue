@@ -6,7 +6,7 @@
           <p v-text="getTitle(image, false)"></p>
         </router-link>
         <div class="portraitWallList__block--content">
-          <h2><router-link :to="getHref(image)" target="_blank" v-text="getValue(image, [ 'description' ])"></router-link></h2>
+          <h2><router-link :to="getHref(image)" target="_blank" v-text="get(image, [ 'description' ])"></router-link></h2>
           <p><a target="_blank" v-text="getTitle(image, true)"></a></p>
         </div>
       </div>
@@ -16,37 +16,37 @@
 
 <script>
 
-import { getTruncatedVal, getValue } from '../util/comm'
-import _ from 'lodash'
+import { chunk, find, get, split, sortBy, toNumber } from 'lodash'
+import { getTruncatedVal } from '../util/comm'
 
 export default {
   name: 'portraitWallList',
   props: [ 'articles', 'initialMediaData' ],
   computed: {
     images () {
-      return _.chunk(_.sortBy(this.initialMediaData, [ function (o) {
-        return _.toNumber(_.split(o.keywords, '-')[0])
+      return chunk(sortBy(this.initialMediaData, [ function (o) {
+        return toNumber(split(o.keywords, '-')[ 0 ])
       } ]), 5)
     }
   },
   methods: {
     getHref (item) {
-      return `/story/${_.split(_.get(item, [ 'keywords' ]), '-')[1]}`
+      return `/story/${split(get(item, [ 'keywords' ]), '-')[1]}`
     },
     getImage (item) {
-      return _.get(item, [ 'image', 'resizedTargets', 'desktop', 'url' ])
+      return get(item, [ 'image', 'resizedTargets', 'desktop', 'url' ])
     },
     getOrder (item) {
-      return _.split(_.get(item, [ 'keywords' ]), '-')[0]
+      return split(get(item, [ 'keywords' ]), '-')[0]
     },
     getTitle (item, needComplete) {
-      const slug = _.split(_.get(item, [ 'keywords' ]), '-')[1]
+      const slug = split(get(item, [ 'keywords' ]), '-')[1]
       if (needComplete) {
-        return _.get(_.find(this.articles, { 'slug': slug }), [ 'title' ])
+        return get(find(this.articles, { 'slug': slug }), [ 'title' ])
       }
-      return getTruncatedVal(_.get(_.find(this.articles, { 'slug': slug }), [ 'title' ]), 19)
+      return getTruncatedVal(get(find(this.articles, { 'slug': slug }), [ 'title' ]), 19)
     },
-    getValue
+    get
   }
 }
 
@@ -161,10 +161,4 @@ export default {
           margin 0
         p
           display none
-
-@media (min-width:1200px)
-  .portraitWallList
-    &__block
-      &--image
-        font-size 1rem
 </style>

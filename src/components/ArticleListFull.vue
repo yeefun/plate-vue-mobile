@@ -6,7 +6,7 @@
         <template v-for="item in articles">
           <div class="articleListFull-post">
             <a :href="getHref(item)" target="_blank" class="articleListFull-post__img">
-              <figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }" :title="getValue(item, [ 'title' ])"></figure>
+              <figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }" :title="get(item, [ 'title' ])"></figure>
             </a>
             <div class="articleListFull-post__content">
               <h2><a :href="getHref(item)" target="_blank" v-text="item.title"></a></h2>
@@ -24,7 +24,8 @@
 </template>
 
 <script>
-import { getAuthor, getBrief, getHref, getImage, getValue } from '../util/comm'
+import { getAuthor, getBrief, getHref, getImage } from '../util/comm'
+import { get } from 'lodash'
 import moment from 'moment'
 
 export default {
@@ -37,7 +38,7 @@ export default {
     getBrief,
     getHref,
     getImage,
-    getValue,
+    get,
     moment
   }
 }

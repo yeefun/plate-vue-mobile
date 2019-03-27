@@ -83,8 +83,7 @@
 
 import { SECTION_WATCH_ID, SOCIAL_LINK, TOPIC_WATCH_ID } from '../constants/index'
 import { currentYPosition } from 'kc-scroll'
-import { getValue } from '../util/comm'
-import _ from 'lodash'
+import { find, get } from 'lodash'
 
 export default {
   name: 'header-full',
@@ -102,10 +101,10 @@ export default {
   },
   computed: {
     menuItem () {
-      return _.get(_.find(_.get(this.sections, [ 'items' ]), { name: this.sectionName }), [ 'categories' ])
+      return get(find(get(this.sections, [ 'items' ]), { name: this.sectionName }), [ 'categories' ])
     },
     sectionLogo () {
-      return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { name: this.sectionName }), [ 'image' ], null)
+      return get(find(get(this.commonData, [ 'sections', 'items' ]), { name: this.sectionName }), [ 'image' ], null)
     },
     socialLink () {
       return SOCIAL_LINK
@@ -123,14 +122,14 @@ export default {
       this.headerDFPHeight = document.getElementById('dfp-HD').offsetHeight + 35
     },
     getSectionLogoUrl () {
-      if (_.get(this.$route, [ 'params', 'topicId' ]) === TOPIC_WATCH_ID) {
-        const section = _.find(_.get(this.sections, [ 'items' ]), { id: SECTION_WATCH_ID })
-        return _.get(section, [ 'image', 'image', 'resizedTargets', 'desktop', 'url' ])
+      if (get(this.$route, [ 'params', 'topicId' ]) === TOPIC_WATCH_ID) {
+        const section = find(get(this.sections, [ 'items' ]), { id: SECTION_WATCH_ID })
+        return get(section, [ 'image', 'image', 'resizedTargets', 'desktop', 'url' ])
       } else {
-        return _.get(this.sectionLogo, [ 'image', 'url' ]) ? _.get(this.sectionLogo, [ 'image', 'url' ]) : '/asset/logo.png'
+        return get(this.sectionLogo, [ 'image', 'url' ]) ? get(this.sectionLogo, [ 'image', 'url' ]) : '/asset/logo.png'
       }
     },
-    getValue,
+    get,
     openSearchBar () {
       this.openSearch = true
     },
@@ -146,7 +145,7 @@ export default {
       }
     },
     searchValueChange () {
-      const currentKeyword = _.get(this.$route, [ 'params', 'keyword' ])
+      const currentKeyword = get(this.$route, [ 'params', 'keyword' ])
       if (this.searchVal !== currentKeyword && this.searchVal !== '') {
         this.isChanged = true
       } else {
@@ -305,27 +304,4 @@ header
     width 100%
     height 100%
     background-color rgba(0, 0, 0, .5)
-
-@media (min-width: 1200px)
-  .headerFull
-    height 150px
-    &--black
-      height 60px
-
-  .sidebarFull
-    &-container
-      width 365px
-
-  .searchFull
-    &-container
-      top 60px
-      justify-content flex-end
-      height 52px
-      input
-        text-align right
-      > a
-        margin-left 50px
-  .watch101
-    .headerFull
-      height 60px
 </style>

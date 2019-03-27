@@ -8,7 +8,7 @@
 
 <script>
 
-import _ from 'lodash'
+import { get } from 'lodash'
 
 export default {
   props: [ 'initialTimeline' ],
@@ -17,10 +17,10 @@ export default {
       return this.initialTimeline
     },
     topic () {
-      return _.get(this.timeline, [ 'topic' ])
+      return get(this.timeline, [ 'topic' ])
     },
     topicImage () {
-      return _.get(this.topic, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], '')
+      return get(this.topic, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], '')
     }
   }
 }

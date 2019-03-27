@@ -21,7 +21,7 @@
 <script>
 
 import { getHref, getImage, getTruncatedVal } from '../util/comm'
-import _ from 'lodash'
+import { find, filter, get } from 'lodash'
 import sanitizeHtml from 'sanitize-html'
 
 export default {
@@ -42,20 +42,20 @@ export default {
   },
   methods: {
     getBrief (article, count) {
-      const brief = sanitizeHtml(_.get(article, [ 'brief', 'html' ], _.get(article, [ 'brief' ])), { allowedTags: [ '' ] })
+      const brief = sanitizeHtml(get(article, [ 'brief', 'html' ], get(article, [ 'brief' ])), { allowedTags: [ '' ] })
       return this.getTruncatedVal(brief, count)
     },
     getHref,
     getImage,
     getPostAmountByTag (tagId) {
-      const posts = _.filter(this.articles, (a) => {
-        return _.find(_.get(a, [ 'tags' ]), { 'id': tagId })
+      const posts = filter(this.articles, (a) => {
+        return find(get(a, [ 'tags' ]), { 'id': tagId })
       })
-      return _.get(posts, 'length', 0)
+      return get(posts, 'length', 0)
     },
     getPostByTag (tagId) {
-      return _.filter(this.articles, (a) => {
-        return _.find(_.get(a, [ 'tags' ]), { 'id': tagId })
+      return filter(this.articles, (a) => {
+        return find(get(a, [ 'tags' ]), { 'id': tagId })
       })
     },
     getTruncatedVal

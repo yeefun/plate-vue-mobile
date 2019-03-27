@@ -32,7 +32,7 @@
 </template>
 <script>
 
-import { getImage } from '../util/comm'
+import { getImage } from 'src/util/comm'
 
 export default {
   name: 'leadingWatch',
@@ -112,18 +112,6 @@ export default {
   > a
     display block
     font-size 0
-
-@media (min-width: 1200px)
-  .leadingWatchTag
-    height 52px
-    &__tag
-      > span
-        font-size 18px
-        line-height 52px
-      &--desktop
-        display block
-      &--mobile
-        display none
 
 .sihh
   flex-grow 1
