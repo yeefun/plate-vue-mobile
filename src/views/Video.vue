@@ -6,51 +6,44 @@
         <SingleVideoBody :video="video" :videos="$store.state.playlist[OATH_ALL_VIDEO_PLAYLIST_ID]">
           <ShareLight slot="share" :gtmCategory="'article'" />
           <template v-if="mounted">
-            <vue-dfp :is="props.vueDfp" v-if="viewportWidth >= 1200" slot="PCHD" :config="props.config" class="dfp" pos="PCHD" />
-            <vue-dfp :is="props.vueDfp" v-else slot="MBHD" :config="props.config" class="dfp" pos="MBHD" />
+            <vue-dfp :is="props.vueDfp" slot="MBHD" :config="props.config" class="dfp" pos="MBHD" />
           </template>
           <template v-if="mounted">
-            <vue-dfp :is="props.vueDfp" v-if="viewportWidth >= 1200" slot="PCFT" :config="props.config" class="dfp" pos="PCFT" />
-            <vue-dfp :is="props.vueDfp" v-else slot="MBFT" :config="props.config" class="dfp" pos="MBFT" />
+            <vue-dfp :is="props.vueDfp" slot="MBFT" :config="props.config" class="dfp" pos="MBFT" />
           </template>
           <template v-if="mounted">
-            <vue-dfp :is="props.vueDfp" v-if="viewportWidth >= 1200" slot="PCR1" :config="props.config" class="dfp" pos="PCR1" style="margin-top: 0;" />
-            <vue-dfp :is="props.vueDfp" v-else slot="MBE1" :config="props.config" class="dfp" pos="MBE1" />
+            <vue-dfp :is="props.vueDfp" slot="MBE1" :config="props.config" class="dfp" pos="MBE1" />
           </template>
         </SingleVideoBody>
       </template>
       <template v-else>
         <VideoLeading>
-          <vue-dfp :is="props.vueDfp" v-if="mounted && viewportWidth >= 1200" slot="LPCHD" :config="props.config" class="dfp" pos="LPCHD" />
-          <vue-dfp :is="props.vueDfp" v-if="mounted && viewportWidth < 1200" slot="LMBHD" :config="props.config" class="dfp" pos="LMBHD" />
+          <vue-dfp :is="props.vueDfp" v-if="mounted" slot="LMBHD" :config="props.config" class="dfp" pos="LMBHD" />
         </VideoLeading>
         <template v-for="(item, index) in playlist">
           <VideoList :key="item.id" :items="$store.state.playlist[item.id]" :playlist="item" @loadmore="handleLoadmore">
             <router-link v-if="!isCategoryPage" slot="more" :to="`/category/${OATH_PLAYLIST[item.id].categoryName}`" class="btn--more">看更多<img src="/assets/mirrormedia/icon/arrow-slideshow-blue-right.png" alt="看更多"></router-link>
             <template v-if="mounted && isCategoryPage">
-              <vue-dfp :is="props.vueDfp" v-if="viewportWidth >= 1200" :key="`${index}-LPCFT`" slot="LPCFT" :config="props.config" class="dfp" pos="LPCFT" />
-              <vue-dfp :is="props.vueDfp" v-else :key="`${index}-LMBFT`" slot="LMBFT" :config="props.config" class="dfp" pos="LMBFT" />
+              <vue-dfp :is="props.vueDfp" :key="`${index}-LMBFT`" slot="LMBFT" :config="props.config" class="dfp" pos="LMBFT" />
             </template>
           </VideoList>
           <template v-if="mounted && !isCategoryPage">
-            <vue-dfp :is="props.vueDfp" v-if="viewportWidth >= 1200 && index === 4" :key="`${index}-LPCFT`" :config="props.config" class="dfp" pos="LPCFT" />
-            <vue-dfp :is="props.vueDfp" v-if="viewportWidth < 1200 && index === 2" :key="`${index}-LMBFT`" :config="props.config" class="dfp" pos="LMBFT" />
+            <vue-dfp :is="props.vueDfp" v-if="index === 2" :key="`${index}-LMBFT`" :config="props.config" class="dfp" pos="LMBFT" />
           </template>
         </template>
       </template>
       <section class="footer container">
         <Footer />
       </section>
-      <LiveStream v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
       <Share v-if="!isSingleVideoPage" left="20px" bottom="20px" />
-      <DfpCover v-if="mounted && showDfpCoverAdFlag && viewportWidth < 1199 && (isTimeToShowAdCover || dfpMode === 'prod')">
-        <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewportWidth < 550)" :config="props.config" slot="ad-cover" />
+      <DfpCover v-if="mounted && isTimeToShowAdCover" v-show="showDfpCoverAdFlag">
+        <vue-dfp :is="props.vueDfp" pos="LMBCVR" :config="props.config" slot="ad-cover" />
       </DfpCover>
-      <DfpCover v-if="mounted && showDfpCoverAd2Flag && viewportWidth < 1199" :showCloseBtn="false" class="raw">
-        <vue-dfp :is="props.vueDfp" pos="LMBCVR2" v-if="(viewportWidth < 550)" :config="props.config" slot="ad-cover" />
+      <DfpCover v-if="mounted && showDfpCoverAd2Flag" :showCloseBtn="false" class="raw">
+        <vue-dfp :is="props.vueDfp" pos="LMBCVR2" :config="props.config" slot="ad-cover" />
       </DfpCover>
-      <DfpCover v-if="mounted && showDfpCoverInnityFlag && viewportWidth < 1199" :showCloseBtn="false" class="raw">
-        <vue-dfp :is="props.vueDfp" pos="LMBCVR3" v-if="(viewviewportWidthport < 550)" :config="props.config" slot="ad-cover" />
+      <DfpCover v-if="mounted && showDfpCoverInnityFlag" :showCloseBtn="false" class="raw">
+        <vue-dfp :is="props.vueDfp" pos="LMBCVR3" :config="props.config" slot="ad-cover" />
       </DfpCover>
     </template>
   </VueDfpProvider>
@@ -67,7 +60,6 @@ import ShareLight from '../components/share/ShareLight.vue'
 import VideoLeading from '../components/video/VideoLeading.vue'
 import VideoList from '../components/video/VideoList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
-import moment from 'moment'
 import titleMetaMixin from '../util/mixinTitleMeta'
 import uuidv4 from 'uuid/v4'
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, OATH_ALL_VIDEO_PLAYLIST_ID, OATH_PLAYLIST } from '../constants'
@@ -352,15 +344,6 @@ export default {
     eventLogo () {
       return get(this.$store, 'state.eventLogo.items.0')
     },
-    hasEventEmbedded () {
-      const _now = moment()
-      const _eventStartTime = moment(new Date(get(this.eventEmbedded, [ 'startDate' ])))
-      let _eventEndTime = moment(new Date(get(this.eventEmbedded, [ 'endDate' ])))
-      if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
-        _eventEndTime = moment(new Date(get(this.eventEmbedded, [ 'endDate' ]))).add(12, 'h')
-      }
-      return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
-    },
     isCategoryPage () {
       return this.$route.fullPath.match(/category/)
     },
@@ -474,8 +457,4 @@ export default {
   img
     height 1em
     margin-left 5px
-
-@media (min-width: 1200px)
-  .btn--more
-    font-size 1rem
 </style>

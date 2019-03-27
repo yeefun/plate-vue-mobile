@@ -181,37 +181,4 @@ export default {
         p
           flex 1
           font-size 1rem
-
-@media (min-width: 1200px)
-  .single-video
-    display flex
-    flex-wrap wrap
-    max-width 1160px
-    margin 30px auto 0
-    &__video
-      width 66.67%
-      > h1, > p
-        width 100%
-      h1
-        margin-right 2em
-      p.small
-        font-size .875rem
-    &__video-info
-      width 100%
-    &__latest
-      width calc(33.33% - 50px)
-      margin 0 0 0 50px
-      h3
-        font-size 1.25rem
-      .latest
-        figure
-          width 40%
-          padding-top 22.5%
-        p
-          margin 0
-          font-size .875rem
-          &:hover
-            color #064f77
-    &__comments
-      width 100%
 </style>

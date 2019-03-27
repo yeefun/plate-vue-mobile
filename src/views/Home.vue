@@ -35,10 +35,6 @@
           </main>
         </section>
         <loading :show="loading" />
-        <LazyItemWrapper :position="$store.state.viewport.height" :strict="true">
-          <live-stream v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
-          <live-stream v-else-if="!hasEventEmbedded && hasEventMod" :mediaData="eventMod" type="mod" />
-        </LazyItemWrapper>
         <DfpCover v-if="isTimeToShowAdCover" v-show="showDfpCoverAdFlag">
           <vue-dfp :is="props.vueDfp" pos="LMBCVR" :config="props.config" slot="ad-cover" />
         </DfpCover>
@@ -277,15 +273,6 @@ export default {
       let _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate')))
       if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
         _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate'))).add(12, 'h')
-      }
-      return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
-    },
-    hasEventMod () {
-      const _now = moment()
-      const _eventStartTime = moment(new Date(get(this.eventMod, 'startDate')))
-      let _eventEndTime = moment(new Date(get(this.eventMod, 'endDate')))
-      if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
-        _eventEndTime = moment(new Date(get(this.eventMod, 'endDate'))).add(12, 'h')
       }
       return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
     },

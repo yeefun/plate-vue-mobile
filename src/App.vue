@@ -4,6 +4,7 @@
       <router-view class="view"></router-view>
     </transition>
     <LiveStream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
+    <LiveStream v-else-if="!hasEventEmbedded && hasEventMod" :mediaData="eventMod" type="mod" />
   </div>
 </template>
 
@@ -40,15 +41,25 @@
         return this.$route.fullPath
       },
       eventEmbedded () { return get(this.$store, 'state.eventEmbedded.items.0') },      
+      eventMod () { return get(this.$store, 'state.eventMod.items.0') },
       hasEventEmbedded () {
-        const _now = moment()
-        const _eventStartTime = moment(new Date(get(this.eventEmbedded, 'startDate')))
-        let _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate')))
-        if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
-          _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate'))).add(12, 'h')
+        const now = moment()
+        const eventStartTime = moment(new Date(get(this.eventEmbedded, 'startDate')))
+        let eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate')))
+        if (eventEndTime && (eventEndTime < eventStartTime)) {
+          eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate'))).add(12, 'h')
         }
-        return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
+        return (eventStartTime && eventEndTime && (now >= eventStartTime) && (now <= eventEndTime))
       }, 
+      hasEventMod () {
+        const now = moment()
+        const eventStartTime = moment(new Date(get(this.eventMod, 'startDate')))
+        let eventEndTime = moment(new Date(get(this.eventMod, 'endDate')))
+        if (eventEndTime && (eventEndTime < eventStartTime)) {
+          eventEndTime = moment(new Date(get(this.eventMod, 'endDate'))).add(12, 'h')
+        }
+        return (eventStartTime && eventEndTime && (now >= eventStartTime) && (now <= eventEndTime))
+      },
     },
     watch: {
       currPath: function () {

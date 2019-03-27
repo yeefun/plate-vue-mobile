@@ -85,7 +85,7 @@ import {
   getHref,
   getImage,
   getTruncatedVal
-} from '../util/comm'
+} from 'src/util/comm'
 
 export default {
   name: 'latestArticle-foodtravel',

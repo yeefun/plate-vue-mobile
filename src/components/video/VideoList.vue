@@ -132,17 +132,4 @@ export default {
       > h3
         margin-top 15px
         font-size 1rem
-
-@media (min-width: 1200px)
-  .video-list
-    width auto
-    > h2
-      margin 0 10px
-    &__list
-      justify-content flex-start
-      flex-direction row
-      margin-top 0
-    &__block
-      max-width calc((100% - 80px) / 4)
-      margin 20px 10px 0
 </style>
