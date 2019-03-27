@@ -1,10 +1,9 @@
 <template>
-  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="`other`" :options="dfpOptions" :mode="dfpMode">
+  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="'other'" :options="dfpOptions" :mode="dfpMode">
     <template slot-scope="props" slot="dfpPos">
       <div class="search-view">
         <section style="width: 100%;">
           <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
-          <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/> -->
         </section>
         <div class="search-title container">
           <span class="search-title__text" v-text="title"></span>
@@ -25,11 +24,12 @@
 
 <script>
 
-import _ from 'lodash'
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
 import { FB_APP_ID, FB_PAGE_ID } from '../constants'
 import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
+import { adtracker } from 'src/util/adtracking'
 import { currEnv, unLockJS } from '../util/comm'
+import { get } from 'lodash'
 import { getRole } from '../util/mmABRoleAssign'
 import ArticleList from '../components/ArticleList.vue'
 import Cookie from 'vue-cookie'
@@ -76,14 +76,14 @@ const fetchEvent = (store, eventType = 'embedded') => {
 }
 
 const fetchPartners = (store) => {
-  const page = _.get(store.state, [ 'partners', 'meta', 'page' ], 0) + 1
+  const page = get(store, 'state.partners.meta.page', 0) + 1
   return store.dispatch('FETCH_PARTNERS', {
     params: {
       max_results: 25,
       page: page
     }
   }).then(() => {
-    if (_.get(store.state, [ 'partners', 'items', 'length' ]) < _.get(store.state, [ 'partners', 'meta', 'total' ])) {
+    if (get(store.state, 'partners.items.length') < get(store, 'state.partners.meta.total')) {
       fetchPartners(store)
     }
   })
@@ -152,13 +152,13 @@ export default {
   },
   computed: {
     articles () {
-      return _.get(this.$store, 'getters.searchResultNormalized', [])
+      return get(this.$store, 'getters.searchResultNormalized', [])
     },
     eventLogo () {
-      return _.get(this.$store.state.eventLogo, 'items.0')
+      return get(this.$store.state.eventLogo, 'items.0')
     },
     hasMore () {
-      return _.get(this.articles, 'length', 0) < _.get(this.$store, 'getters.searchResultTotalCount', 0)
+      return get(this.articles, 'length', 0) < get(this.$store, 'getters.searchResultTotalCount', 0)
     },
     title () {
       return this.$route.params.keyword
@@ -188,6 +188,12 @@ export default {
               this.dfpHeaderLogoLoaded = true
               break
           }
+          adtracker({
+            el: dfpCover,
+            slot: event.slot.getSlotElementId(),
+            position,
+            isAdEmpty: adDisplayStatus === 'none'
+          })            
         },
         setCentering: true
       })
@@ -199,7 +205,7 @@ export default {
     },
     getMmid () {
       const mmid = Cookie.get('mmid')
-      let assisgnedRole = _.get(this.$route, [ 'query', 'ab' ])
+      let assisgnedRole = get(this.$route, 'query.ab')
       if (assisgnedRole) {
         assisgnedRole = assisgnedRole.toUpperCase()
       }
