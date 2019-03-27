@@ -3,14 +3,11 @@
 </template>
 
 <script>
+import { get } from 'lodash'
+import ProjectList from 'src/components/article/ProjectList.vue'
 
-import _ from 'lodash'
-import ProjectList from '../components/article/ProjectList.vue'
 
-const fetchProjects = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'projects' ] })
-}
-
+const fetchProjects = store => store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'projects' ] })
 export default {
   name: 'project-list',
   components: {
@@ -26,13 +23,13 @@ export default {
   },
   computed: {
     excludingProjects () {
-      return _.get(this.$store, [ 'state', 'route', 'query', 'excluding' ], '').split(',')
+      return get(this.$store, 'state.route.query.excluding', '').split(',')
     },
     projects () {
-      return _.get(this.$store.state, [ 'commonData', 'projects', 'items' ])
+      return get(this.$store, 'state.commonData.projects.items')
     },
     projectClass () {
-      const isStyleLight = _.get(this.$store, [ 'state', 'route', 'params', 'style' ], 'light') !== 'dark'
+      const isStyleLight = get(this.$store, 'state.route.params.style', 'light') !== 'dark'
       return {
         light: isStyleLight,
         dark: !isStyleLight
