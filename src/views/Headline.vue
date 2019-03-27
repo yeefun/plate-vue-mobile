@@ -1,7 +1,6 @@
 <template>
   <div class="headline">
     <HeaderR/>
-    <!-- <Header :commonData="$store.state.commonData" /> -->
     <main>
       <iframe src="https://load-balancer.likr.com.tw/news_page_new/main_page/mirrormedia.php" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" id="Iframe">
       </iframe>
@@ -14,17 +13,14 @@
 <script>
 
 import Footer from '../components/Footer.vue'
-import Header from '../components/Header.vue'
 import HeaderR from '../components/HeaderR.vue'
 import titleMetaMixin from '../util/mixinTitleMeta'
 import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { get } from 'lodash'
 
-const fetchCommonData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections', 'topics' ] })
-}
+const fetchCommonData = store => store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections', 'topics' ] })
 
-const fetchPartners = (store) => {
+const fetchPartners = store => {
   const page = get(store.state, 'partners.meta.page', 0) + 1
   return store.dispatch('FETCH_PARTNERS', {
     params: {
@@ -48,7 +44,6 @@ export default {
   },
   components: {
     Footer,
-    Header,
     HeaderR
   },
   mixins: [ titleMetaMixin ],
@@ -91,10 +86,5 @@ export default {
   .headline
     main
       width calc(100% - 4rem)
-
-@media (min-width: 1200px)
-  .headline
-    main
-      width 1024px
 
 </style>
