@@ -21,9 +21,9 @@
           <div class="innerBox leftLine">
             <div class="datetime-top mobile-only" v-text="moment(item.created_at).format('mm/dd HH:MM')"></div>
             <div class="heroImg">
-              <a :href="`https://twitter.com/MirrorWatchTW/status/${getValue(item, [ 'id_str' ], '')}`">
-                <img :src="getValue(item, [ 'extended_entities', 'media', 0, 'media_url_https' ], '/assets/mirrormedia/notImage.png')" 
-                    v-if="getValue(item, [ 'extended_entities', 'media', 0, 'media_url_https' ])"  />
+              <a :href="`https://twitter.com/MirrorWatchTW/status/${get(item, [ 'id_str' ], '')}`">
+                <img :src="get(item, [ 'extended_entities', 'media', 0, 'media_url_https' ], '/assets/mirrormedia/notImage.png')" 
+                    v-if="get(item, [ 'extended_entities', 'media', 0, 'media_url_https' ])"  />
               </a>
             </div>
             <div class="content mobile-only" v-html="twitterAutoLink(item.text, item.entities.urls)"></div>
@@ -40,42 +40,27 @@
 </template>
 
 <script>
-import { getValue, unLockJS } from '../util/comm'
-import _ from 'lodash'
+import { unLockJS } from '../util/comm'
+import { get, last, upperCase } from 'lodash'
 import FooterFull from '../components/FooterFull.vue'
 import HeaderFull from '../components/HeaderFull.vue'
 import More from '../components/More.vue'
 import Spinner from '../components/Spinner.vue'
 import moment from 'moment'
+import superagent from 'superagent'
 import titleMetaMixin from '../util/mixinTitleMeta'
 import twitter from 'twitter-text'
 
-const fetchCommonData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections' ] })
-}
-
-const fetchData = (store) => {
-  return fetchCommonData(store)
-}
-
-function fetchTwitter (url) {
-  const superagent = require('superagent')
-  const apiHost = '/api'
-  return new Promise(resolve => {
-    superagent
-    .get(apiHost + url)
-    .end((err, response) => {
-      if (!err && response) {
-        resolve(JSON.parse(response.text))
-      } else {
-        resolve('{\'error\':' + err + '}')
-      }
-    })
-  })
-}
+const fetchCommonData = store => store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections' ] })
+const fetchData = store => fetchCommonData(store)
+const fetchTwitter = url => (
+  superagent
+    .get(`/api${url}`)
+    .then(res => JSON.parse(res.text))
+)
 
 export default {
-  name: 'timeline-view',
+  name: 'TimelineView',
   data () {
     return {
       commonData: this.$store.state.commonData,
@@ -94,15 +79,15 @@ export default {
   },
   computed: {
     lastItemId () {
-      return _.get(_.last(this.rep), 'id', 0)
+      return get(last(this.rep), 'id', 0)
     }
   },
   mixins: [ titleMetaMixin ],
   metaSet () {
     return {
-      title: 'Timeline :: ' + _.upperCase(this.$route.params.title),
+      title: 'Timeline :: ' + upperCase(this.$route.params.title),
       meta: `
-        <meta name="description" content="${'Timeline :: ' + _.upperCase(this.$route.params.title)}">
+        <meta name="description" content="${'Timeline :: ' + upperCase(this.$route.params.title)}">
       `
     }
   },
@@ -116,19 +101,21 @@ export default {
     closeSideBar () {
       this.openSide = false
     },
-    getValue,
+    get,
     loadMore () {
-      fetchTwitter(`/twitter?screen_name=MirrorWatchTW&count=10&max_id=${this.lastItemId}`).then(
+      fetchTwitter(`/twitter?screen_name=MirrorWatchTW&count=10&max_id=${this.lastItemId}`)
+      .then(
         response => {
           if (response.length > 0 && !response[0][ 'code' ]) {
             this.rep = this.rep.concat(response)
           }
           this.loading = false
-        },
-        error => {
-          console.error('Failed!', error) //eslint-disable-line
         }
       )
+      .catch(error => {
+        this.loading = false
+        console.error('Failed!', error)
+      })
     },
     moment,
     openSearchBar () {
@@ -141,23 +128,25 @@ export default {
   },
   mounted () {
     this.checkIfLockJS()
-    window.ga('send', 'pageview', { title: `Timeline :: ${_.upperCase(this.$route.params.title)}`, location: document.location.href })
+    window.ga('send', 'pageview', { title: `Timeline :: ${upperCase(this.$route.params.title)}`, location: document.location.href })
   },
   asyncData ({ store }) {
     return fetchData(store)
   },
   beforeMount () {
-    fetchTwitter(`/twitter?screen_name=MirrorWatchTW&count=10`).then(
+    fetchTwitter(`/twitter?screen_name=MirrorWatchTW&count=10`)
+    .then(
       response => {
         if (response.length > 0 && !response[0][ 'code' ]) {
           this.rep = response
         }
         this.loading = false
-      },
-      error => {
-        console.error('Failed!', error) //eslint-disable-line
       }
     )
+    .catch(error => {
+      this.loading = false
+      console.error('Failed!', error)
+    })
   }
 }
 </script>
