@@ -2,29 +2,28 @@
   <div class="heroimageFoodTravel">
     <div class="heroimage-container">
       <!--<img class="heroimage" src="/assets/mirrormedia/foodtravelheroimg.jpg" alt="">-->
-      <img class="heroimage" :src="getValue(leadingImg, [ 'image', 'resizedTargets', 'tablet', 'url' ])" alt="">
+      <img class="heroimage" :src="get(leadingImg, [ 'image', 'resizedTargets', 'tablet', 'url' ])" alt="">
     </div>
     <img class="section-title" :src="getSectionLogoUrl()" alt="">
   </div>
 </template>
 
 <script>
-import { getValue } from '../util/comm'
-import _ from 'lodash'
+import { find, get } from 'lodash'
 
 export default {
   computed: {
     leadingImg () {
-      return _.get(this.commonData.sections.items.find((o) => o.name === 'foodtravel'), [ 'heroImage' ])
+      return get(this.commonData.sections.items.find((o) => o.name === 'foodtravel'), [ 'heroImage' ])
     },
     sectionLogo () {
-      return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { name: this.sectionName }), [ 'image' ], null)
+      return get(find(get(this.commonData, [ 'sections', 'items' ]), { name: this.sectionName }), [ 'image' ], null)
     }
   },
   methods: {
-    getValue,
+    get,
     getSectionLogoUrl () {
-      return _.get(this.sectionLogo, [ 'image', 'url' ]) ? _.get(this.sectionLogo, [ 'image', 'url' ]) : '/asset/logo.png'
+      return get(this.sectionLogo, [ 'image', 'url' ]) ? get(this.sectionLogo, [ 'image', 'url' ]) : '/asset/logo.png'
     }
   },
   props: [ 'commonData', 'sectionName' ]

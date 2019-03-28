@@ -1,6 +1,6 @@
 <template>
   <section class="ActivityLightbox" :style="[ isLightboxMenuOpen ? { overflow: 'hidden' } : {} ]">
-    <h1 v-text="getValue(activity, [ 'name' ])" />
+    <h1 v-text="get(activity, [ 'name' ])" />
     <figure class="ActivityLightbox__close" @click="closeLightbox()">
       <img v-lazy="`/assets/mirrormedia/icon/timelineClose@2x.png`" />
     </figure>
@@ -14,14 +14,14 @@
     <div class="ActivityLightbox__slideshowInfo" v-if="currentContentStyle !== 'text'">
       <p v-text="currentContentCredit" />
       <div class="ActivityLightbox__slideshowInfoAmountBox">
-        <span>{{ currentContentIndex + 1 }} | {{ getValue(currentNodeContents, [ 'length' ]) }}</span>
+        <span>{{ currentContentIndex + 1 }} | {{ get(currentNodeContents, [ 'length' ]) }}</span>
         <img v-lazy="`/assets/mirrormedia/icon/square_gray@2x.png`" v-show="nodeContentMoreThanOne" @click="openLightboxMenu()" />
       </div>
     </div>
     <div class="ActivityLightbox__content" :class="currentContentStyle">
-      <h3 v-text="getValue(nodes, [ currentNodeIndex, 'subtitle' ])" />
-      <h2 v-text="getValue(nodes, [ currentNodeIndex, 'name' ])" />
-      <p v-text="getValue(nodes, [ currentNodeIndex, 'content', 'apiData', '0', 'content', '0' ])" />
+      <h3 v-text="get(nodes, [ currentNodeIndex, 'subtitle' ])" />
+      <h2 v-text="get(nodes, [ currentNodeIndex, 'name' ])" />
+      <p v-text="get(nodes, [ currentNodeIndex, 'content', 'apiData', '0', 'content', '0' ])" />
       <figure @click="share()" id="activity-share">
         <img v-lazy="`/assets/mirrormedia/icon/facebook_white.png`" />
       </figure>
@@ -33,8 +33,7 @@
 
 <script>
 
-import { getValue } from '../../util/comm'
-import _ from 'lodash'
+import { filter, get, slice } from 'lodash'
 import ActivityLightboxMenu from './ActivityLightboxMenu.vue'
 import ActivityLightboxSlider from './ActivityLightboxSlider.vue'
 
@@ -54,28 +53,28 @@ export default {
   },
   computed: {
     currentContent () {
-      return _.get(this.currentNodeContents, [ this.currentContentIndex, 'content', '0' ])
+      return get(this.currentNodeContents, [ this.currentContentIndex, 'content', '0' ])
     },
     currentContentCredit () {
       if (this.currentContentStyle === 'image') {
-        return _.get(this.currentContent, [ 'description' ])
+        return get(this.currentContent, [ 'description' ])
       } else {
-        return _.get(this.currentContent, [ 'title' ])
+        return get(this.currentContent, [ 'title' ])
       }
     },
     currentContentStyle () {
-      return _.get(this.currentNodeContents, [ '0', 'type' ], 'text')
+      return get(this.currentNodeContents, [ '0', 'type' ], 'text')
     },
     currentNodeIndex () {
       return this.lightboxIndex
     },
     currentNodeContents () {
-      return _.filter(_.slice(_.get(this.nodes, [ this.currentNodeIndex, 'content', 'apiData' ]), 1, _.get(this.nodes, [ this.currentNodeIndex, 'content', 'apiData', 'length' ])), function (o) {
+      return filter(slice(get(this.nodes, [ this.currentNodeIndex, 'content', 'apiData' ]), 1, get(this.nodes, [ this.currentNodeIndex, 'content', 'apiData', 'length' ])), function (o) {
         return o.type !== 'unstyled'
       })
     },
     nodeContentMoreThanOne () {
-      return _.get(this.currentNodeContents, [ 'length' ]) > 1
+      return get(this.currentNodeContents, [ 'length' ]) > 1
     },
     nodes () {
       return this.initialNodes
@@ -92,7 +91,7 @@ export default {
       }
       this.$emit('closeLightbox')
     },
-    getValue,
+    get,
     goToContentIndex (index) {
       this.currentContentIndex = index
       this.isLightboxMenuOpen = false
@@ -103,7 +102,7 @@ export default {
         currentVideo.querySelector('video').pause()
       }
       const nextContentIndex = this.currentContentIndex + 1
-      if (nextContentIndex > _.get(this.currentNodeContents, [ 'length' ]) - 1) {
+      if (nextContentIndex > get(this.currentNodeContents, [ 'length' ]) - 1) {
         this.currentContentIndex = 0
       } else {
         this.currentContentIndex = nextContentIndex
@@ -116,7 +115,7 @@ export default {
       }
       const prevContentIndex = this.currentContentIndex - 1
       if (prevContentIndex < 0) {
-        this.currentContentIndex = _.get(this.currentNodeContents, [ 'length' ]) - 1
+        this.currentContentIndex = get(this.currentNodeContents, [ 'length' ]) - 1
       } else {
         this.currentContentIndex = prevContentIndex
       }
@@ -131,17 +130,17 @@ export default {
     share () {
       let imageUrl
       if (this.currentContentStyle === 'video') {
-        imageUrl = _.get(this.currentNodeContents, [ this.currentContentIndex, 'content', '0', 'coverPhoto', 'mobile', 'url' ])
+        imageUrl = get(this.currentNodeContents, [ this.currentContentIndex, 'content', '0', 'coverPhoto', 'mobile', 'url' ])
       } else if (this.currentContentStyle === 'image') {
-        imageUrl = _.get(this.currentNodeContents, [ this.currentContentIndex, 'content', '0', 'mobile', 'url' ])
+        imageUrl = get(this.currentNodeContents, [ this.currentContentIndex, 'content', '0', 'mobile', 'url' ])
       } else {
-        imageUrl = _.get(this.activity, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ])
+        imageUrl = get(this.activity, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ])
       }
-      const description = `${_.get(this.nodes, [ this.currentNodeIndex, 'subtitle' ])} ${_.get(this.nodes, [ this.currentNodeIndex, 'name' ])}： ${_.get(this.nodes, [ this.currentNodeIndex, 'content', 'apiData', '0', 'content', '0' ])}`
+      const description = `${get(this.nodes, [ this.currentNodeIndex, 'subtitle' ])} ${get(this.nodes, [ this.currentNodeIndex, 'name' ])}： ${get(this.nodes, [ this.currentNodeIndex, 'content', 'apiData', '0', 'content', '0' ])}`
       window.FB.ui(
         {
           method: 'feed',
-          link: `https://www.mirrormedia.mg/activity/${_.get(this.$route, [ 'params', 'activityId' ])}/`,
+          link: `https://www.mirrormedia.mg/activity/${get(this.$route, [ 'params', 'activityId' ])}/`,
           picture: imageUrl,
           description
         }, function () {})

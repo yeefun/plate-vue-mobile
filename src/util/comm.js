@@ -179,10 +179,6 @@ export function getTruncatedVal (oVal, count) {
   return truncate(oVal, count)
 }
 
-export function getValue (o = {}, p = [], d = '') {
-  return _.get(o, p, d)
-}
-
 export function getHost () {
   const browser = typeof window !== 'undefined'
   if (browser) {

@@ -1,21 +1,21 @@
 <template>
   <div class="listArticleBlockLight">
     <figure v-if="image" class="listArticleBlockLight__figure">
-      <router-link :to="`/external/${getValue(article, [ 'name' ])}`" target="_blank">
-        <img v-lazy="image" :alt="getValue(article, [ 'title' ])" />
+      <router-link :to="`/external/${get(article, [ 'name' ])}`" target="_blank">
+        <img v-lazy="image" :alt="get(article, [ 'title' ])" />
       </router-link>
     </figure>
     <div class="listArticleBlockLight__text" :class="{ noImg: !image }">
-      <h2><router-link :to="`/external/${getValue(article, [ 'name' ])}`" target="_blank" v-text="getValue(article, [ 'title' ])"></router-link></h2>
-      <p><router-link :to="`/external/${getValue(article, [ 'name' ])}`" target="_blank" v-text="$_listArticleLight_getBrief(article)"></router-link></p>
+      <h2><router-link :to="`/external/${get(article, [ 'name' ])}`" target="_blank" v-text="get(article, [ 'title' ])"></router-link></h2>
+      <p><router-link :to="`/external/${get(article, [ 'name' ])}`" target="_blank" v-text="$_listArticleLight_getBrief(article)"></router-link></p>
     </div>
   </div>
 </template>
 
 <script>
 
-import { getBrief, getValue } from '../../util/comm'
-import _ from 'lodash'
+import { getBrief } from '../../util/comm'
+import { get } from 'lodash'
 
 export default {
   name: 'ListArticleBlockLight',
@@ -30,7 +30,7 @@ export default {
   },
   computed: {
     image () {
-      const link = _.get(this.article, [ 'thumb' ])
+      const link = get(this.article, [ 'thumb' ])
       if (link) {
         return link
       }
@@ -50,7 +50,7 @@ export default {
       }
     },
     getBrief,
-    getValue
+    get
   }
 }
 

@@ -6,8 +6,8 @@
         <template v-for="o in filteredRecommends">
           <div v-if="o" class="related-list__list__item">
             <div class="title">
-              <router-link @click.native="recommendsClickHandler(getValue(o, [ 'slug' ]), $event)" :to="routerLinkUrl(o)" v-text="getValue(o, [ 'title' ], '')" :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}`" v-if="shouldShowItem(o)"></router-link>
-              <a @click="recommendsClickHandler(getValue(o, [ 'slug' ]), $event)" :href="getHrefFull(o)" v-text="getValue(o, [ 'title' ], '')" :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}`" v-else></a>
+              <router-link @click.native="recommendsClickHandler(get(o, [ 'slug' ]), $event)" :to="routerLinkUrl(o)" v-text="get(o, [ 'title' ], '')" :id="`recommend-${get(o, [ 'slug' ], Date.now())}`" v-if="shouldShowItem(o)"></router-link>
+              <a @click="recommendsClickHandler(get(o, [ 'slug' ]), $event)" :href="getHrefFull(o)" v-text="get(o, [ 'title' ], '')" :id="`recommend-${get(o, [ 'slug' ], Date.now())}`" v-else></a>
             </div>
           </div>
         </template>
@@ -16,9 +16,9 @@
   </div>
 </template>
 <script>
-  import _ from 'lodash'
+  import { get, map, take } from 'lodash'
   import { SECTION_MAP, RELATED_LIST_MAX, RECOMM_HITORY_MAX_IN_LOCALSTORAGE } from '../../constants'
-  import { extractSlugFromreferrer, getHref, getHrefFull, getValue } from '../../util/comm'
+  import { extractSlugFromreferrer, getHref, getHrefFull } from '../../util/comm'
   import Deque from 'double-ended-queue'
   import HashTable from 'jshashtable'
 
@@ -40,15 +40,15 @@
         const recommendListHash = this.recommendsHash
         if (this.referrerSlug !== 'N/A') { recommendListHash.remove(this.referrerSlug) }
         if (this.excludingArticle !== 'N/A') { recommendListHash.remove(this.excludingArticle) }
-        for (let i = 0; i < excludingArticlesLen; i += 1) { recommendListHash.remove(_.get(this.relateds[ i ], [ 'slug' ], '')) }
+        for (let i = 0; i < excludingArticlesLen; i += 1) { recommendListHash.remove(get(this.relateds[ i ], [ 'slug' ], '')) }
         dqueue.toArray().map((slug) => { recommendListHash.remove(slug) })
         debug(recommendListHash.values())
-        return _.take(recommendListHash.values(), RELATED_LIST_MAX - excludingArticlesLen)
+        return take(recommendListHash.values(), RELATED_LIST_MAX - excludingArticlesLen)
       },
       recommendsHash () {
         const hashtable = new HashTable()
-        _.map(this.recommends, (a) => {
-          hashtable.put(_.get(a, [ 'slug' ]), a)
+        map(this.recommends, (a) => {
+          hashtable.put(get(a, [ 'slug' ]), a)
         })
         return hashtable
       },
@@ -60,9 +60,9 @@
     },
     methods: {
       getHrefFull,
-      getValue,
+      get,
       containerStyle () {
-        return { border: `2px solid ${_.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141')}` }
+        return { border: `2px solid ${get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141')}` }
       },
       getRecommClickHistory () {
         const recommsClickHistory = (process.browser) && localStorage.getItem('recommsClickHistory')
@@ -71,7 +71,7 @@
         return dqueue
       },
       routerLinkUrl (article) {
-        return !this.isApp ? getHref(article) : `/app/${getValue(article, [ 'slug' ], '')}`
+        return !this.isApp ? getHref(article) : `/app/${get(article, [ 'slug' ], '')}`
       },
       recommendsClickHandler (slug) {
         try {
@@ -90,7 +90,7 @@
         return article.style !== 'projects' && article.style !== 'campaign' && article.style !== 'readr'
       },
       titleStyle () {
-        return { color: _.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;') }
+        return { color: get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;') }
       }
     },
     beforeMount () {
@@ -98,7 +98,7 @@
       fetchRecommendList(this.$store, this.currArticleId)
     },
     mounted () {
-      const customCSS = `.related-list .related-list__list > .related-list__list__title::before { content: ""; border-color: transparent transparent transparent ${_.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
+      const customCSS = `.related-list .related-list__list > .related-list__list__title::before { content: ""; border-color: transparent transparent transparent ${get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
       const custCss = document.createElement('style')
       custCss.setAttribute('class', 'relatedBtmStyle')
       custCss.appendChild(document.createTextNode(customCSS))
@@ -111,7 +111,7 @@
         fetchRecommendList(this.$store, this.currArticleId)
       },
       sectionId: function () {
-        document.querySelector('.relatedBtmStyle').innerHTML = `.related-list .related-list__list > .related-list__list__title::before { content: ""; border-color: transparent transparent transparent ${_.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
+        document.querySelector('.relatedBtmStyle').innerHTML = `.related-list .related-list__list > .related-list__list__title::before { content: ""; border-color: transparent transparent transparent ${get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
       },
     },
     name: 'RecommendList',

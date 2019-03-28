@@ -3,12 +3,12 @@
     <a href="/" class="activity__logo" id="home">
       <img src="/assets/mirrormedia/icon/logo_black.png" srcset="/assets/mirrormedia/icon/logo_black@2x.png 2x" alt="鏡週刊 Mirror Media" />
     </a>
-    <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" :sharePath="`/activity/${getValue(activity, [ 'id' ])}`" class="activity__share" />
+    <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" :sharePath="`/activity/${get(activity, [ 'id' ])}`" class="activity__share" />
     <div class="activity__menu" v-if="topicId">
       <a :href="`/topic/${topicId}`"><img src="/assets/mirrormedia/icon/home.png" srcset="/assets/mirrormedia/icon/home@2x.png 2x" /></a>
     </div>
     <img :src="getImage(activity, 'desktop')" />
-    <h1 v-text="getValue(activity, [ 'name' ])" />
+    <h1 v-text="get(activity, [ 'name' ])" />
     <activity-timeline :initialNodeIndex="initialNodeIndex" :initialNodes="initialNodes" :viewport="viewport" v-on:openLightbox="openLightbox" />
     <activity-lightbox :initialActivity="activity" :initialNodes="initialNodes" :lightboxIndex="lightboxIndex" :viewport="viewport" v-show="isLightboxOpen" v-on:closeLightbox="closeLightbox" />
     <div class="activity__landscape">
@@ -27,8 +27,9 @@
 
 import { FB_APP_ID, FB_PAGE_ID } from '../constants'
 import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL } from '../constants'
-import { getImage, getTruncatedVal, getValue } from '../util/comm.js'
+import { getImage, getTruncatedVal } from '../util/comm.js'
 import _ from 'lodash'
+import { get } from 'lodash'
 import ActivityLightbox from '../components/activity/ActivityLightbox.vue'
 import ActivityTimeline from '../components/activity/ActivityTimeline.vue'
 import Share from '../components/Share.vue'
@@ -115,7 +116,7 @@ export default {
     },
     getImage,
     getTruncatedVal,
-    getValue,
+    get,
     updateViewport () {
       if (process.env.VUE_ENV === 'client') {
         this.viewport = document.documentElement.clientWidth || document.body.clientWidth

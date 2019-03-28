@@ -10,7 +10,7 @@
         </template>
       </figure>
       <div class="listChoice__block--content" :style="{ borderColor: sectionColor }">
-        <h2><router-link :to="getHref(item)" :id="`listing_choice-${item.name}-title`" target="_blank" v-text="getTruncatedVal(getValue(item, [ 'title' ]), 30)"></router-link></h2>
+        <h2><router-link :to="getHref(item)" :id="`listing_choice-${item.name}-title`" target="_blank" v-text="getTruncatedVal(get(item, [ 'title' ]), 30)"></router-link></h2>
         <p><router-link :to="getHref(item)" :id="`listing_choice-${item.name}-descr`" target="_blank" v-text="getBrief(item, 45)"></router-link></p>
       </div>
     </div>
@@ -20,8 +20,8 @@
 <script>
 
 import { SECTION_MAP } from '../constants'
-import { getBrief, getHref, getImage, getTruncatedVal, getValue } from '../util/comm'
-import _ from 'lodash'
+import { getBrief, getHref, getImage, getTruncatedVal } from '../util/comm'
+import { get } from 'lodash'
 
 export default {
   name: 'listChoice',
@@ -34,7 +34,7 @@ export default {
       return this.initialSectionfeatured
     },
     sectionColor () {
-      return _.get(SECTION_MAP, [ _.get(this.section, [ 'id' ]), 'bgcolor' ], '#bcbcbc')
+      return get(SECTION_MAP, [ get(this.section, [ 'id' ]), 'bgcolor' ], '#bcbcbc')
     },
     viewportTarget () {
       if (this.viewport < 600) {
@@ -49,7 +49,7 @@ export default {
     getImage,
     getTruncatedVal,
     getHref,
-    getValue
+    get
   }
 }
 </script>

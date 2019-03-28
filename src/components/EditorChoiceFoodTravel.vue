@@ -4,7 +4,7 @@
     <div class="editorChoiceFoodBlock" v-for="(item, index) in sectionfeatured">
       <router-link :to="getHref(item)" class="editorChoiceFoodBlock__img" target="_blank"><figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }"></figure></router-link>
       <div class="editorChoiceFoodBlock__content">
-        <router-link :to="getHref(item)" target="_blank"><h2 v-text="calcTitle(getValue(item, [ 'title' ]))"></h2></router-link>
+        <router-link :to="getHref(item)" target="_blank"><h2 v-text="calcTitle(get(item, [ 'title' ]))"></h2></router-link>
         <router-link :to="getHref(item)" target="_blank"><p v-text="calcBrief(item, index)"></p></router-link>
       </div>
     </div>
@@ -12,7 +12,8 @@
 </template>
 <script>
 
-import { getBrief, getHref, getImage, getTruncatedVal, getValue } from '../util/comm'
+import { getBrief, getHref, getImage, getTruncatedVal } from '../util/comm'
+import { get } from 'lodash'
 
 export default {
   name: 'editorChoice-foodTravel',
@@ -61,7 +62,7 @@ export default {
     getHref,
     getImage,
     getTruncatedVal,
-    getValue
+    get
   }
 }
 </script>

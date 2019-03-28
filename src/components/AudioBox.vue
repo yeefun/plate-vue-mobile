@@ -4,7 +4,7 @@
       <button :class="{ paused: !isPlaying && !isEnded, playing: isPlaying && !isEnded, ended: isEnded }" @click="handleAudioClick"></button>
     </div>
     <div class="audioBox__info">
-      <h1 v-text="getValue(audio, 'title')"></h1>
+      <h1 v-text="get(audio, 'title')"></h1>
       <div ref="audioProgress" class="progress">
         <div class="progress__line" @click="changeProgress($event)">
           <div></div>
@@ -12,19 +12,19 @@
         <div class="progress__current" :style="{ left: `calc(${progress}% - 10px)` }"></div>
       </div>
       <div class="info">
-        <h1 v-text="getValue(audio, 'title')"></h1>
+        <h1 v-text="get(audio, 'title')"></h1>
         <p v-show="audioDuration !== 0 && canPlay">{{ getAudioTime(audioCurrent) }} / {{ getAudioTime(audioDuration) }}</p>
         <p v-show="audioDuration !== 0 && !canPlay" >讀取中...</p>
       </div>
     </div>
     <audio ref="audio" preload="none" @loadeddata="isLoaded = true" @ended="isEnded = true" @timeupdate="renewAudioCurrent" @loadedmetadata="renewAudioDuration" @canplay="canPlay = true">
-      <source :src="getValue(audio, 'url')" :type="getValue(audio, 'filetype')">
+      <source :src="get(audio, 'url')" :type="get(audio, 'filetype')">
     </audio>
   </div>
 </template>
 
 <script>
-import { getValue } from '../util/comm'
+import { get } from 'lodash'
 import moment from 'moment'
 
 export default {
@@ -108,7 +108,7 @@ export default {
         audioEle.play()
       }
     },
-    getValue,
+    get,
     getAudioTime (duration) {
       return moment.utc(duration * 1000).format('HH:mm:ss')
     },

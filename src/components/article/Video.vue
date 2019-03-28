@@ -2,7 +2,7 @@
   <div class="video-container" @mouseover="mouseoverHandler" @click="videoPlay" >
     <video width="100%" height="100%" controls controlsList="nodownload" preload="metadata" playsinline :ref="videoId" :id="videoId"
           :poster="poster" :style="posterStyle">
-            <source :src="getValue(video, [ 'url' ])" :type="getValue(video, [ 'filetype' ])">
+            <source :src="get(video, [ 'url' ])" :type="get(video, [ 'filetype' ])">
             Your browser does not support the video tag.
     </video>
     <div class="playpause" :class="videoClass" :target-video="videoId" :style="playPauseStyle" ></div>
@@ -61,9 +61,7 @@
         }
       },
       getClientOS,
-      getValue (o = {}, p = [], d = '') {
-        return get(o, p, d)
-      },
+      get,
       mouseoverHandler (e) {
         const target = e.target
         const clientOS = this.getClientOS()

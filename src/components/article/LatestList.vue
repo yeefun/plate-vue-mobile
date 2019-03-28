@@ -4,18 +4,18 @@
     <div class="list">
       <div class="item" v-for="(o, i) in pureLatest" v-if="i < 6">
         <div class="thumbnail">
-          <LazyImage :src="getImage(o, 'tiny')" :alt="getValue(o, [ 'title' ])"/>
+          <LazyImage :src="getImage(o, 'tiny')" :alt="get(o, [ 'title' ])"/>
           <router-link :to="{ path: getHref(o) }" :id="'latest-' + o.name" :style="{ width: '100%', height: '100%', display: 'block' }" v-if="o.style !== 'projects'"></router-link>
           <a :href="`${site_url}${getHref(o)}`" :id="'latest-' + o.name" :style="{ width: '100%', height: '100%', display: 'block' }" v-if="o.style === 'projects'"></a>
         </div>
         <div class="content">
           <div class="content_category">
-            <router-link :to="{ path: getHref(o) }" :id="'latest-' + o.name" v-if="o.style !== 'projects'">{{ getValue(o, [ 'categories', 0, 'title' ], '新聞') }}</router-link>
-            <a :href="`${site_url}${getHref(o)}`" :id="'latest-' + o.name" v-if="o.style === 'projects'">{{ getValue(o, [ 'categories', 0, 'title' ], '新聞') }}</a>
+            <router-link :to="{ path: getHref(o) }" :id="'latest-' + o.name" v-if="o.style !== 'projects'">{{ get(o, [ 'categories', 0, 'title' ], '新聞') }}</router-link>
+            <a :href="`${site_url}${getHref(o)}`" :id="'latest-' + o.name" v-if="o.style === 'projects'">{{ get(o, [ 'categories', 0, 'title' ], '新聞') }}</a>
           </div>
           <div class="content_title">
-            <router-link :to="{ path: getHref(o) }" :id="'latest-' + o.name" v-if="o.style !== 'projects'">{{ getTruncatedVal(getValue(o, [ 'title' ], ''), 27) }}</router-link>
-            <a :href="`${site_url}${getHref(o)}`" :id="'latest-' + o.name" v-if="o.style === 'projects'">{{ getTruncatedVal(getValue(o, [ 'title' ], ''), 27) }}</a>
+            <router-link :to="{ path: getHref(o) }" :id="'latest-' + o.name" v-if="o.style !== 'projects'">{{ getTruncatedVal(get(o, [ 'title' ], ''), 27) }}</router-link>
+            <a :href="`${site_url}${getHref(o)}`" :id="'latest-' + o.name" v-if="o.style === 'projects'">{{ getTruncatedVal(get(o, [ 'title' ], ''), 27) }}</a>
           </div>
         </div>
       </div>
@@ -25,8 +25,8 @@
 <script>
   import LazyImage from 'src/components/common/LazyImage.vue'
   import { SITE_URL } from '../../constants'
-  import { getHref, getImage, getTruncatedVal, getValue } from '../../util/comm'
-  import _ from 'lodash'
+  import { getHref, getImage, getTruncatedVal } from '../../util/comm'
+  import { filter, get } from 'lodash'
 
   // const debug = require('debug')('CLIENT:LatestList')
 
@@ -39,17 +39,17 @@
         return SITE_URL
       },
       pureLatest () {
-        return _.filter(this.latestList, (o) => { return _.get(o, [ 'slug' ], '') !== this.currArticleSlug })
+        return filter(this.latestList, (o) => { return get(o, [ 'slug' ], '') !== this.currArticleSlug })
       },
       latestList () {
-        return _.get(this.$store, 'state.latestArticle.items', [])
+        return get(this.$store, 'state.latestArticle.items', [])
       }
     },
     methods: {
       getHref,
       getImage,
       getTruncatedVal,
-      getValue
+      get
     },
     name: 'LatestList',
     props: {

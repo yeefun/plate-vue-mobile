@@ -4,7 +4,7 @@
       <div class="activityTimeline__timeBlock" v-show="windowViewport < 900" />
       <div class="activityTimeline__timeBlock" v-for="(item, index) in nodes">
         <div class="activityTimeline__timeBlock--vertLine" />
-        <p v-text="getValue(item, [ 'subtitle' ])"/>
+        <p v-text="get(item, [ 'subtitle' ])"/>
       </div>
       <div class="activityTimeline__timeBlock" v-show="windowViewport < 900" />
     </div>
@@ -15,7 +15,7 @@
             <img v-lazy="getNodeImage(item)" v-show="getNodeImage(item)" />
           </figure>
           <div class="activityTimeline__imageBlock--text" >
-            <h2 v-text="getTruncatedVal(getValue(item, [ 'name' ]), 16)" />
+            <h2 v-text="getTruncatedVal(get(item, [ 'name' ]), 16)" />
             <div class="activityTimeline__imageBlock--textIcon" />
           </div>
         </div>
@@ -32,8 +32,8 @@
 
 <script>
 
-import { getTruncatedVal, getValue } from '../../util/comm'
-import _ from 'lodash'
+import { getTruncatedVal } from '../../util/comm'
+import { filter, get, slice } from 'lodash'
 
 export default {
   props: [ 'initialNodeIndex', 'initialNodes', 'viewport' ],
@@ -57,7 +57,7 @@ export default {
       }
     },
     nodeAmount () {
-      return _.get(this.nodes, [ 'length' ])
+      return get(this.nodes, [ 'length' ])
     },
     nodes () {
       return this.initialNodes
@@ -82,21 +82,21 @@ export default {
   },
   methods: {
     getNodeImage (item) {
-      const nodeContents = _.filter(_.slice(_.get(item, [ 'content', 'apiData' ]), 1, _.get(item, [ 'content', 'apiData', 'length' ])), function (o) {
+      const nodeContents = filter(slice(get(item, [ 'content', 'apiData' ]), 1, get(item, [ 'content', 'apiData', 'length' ])), function (o) {
         return o.type !== 'unstyled'
       })
-      const nodeContentStyle = _.get(nodeContents, [ '0', 'type' ])
+      const nodeContentStyle = get(nodeContents, [ '0', 'type' ])
       if (nodeContentStyle === 'image') {
-        return _.get(nodeContents, [ '0', 'content', '0', 'desktop', 'url' ])
+        return get(nodeContents, [ '0', 'content', '0', 'desktop', 'url' ])
       } else {
-        return _.get(nodeContents, [ '0', 'content', '0', 'coverPhoto', 'desktop', 'url' ])
+        return get(nodeContents, [ '0', 'content', '0', 'coverPhoto', 'desktop', 'url' ])
       }
     },
     getNodeStyle (item) {
-      return _.get(item, [ 'content', 'apiData', '1', 'type' ], 'text')
+      return get(item, [ 'content', 'apiData', '1', 'type' ], 'text')
     },
     getTruncatedVal,
-    getValue,
+    get,
     goToPrev () {
       if (this.windowViewport < 900) {
         if (this.imagesTransform < 0) {

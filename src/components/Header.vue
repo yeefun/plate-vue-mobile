@@ -42,7 +42,7 @@
         <div class="header-menu__item dropdown external" :style="{ width: `calc( 100% / ${headerAmount + 1} )` }">
           <a>健康醫療</a>
           <div class="dropdown-content external">
-            <router-link v-for="p in partners" :id="`header-${p.id}-menu`" :key="`${p.id}-menu`" :to="`/externals/${p.name}`" v-text="getValue(p, [ 'display' ])"></router-link>
+            <router-link v-for="p in partners" :id="`header-${p.id}-menu`" :key="`${p.id}-menu`" :to="`/externals/${p.name}`" v-text="get(p, [ 'display' ])"></router-link>
           </div>
         </div>
       </div>
@@ -51,7 +51,7 @@
     <nav class="header-menu--topic">
       <div>
         <div class="header-menu">
-          <router-link :to="`/topic/${getValue(item, [ 'id' ])}`" :id="`header-${item.id}-menu`" v-for="(item, i) in topics" v-text="item.name" :key="`${item.id}-menu`" />
+          <router-link :to="`/topic/${get(item, [ 'id' ])}`" :id="`header-${item.id}-menu`" v-for="(item, i) in topics" v-text="item.name" :key="`${item.id}-menu`" />
           <router-link to="/section/topic">更多</router-link>
         </div>
         <div class="header-menu-wrapper">
@@ -70,7 +70,7 @@
         <img @click="$_header_closeSideBar" src="/assets/mirrormedia/icon/close_white@2x.png" alt="關閉側邊欄" >
       </div>
       <div class="header-sidebar__topic">
-        <a :href="`/topic/${getValue(item, [ 'id' ])}`" :id="`header-${item.id}-sidebar`" v-for="(item, i) in topics" v-text="item.name" :key="`${item.id}-sidebar-${i}`"></a>
+        <a :href="`/topic/${get(item, [ 'id' ])}`" :id="`header-${item.id}-sidebar`" v-for="(item, i) in topics" v-text="item.name" :key="`${item.id}-sidebar-${i}`"></a>
         <a href="/section/topic">更多</a>
       </div>
       <div class="header-sidebar__sections">
@@ -83,7 +83,7 @@
         <div class="header-sidebar__section external">
           <a>健康醫療</a>
           <div class="header-sidebar__categories">
-            <a v-for="p in partners" :id="`header-${p.id}-sidebar`" :key="`${p.id}-sidebar`" :href="`/externals/${p.name}`" v-text="getValue(p, [ 'display' ])"></a>
+            <a v-for="p in partners" :id="`header-${p.id}-sidebar`" :key="`${p.id}-sidebar`" :href="`/externals/${p.name}`" v-text="get(p, [ 'display' ])"></a>
           </div>
         </div>
         <div class="header-sidebar__section mirrorfiction">
@@ -130,8 +130,7 @@
 
 import { SECTION_MAP, SOCIAL_LINK } from '../constants/index'
 import { currentYPosition } from 'kc-scroll'
-import { getValue } from '../util/comm'
-import _ from 'lodash'
+import { filter, get, take } from 'lodash'
 
 export default {
   name: 'AppHeader',
@@ -160,30 +159,30 @@ export default {
       isScrolled: false,
       openSearch: false,
       openSide: false,
-      searchVal: _.get(this.$route, [ 'params', 'keyword' ])
+      searchVal: get(this.$route, [ 'params', 'keyword' ])
     }
   },
   computed: {
     headerAmount () {
-      return _.get(this.sections, [ 'length' ])
+      return get(this.sections, [ 'length' ])
     },
     logoEventImg () {
-      return _.get(this.eventLogo, [ 'image', 'image', 'resizedTargets', 'desktop', 'url' ], null)
+      return get(this.eventLogo, [ 'image', 'image', 'resizedTargets', 'desktop', 'url' ], null)
     },
     logoEventHref () {
-      return _.get(this.eventLogo, [ 'link' ], '/')
+      return get(this.eventLogo, [ 'link' ], '/')
     },
     partners () {
-      return _.filter(_.get(this.commonData, [ 'partners', 'items' ]), 'public')
+      return filter(get(this.commonData, [ 'partners', 'items' ]), 'public')
     },
     sections () {
-      return _.filter(_.get(this.commonData, [ 'sections', 'items' ]), 'isFeatured')
+      return filter(get(this.commonData, [ 'sections', 'items' ]), 'isFeatured')
     },
     socialLink () {
       return SOCIAL_LINK
     },
     topics () {
-      return _.take(_.filter(_.get(this.commonData, [ 'topics', 'items' ]), 'isFeatured'), 7)
+      return take(filter(get(this.commonData, [ 'topics', 'items' ]), 'isFeatured'), 7)
     },
     viewportTarget () {
       if (this.viewport < 600) {
@@ -234,7 +233,7 @@ export default {
       document.onkeydown = null
     },
     $_header_getColor (item) {
-      return _.get(SECTION_MAP, [ _.get(item, [ 'id' ]), 'bgcolor' ])
+      return get(SECTION_MAP, [ get(item, [ 'id' ]), 'bgcolor' ])
     },
     $_header_handleScroll () {
       window.addEventListener('scroll', () => {
@@ -284,14 +283,14 @@ export default {
       }
     },
     $_header_searchValueChange () {
-      const currentKeyword = _.get(this.$route, [ 'params', 'keyword' ])
+      const currentKeyword = get(this.$route, [ 'params', 'keyword' ])
       if (this.searchVal !== currentKeyword && this.searchVal !== '') {
         this.isChanged = true
       } else {
         this.isChanged = false
       }
     },
-    getValue
+    get
   }
 }
 

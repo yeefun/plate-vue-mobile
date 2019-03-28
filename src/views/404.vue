@@ -14,11 +14,11 @@
       <div class="notFound-popListContainer">
         <div class="notFound-popListContainer__post" v-for="(item, index) in popArticles">
           <figure class="notFound-popListContainer__post--img">
-            <a :id="`notfound-${index}-img`" :href="getValue(item, [ 'slug' ])"><img :src="getValue(item, [ 'heroImage', 'image', 'resizedTargets', viewportTarget, 'url' ])" :alt="getValue(item, [ 'title' ])"/></a>
-            <div class="notFound-popListContainer__post--category" :style="getSectionStyle(item)" v-text="getValue(item, [ 'sections', '0', 'title' ])" />
+            <a :id="`notfound-${index}-img`" :href="get(item, [ 'slug' ])"><img :src="get(item, [ 'heroImage', 'image', 'resizedTargets', viewportTarget, 'url' ])" :alt="get(item, [ 'title' ])"/></a>
+            <div class="notFound-popListContainer__post--category" :style="getSectionStyle(item)" v-text="get(item, [ 'sections', '0', 'title' ])" />
           </figure>
           <div class="notFound-popListContainer__post--title">
-            <a :id="`notfound-${index}-title`" :href="getValue(item, [ 'slug' ])" v-text="getValue(item, [ 'title' ])"></a>
+            <a :id="`notfound-${index}-title`" :href="get(item, [ 'slug' ])" v-text="get(item, [ 'title' ])"></a>
           </div>
         </div>
       </div>
@@ -29,8 +29,7 @@
 <script>
 
 import { SECTION_MAP, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
-import { getValue } from '../util/comm'
-import _ from 'lodash'
+import { get, take } from 'lodash'
 
 const fetchPop = (store) => {
   return store.dispatch('FETCH_ARTICLES_POP_LIST', {})
@@ -45,7 +44,7 @@ export default {
   },
   computed: {
     popArticles () {
-      return _.take(_.get(this.$store.state, [ 'articlesPopList', 'report' ]), 3)
+      return take(get(this.$store.state, [ 'articlesPopList', 'report' ]), 3)
     },
     viewportTarget () {
       if (this.viewport < 600) {
@@ -58,9 +57,9 @@ export default {
     }
   },
   methods: {
-    getValue,
+    get,
     getSectionStyle (item) {
-      return { backgroundColor: _.get(SECTION_MAP, [ _.get(item, [ 'sections', '0', 'id' ]), 'bgcolor' ], '#bcbcbc') }
+      return { backgroundColor: get(SECTION_MAP, [ get(item, [ 'sections', '0', 'id' ]), 'bgcolor' ], '#bcbcbc') }
     },
     insertGoogleFonts () {
       const googleFonts = document.createElement('link')

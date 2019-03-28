@@ -1,6 +1,6 @@
 <template>
   <section class="ActivityLightboxMenu">
-    <h1 v-text="getValue(activity, [ 'name' ])"/>
+    <h1 v-text="get(activity, [ 'name' ])"/>
     <div class="ActivityLightboxMenu__images">
       <div class="ActivityLightboxMenu__images--block" v-for="(item, index) in nodeContents">
         <div class="ActivityLightboxMenu__images--image" :style="{ backgroundImage: 'url(' + getImage(item) + ')' }" @click="goToContentIndex(index)" />
@@ -11,8 +11,7 @@
 
 <script>
 
-import { getValue } from '../../util/comm'
-import _ from 'lodash'
+import { get } from 'lodash'
 
 export default {
   props: [ 'currentNodeContents', 'initialActivity', 'viewport' ],
@@ -30,20 +29,20 @@ export default {
     }
   },
   methods: {
-    getValue,
+    get,
     getImage (item) {
-      const contentStyle = _.get(item, [ 'type' ])
+      const contentStyle = get(item, [ 'type' ])
       if (this.windowViewport < 600) {
         if (contentStyle === 'video') {
-          return _.get(item, [ 'content', '0', 'coverPhoto', 'mobile', 'url' ])
+          return get(item, [ 'content', '0', 'coverPhoto', 'mobile', 'url' ])
         } else {
-          return _.get(item, [ 'content', '0', 'mobile', 'url' ])
+          return get(item, [ 'content', '0', 'mobile', 'url' ])
         }
       } else {
         if (contentStyle === 'video') {
-          return _.get(item, [ 'content', '0', 'coverPhoto', 'desktop', 'url' ])
+          return get(item, [ 'content', '0', 'coverPhoto', 'desktop', 'url' ])
         } else {
-          return _.get(item, [ 'content', '0', 'desktop', 'url' ])
+          return get(item, [ 'content', '0', 'desktop', 'url' ])
         }
       }
     },
