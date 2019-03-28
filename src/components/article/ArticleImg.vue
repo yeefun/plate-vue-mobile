@@ -173,13 +173,11 @@
     .caption 
       font-family "Noto Sans TC", STHeitiTC-Medium, "Microsoft JhengHei", sans-serif
       font-size 15px
-      line-height 1.7
+      line-height 1.5rem
       letter-spacing 0.3px
       color rgba(0, 0, 0, 0.498039)
-      padding-top 10px
-      padding-bottom 10px
-      padding 10px 20px  
-      margin-top 20px
+      padding 0 20px  
+      margin-top 10px
       width 100%
       text-align justify
 

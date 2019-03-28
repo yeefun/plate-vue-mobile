@@ -438,6 +438,36 @@
           padding-left 10px
           padding-right 10px
           line-height 1
+
+
+  >>> .swiper-wrapper 
+    // height 450px
+    display flex
+    align-items center
+
+    .swiper-slide 
+      display flex
+      align-items center
+      justify-content center
+
+      > div
+        width 100%
+
+      .slideshowImg 
+        img 
+          width 100%
+          object-fit contain
+          object-position center center
+          max-height 450px
+
+        .img-caption
+          margin 10px auto 0
+          padding 8px 0
+          color rgba(0,0,0,0.498)
+          font-size 1rem
+          text-align left
+          line-height 1.5rem
+          padding 0 25px
 @media (min-width 499px)  
   .content     
     >>> .info-box-container

@@ -285,6 +285,19 @@ export function isEleFixed (ele) {
   return false  
 }
 
+export function isEleShown (ele) {
+  let node = ele
+  
+  while (node !== null && node !== undefined && node !== document) {
+    const display = node.currentStyle ? node.currentStyle.display : window.getComputedStyle(node, null).display
+    if (display === 'none') {
+      return false
+    }
+    node = node.parentNode
+  }
+  return true  
+}
+
 export function isDescendant (child, { classname = 'none' }) {
   let node = child.parentNode
   while (node !== null && node !== undefined) {

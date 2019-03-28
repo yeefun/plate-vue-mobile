@@ -59,7 +59,6 @@
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
   import titleMetaMixin from 'src/util/mixinTitleMeta'
   import truncate from 'truncate'
-  import uuidv4 from 'uuid/v4'
   import verge from 'verge'
   const debug = require('debug')('CLIENT:External')
   const fetchData = (store, slug) => Promise.all([
@@ -181,25 +180,24 @@
       dfpOptions () {
         const currentInstance = this
         return Object.assign({}, DFP_OPTIONS, {
-          sectionTempId: this.sectionTempId,
-          afterEachAdLoaded: (event) => {
+          afterEachAdLoaded: function (event) {
             const dfpCurrAd = document.querySelector(`#${event.slot.getSlotElementId()}`)
             const position = dfpCurrAd.getAttribute('pos')
 
             /**
             * Because googletag.pubads().addEventListener('slotRenderEnded', afterEachAdLoaded) can't be removed.
-            * We have check if current page gets changed through sectionTempId. If so, dont run this outdated callback.
+            * We have check if current page gets changed with checking by sessionId to prevent from runnig this outdated callback.
             */
-            const sectionTempId = dfpCurrAd.getAttribute('sectionTempId')
-            if (currentInstance.sectionTempId !== sectionTempId) { return }
+            const elSessionId = dfpCurrAd.getAttribute('sessionId')
+            if (elSessionId !== this.sessionId) { return }
 
             const adDisplayStatus = dfpCurrAd.currentStyle ? dfpCurrAd.currentStyle.display : window.getComputedStyle(dfpCurrAd, null).display
             const loadInnityAd = () => {
               // debug('Event "noad2" is detected!!')
-              if (this.showDfpCoverAd2Flag && !this.showDfpCoverInnityFlag) {
+              if (currentInstance.showDfpCoverAd2Flag && !currentInstance.showDfpCoverInnityFlag) {
                 sendAdCoverGA('innity')
                 // debug('noad2 detected and go innity')
-                this.showDfpCoverInnityFlag = true
+                currentInstance.showDfpCoverInnityFlag = true
               }
             }
             window.addEventListener('noad2', loadInnityAd)
@@ -209,11 +207,11 @@
                 sendAdCoverGA('dfp')
                 if (adDisplayStatus === 'none') {
                   updateCookie().then((isVisited) => {
-                    this.showDfpCoverAd2Flag = !isVisited
+                    currentInstance.showDfpCoverAd2Flag = !isVisited
                   })
                 } else {
                   updateCookie().then((isVisited) => {
-                    this.showDfpCoverAdFlag = !isVisited
+                    currentInstance.showDfpCoverAdFlag = !isVisited
                   })
                 }
                 break
@@ -228,20 +226,21 @@
                 adDisplayStatus === 'none' && debug('dfp response no innity')
                 break    
               case 'PCFF':
-                this.showDfpFixedBtn = !(adDisplayStatus === 'none')
+                currentInstance.showDfpFixedBtn = !(adDisplayStatus === 'none')
                 break
               case 'LOGO':
                 if (adDisplayStatus !== 'none') {
-                  this.showDfpHeaderLogo = true
+                  currentInstance.showDfpHeaderLogo = true
                 }
-                this.dfpHeaderLogoLoaded = true
+                currentInstance.dfpHeaderLogoLoaded = true
                 break
             }
             adtracker({
               el: dfpCurrAd,
               slot: event.slot.getSlotElementId(),
               position,
-              isAdEmpty: adDisplayStatus === 'none'
+              isAdEmpty: adDisplayStatus === 'none',
+              sessionId: elSessionId
             })  
           },
           setCentering: true,
@@ -265,7 +264,6 @@
         dfpUnits: DFP_UNITS,
         dfpHeaderLogoLoaded: false,
         hasSentFirstEnterGA: false,
-        sectionTempId: `external-${uuidv4()}`,
         showDfpHeaderLogo: false,
         showDfpCoverAdFlag: false,
         showDfpCoverAd2Flag: false,

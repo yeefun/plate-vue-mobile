@@ -18,6 +18,11 @@
           <app-footer />
         </section>
       </div>
+      <LazyItemWrapper :loadAfterPageLoaded="true">
+        <DfpST :props="props">
+          <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
+        </DfpST>
+      </LazyItemWrapper>           
     </template>
   </vue-dfp-provider>
 </template>
@@ -36,11 +41,12 @@ import Cookie from 'vue-cookie'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import HeaderR from '../components/HeaderR.vue'
+import DfpST from '../components/DfpST.vue'
+import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import titleMetaMixin from '../util/mixinTitleMeta'
-import uuidv4 from 'uuid/v4'
 
 const MAXRESULT = 12
 const PAGE = 1
@@ -98,6 +104,8 @@ export default {
     'loading': Loading,
     'more': More,
     'vue-dfp-provider': VueDfpProvider,
+    DfpST,
+    LazyItemWrapper,
     HeaderR
   },
   asyncData ({ store, route }) {
@@ -142,7 +150,6 @@ export default {
       isVponSDKLoaded: false,
       loading: false,
       page: PAGE,
-      sectionTempId: `search-${uuidv4()}`,
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
       showDfpCoverAdVponFlag: false,
@@ -166,33 +173,33 @@ export default {
     dfpOptions () {
       const currentInstance = this
       return Object.assign({}, DFP_OPTIONS, {
-        sectionTempId: this.sectionTempId,
-        afterEachAdLoaded: (event) => {
+        afterEachAdLoaded: function (event) {
           const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
           const position = dfpCover.getAttribute('pos')
 
           /**
-           * Because googletag.pubads().addEventListener('slotRenderEnded', afterEachAdLoaded) can't be removed.
-           * We have check if current page gets changed through sectionTempId. If so, dont run this outdated callback.
-           */
-          const sectionTempId = dfpCover.getAttribute('sectionTempId')
-          if (currentInstance.sectionTempId !== sectionTempId) { return }
+          * Because googletag.pubads().addEventListener('slotRenderEnded', afterEachAdLoaded) can't be removed.
+          * We have check if current page gets changed with checking by sessionId to prevent from runnig this outdated callback.
+          */
+          const elSessionId = dfpCover.getAttribute('sessionId')
+          if (elSessionId !== this.sessionId) { return }
 
           const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
 
           switch (position) {
             case 'LOGO':
               if (adDisplayStatus !== 'none') {
-                this.showDfpHeaderLogo = true
+                currentInstance.showDfpHeaderLogo = true
               }
-              this.dfpHeaderLogoLoaded = true
+              currentInstance.dfpHeaderLogoLoaded = true
               break
           }
           adtracker({
             el: dfpCover,
             slot: event.slot.getSlotElementId(),
             position,
-            isAdEmpty: adDisplayStatus === 'none'
+            isAdEmpty: adDisplayStatus === 'none',
+            sessionId: elSessionId
           })            
         },
         setCentering: true

@@ -36,6 +36,11 @@
         <Footer />
       </section>
       <Share v-if="!isSingleVideoPage" left="20px" bottom="20px" />
+      <LazyItemWrapper :loadAfterPageLoaded="true">
+        <DfpST :props="props">
+          <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
+        </DfpST>
+      </LazyItemWrapper>         
       <DfpCover v-if="mounted && isTimeToShowAdCover" v-show="showDfpCoverAdFlag">
         <vue-dfp :is="props.vueDfp" pos="LMBCVR" :config="props.config" slot="ad-cover" />
       </DfpCover>
@@ -51,8 +56,10 @@
 <script>
 import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
+import DfpST from '../components/DfpST.vue'
 import Footer from '../components/Footer.vue'
 import HeaderR from '../components/HeaderR.vue'
+import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import LiveStream from '../components/LiveStream.vue'
 import SingleVideoBody from '../components/video/SingleVideoBody.vue'
 import Share from '../components/Share.vue'
@@ -61,7 +68,6 @@ import VideoLeading from '../components/video/VideoLeading.vue'
 import VideoList from '../components/video/VideoList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import titleMetaMixin from '../util/mixinTitleMeta'
-import uuidv4 from 'uuid/v4'
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, OATH_ALL_VIDEO_PLAYLIST_ID, OATH_PLAYLIST } from '../constants'
 import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL} from '../constants'
 import { adtracker } from 'src/util/adtracking'
@@ -154,8 +160,10 @@ export default {
   name: 'AppVideo',
   components: {
     DfpCover,
+    DfpST,
     Footer,
     HeaderR,
+    LazyItemWrapper,
     LiveStream,
     SingleVideoBody,
     Share,
@@ -259,7 +267,6 @@ export default {
       abIndicator: 'A',
       dfpHeaderLogoLoaded: false,
       mounted: false,
-      sectionTempId: `video-${uuidv4()}`,
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
       showDfpCoverInnityFlag: false,
@@ -270,25 +277,25 @@ export default {
     dfpOptions () {
       const currentInstance = this
       return Object.assign({}, DFP_OPTIONS, {
-        sectionTempId: this.sectionTempId,
-        afterEachAdLoaded: (event) => {
+        afterEachAdLoaded: function (event) {
           const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
           const position = dfpCover.getAttribute('pos')
 
           /**
            * Because googletag.pubads().addEventListener('slotRenderEnded', afterEachAdLoaded) can't be removed.
-           * We have check if current page gets changed through sectionTempId. If so, dont run this outdated callback.
+           * We have check if current page gets changed with checking by sessionId to prevent from runnig this outdated callback.
            */
-          const sectionTempId = dfpCover.getAttribute('sectionTempId')
-          if (currentInstance.sectionTempId !== sectionTempId) { return }
+          const elSessionId = dfpCover.getAttribute('sessionId')
+          debug('this.sessionId', this.sessionId, elSessionId)
+          if (elSessionId !== this.sessionId) { return }
 
           const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
           const loadInnityAd = () => {
             debug('Event "noad2" is detected!!')
-            if (this.showDfpCoverAd2Flag && !this.showDfpCoverInnityFlag) {
+            if (currentInstance.showDfpCoverAd2Flag && !currentInstance.showDfpCoverInnityFlag) {
               sendAdCoverGA('innity')
               debug('noad2 detected and go innity')
-              this.showDfpCoverInnityFlag = true
+              currentInstance.showDfpCoverInnityFlag = true
             }
           }
           window.addEventListener('noad2', loadInnityAd)
@@ -298,12 +305,12 @@ export default {
             case 'LMBCVR':
               sendAdCoverGA('dfp')
               if (adDisplayStatus === 'none') {
-                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
-                  this.showDfpCoverAd2Flag = !isVisited
+                updateCookie({ currEnv: currentInstance.dfpMode }).then((isVisited) => {
+                  currentInstance.showDfpCoverAd2Flag = !isVisited
                 })
               } else {
-                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
-                  this.showDfpCoverAdFlag = !isVisited
+                updateCookie({ currEnv: currentInstance.dfpMode }).then((isVisited) => {
+                  currentInstance.showDfpCoverAdFlag = !isVisited
                 })
               }
               break
@@ -323,16 +330,17 @@ export default {
                 break                   
             case 'LOGO':
               if (adDisplayStatus !== 'none') {
-                this.showDfpHeaderLogo = true
+                currentInstance.showDfpHeaderLogo = true
               }
-              this.dfpHeaderLogoLoaded = true
+              currentInstance.dfpHeaderLogoLoaded = true
               break
           }
           adtracker({
             el: dfpCover,
             slot: event.slot.getSlotElementId(),
             position,
-            isAdEmpty: adDisplayStatus === 'none'
+            isAdEmpty: adDisplayStatus === 'none',
+            sessionId: elSessionId
           }) 
         },
         setCentering: true

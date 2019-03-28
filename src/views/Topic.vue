@@ -91,7 +91,6 @@ import { getRole } from '../util/mmABRoleAssign'
 import ArticleList from '../components/ArticleList.vue'
 import ArticleListFull from '../components/ArticleListFull.vue'
 import Cookie from 'vue-cookie'
-import DfpST from '../components/DfpST.vue'
 import Footer from '../components/Footer.vue'
 import FooterFull from '../components/FooterFull.vue'
 import GroupList from '../components/GroupList.vue'
@@ -109,7 +108,6 @@ import TimelineBody from '../components/timeline/TimelineBody.vue'
 import TimelineHeadline from '../components/timeline/TimelineHeadline.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import titleMetaMixin from '../util/mixinTitleMeta'
-import uuidv4 from 'uuid/v4'
 
 const MAXRESULT = 12
 const PAGE = 1
@@ -249,7 +247,6 @@ export default {
     'timeline-body': TimelineBody,
     'timeline-headline': TimelineHeadline,
     'vue-dfp-provider': VueDfpProvider,
-    DfpST,
     ProjectList,
     HeaderR
   },
@@ -313,7 +310,6 @@ export default {
       dfpUnits: DFP_UNITS,
       isVponSDKLoaded: false,
       loading: false,
-      sectionTempId: `topic-${uuidv4()}`,
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
       showDfpCoverAdVponFlag: false,
@@ -356,34 +352,34 @@ export default {
     dfpOptions () {
       const currentInstance = this
       return Object.assign({}, DFP_OPTIONS, {
-        sectionTempId: this.sectionTempId,
-        afterEachAdLoaded: (event) => {
+        afterEachAdLoaded: function (event) {
           const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
           const position = dfpCover.getAttribute('pos')
 
           /**
-           * Because googletag.pubads().addEventListener('slotRenderEnded', afterEachAdLoaded) can't be removed.
-           * We have check if current page gets changed through sectionTempId. If so, dont run this outdated callback.
-           */
-          const sectionTempId = dfpCover.getAttribute('sectionTempId')
-          if (currentInstance.sectionTempId !== sectionTempId) { return }
+          * Because googletag.pubads().addEventListener('slotRenderEnded', afterEachAdLoaded) can't be removed.
+          * We have check if current page gets changed with checking by sessionId to prevent from runnig this outdated callback.
+          */
+          const elSessionId = dfpCover.getAttribute('sessionId')
+          if (elSessionId !== this.sessionId) { return }
           
           const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
 
           switch (position) {
             case 'LOGO':
               if (adDisplayStatus !== 'none') {
-                this.showDfpHeaderLogo = true
+                currentInstance.showDfpHeaderLogo = true
               }
-              this.dfpHeaderLogoLoaded = true
+              currentInstance.dfpHeaderLogoLoaded = true
               break
           }
           adtracker({
             el: dfpCover,
             slot: event.slot.getSlotElementId(),
             position,
-            isAdEmpty: adDisplayStatus === 'none'
-          }) 
+            isAdEmpty: adDisplayStatus === 'none',
+            sessionId: elSessionId
+          })
         },
         setCentering: true
       })

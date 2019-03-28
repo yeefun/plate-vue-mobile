@@ -111,7 +111,7 @@
  
 .pop_item 
   >>> #compass-fit-widget-content 
-    >>> figure 
+     figure 
       position relative 
       width 100% 
       padding-top 66.66% 
@@ -127,36 +127,36 @@
         height 100% 
         object-fit cover 
         object-position 50% 50% 
-    >>> .pop_item--colorBlock 
-      display flex 
-      justify-content center 
-      align-items center 
-      position absolute 
-      left 0 
-      bottom 0 
-      height 25px 
-      color #fff 
-      font-size 0.9rem 
-      letter-spacing 1px 
-      white-space nowrap 
-      padding 0 10px 
-    >>> .pop_item_title  
-      background-color #fff 
-      border-top-width 0 
-      line-height 1.5rem 
-      font-size 1.1rem 
-      display flex
-      justify-content center 
-      align-items flex-start 
-      a  
-        width 100% 
-        max-height 100% 
-        margin 10px 0 
-        padding 0 0 0 10px 
-        &:hover, &:link, &:visited 
-          color rgba(0, 0, 0, 0.49) 
-          font-weight normal 
-          border none 
+  >>> .pop_item--colorBlock 
+    display flex 
+    justify-content center 
+    align-items center 
+    position absolute 
+    left 0 
+    bottom 0 
+    height 25px 
+    color #fff 
+    font-size 0.9rem 
+    letter-spacing 1px 
+    white-space nowrap 
+    padding 0 10px 
+  >>> .pop_item_title  
+    background-color #fff 
+    border-top-width 0 
+    line-height 1.5rem 
+    font-size 1.1rem 
+    display flex
+    justify-content center 
+    align-items flex-start 
+    a  
+      width 100% 
+      max-height 100% 
+      margin 10px 0 
+      padding 0 0 0 10px 
+      &:hover, &:link, &:visited 
+        color rgba(0, 0, 0, 0.49) 
+        font-weight normal 
+        border none 
  
 @media (min-width: 600px)   
   .nativeDFP.latest-list_item 
