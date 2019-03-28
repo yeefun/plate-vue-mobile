@@ -112,8 +112,10 @@
     &.credit
       text-align center
       >>> span
+        color #000
         display inline-block
         line-height 1.5rem
+        margin-right 10px
   .post-sharer
     text-align center
   .post-brief
