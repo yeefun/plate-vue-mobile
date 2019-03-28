@@ -72,10 +72,6 @@
           <loading :show="loading"></loading>
           <share :right="`20px`" :bottom="`20px`"></share>
         </template>
-        
-        <DfpST :props="props">
-          <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
-        </DfpST>
       </div>
     </template>
   </vue-dfp-provider>
@@ -88,8 +84,8 @@ import { FB_APP_ID, FB_PAGE_ID, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '
 import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { adtracker } from 'src/util/adtracking'
 import { camelize } from 'humps'
-import { currEnv, getTruncatedVal, unLockJS } from '../util/comm'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
+import { currEnv, getTruncatedVal, unLockJS } from '../util/comm'
 import { camelCase, filter, find, includes, indexOf, get, slice, split, take, uniqBy } from 'lodash'
 import { getRole } from '../util/mmABRoleAssign'
 import ArticleList from '../components/ArticleList.vue'
@@ -607,9 +603,9 @@ export default {
         const onCenterIndex = Math.floor(timelineMenuStartTop / activityBoxHeight)
         const activityBoxs = document.querySelectorAll('.timelineMenu-activityBox')
         for (let i = 0; i < activityBoxs.length; i += 1) {
-          activityBoxs[i].classList.remove('onCenter')
+          activityBoxs[i] && activityBoxs[i].classList.remove('onCenter')
         }
-        activityBoxs[onCenterIndex].classList.add('onCenter')
+        activityBoxs[onCenterIndex] && activityBoxs[onCenterIndex].classList.add('onCenter')
       }
     },
     updateCustomizedMarkup () {

@@ -13,7 +13,7 @@
 
 <script>
 
-import _ from 'lodash'
+import { get } from 'lodash'
 
 export default {
   props: [ 'initialContent', 'viewport' ],
@@ -22,23 +22,23 @@ export default {
       return this.initialContent
     },
     contentStyle () {
-      return _.get(this.content, [ 'type' ])
+      return get(this.content, [ 'type' ])
     },
     contentImageUrl () {
       if (this.windowViewport < 600) {
-        return _.get(this.content, [ 'content', '0', 'mobile', 'url' ])
+        return get(this.content, [ 'content', '0', 'mobile', 'url' ])
       } else {
-        return _.get(this.content, [ 'content', '0', 'desktop', 'url' ])
+        return get(this.content, [ 'content', '0', 'desktop', 'url' ])
       }
     },
     contentVideoCover () {
-      return _.get(this.content, [ 'content', '0', 'coverPhoto', 'desktop', 'url' ])
+      return get(this.content, [ 'content', '0', 'coverPhoto', 'desktop', 'url' ])
     },
     contentVideoType () {
-      return _.get(this.content, [ 'content', '0', 'filetype' ])
+      return get(this.content, [ 'content', '0', 'filetype' ])
     },
     contentVideoUrl () {
-      return _.get(this.content, [ 'content', '0', 'url' ])
+      return get(this.content, [ 'content', '0', 'url' ])
     },
     windowViewport () {
       return this.viewport

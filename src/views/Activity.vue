@@ -28,8 +28,7 @@
 import { FB_APP_ID, FB_PAGE_ID } from '../constants'
 import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL } from '../constants'
 import { getImage, getTruncatedVal } from '../util/comm.js'
-import _ from 'lodash'
-import { get } from 'lodash'
+import { find, findIndex, get } from 'lodash'
 import ActivityLightbox from '../components/activity/ActivityLightbox.vue'
 import ActivityTimeline from '../components/activity/ActivityTimeline.vue'
 import Share from '../components/Share.vue'
@@ -51,17 +50,17 @@ const fetchActivities = (store, id) => {
 }
 
 const fetchAllNodes = (store) => {
-  const page = _.get(store.state, [ 'nodes', 'meta', 'page' ], 0) + 1
+  const page = get(store.state, [ 'nodes', 'meta', 'page' ], 0) + 1
 
   return store.dispatch('FETCH_NODES', {
     'params': {
       page: page,
       where: {
-        activity: _.get(store.state, [ 'route', 'params', 'activityId' ])
+        activity: get(store.state, [ 'route', 'params', 'activityId' ])
       }
     }
   }).then(() => {
-    if (_.get(store.state, [ 'nodes', 'items', 'length' ]) < _.get(store.state, [ 'nodes', 'meta', 'total' ])) {
+    if (get(store.state, [ 'nodes', 'items', 'length' ]) < get(store.state, [ 'nodes', 'meta', 'total' ])) {
       fetchAllNodes(store)
     }
   })
@@ -88,22 +87,22 @@ export default {
   },
   computed: {
     activity () {
-      return _.get(this.$store.state, [ 'activities', 'items', '0' ])
+      return get(this.$store.state, [ 'activities', 'items', '0' ])
     },
     initialNodeIndex () {
-      return _.findIndex(_.get(this.$store.state, [ 'nodes', 'items' ]), this.featureNode)
+      return findIndex(get(this.$store.state, [ 'nodes', 'items' ]), this.featureNode)
     },
     featureNode () {
-      return _.find(_.get(this.$store.state, [ 'nodes', 'items' ]), { 'isFeatured': true })
+      return find(get(this.$store.state, [ 'nodes', 'items' ]), { 'isFeatured': true })
     },
     hasAllNodes () {
-      return _.get(this.$store.state, [ 'nodes', 'items', 'length' ]) >= _.get(this.$store.state, [ 'nodes', 'meta', 'total' ])
+      return get(this.$store.state, [ 'nodes', 'items', 'length' ]) >= get(this.$store.state, [ 'nodes', 'meta', 'total' ])
     },
     initialNodes () {
-      return _.get(this.$store.state, [ 'nodes', 'items' ])
+      return get(this.$store.state, [ 'nodes', 'items' ])
     },
     topicId () {
-      return _.get(this.$route, [ 'params', 'topicId' ])
+      return get(this.$route, [ 'params', 'topicId' ])
     }
   },
   methods: {
@@ -138,31 +137,31 @@ export default {
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
     window.ga('set', 'contentGroup3', '')
-    window.ga('send', 'pageview', { title: `${_.get(this.activity, [ 'name' ])} - ${SITE_TITLE}`, location: `${SITE_URL}/activity/${this.$route.params.activityId}` })
+    window.ga('send', 'pageview', { title: `${get(this.activity, [ 'name' ])} - ${SITE_TITLE}`, location: `${SITE_URL}/activity/${this.$route.params.activityId}` })
   },
   metaSet () {
     const url = `${SITE_URL}/activity/${this.$route.params.activityId}`
-    const ogImage = _.get(this.$store.state, [ 'activities', 'items', '0', 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], null)
+    const ogImage = get(this.$store.state, [ 'activities', 'items', '0', 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], null)
     const image = ogImage || '/assets/mirrormedia/notImage.png'
-    const ogDescription = sanitizeHtml(_.get(this.$store.state, [ 'activities', 'items', '0', 'brief', 'html' ]), { allowedTags: [] })
+    const ogDescription = sanitizeHtml(get(this.$store.state, [ 'activities', 'items', '0', 'brief', 'html' ]), { allowedTags: [] })
     const description = ogDescription !== '' ? this.getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
     return {
       url: `${SITE_MOBILE_URL}/activity/${this.$route.params.activityId}`,
-      title: `${_.get(this.activity, [ 'name' ])} - ${SITE_TITLE}`,
+      title: `${get(this.activity, [ 'name' ])} - ${SITE_TITLE}`,
       meta: `
         <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${description}">
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="${_.get(this.activity, [ 'name' ])} - ${SITE_TITLE}">
+        <meta name="twitter:title" content="${get(this.activity, [ 'name' ])} - ${SITE_TITLE}">
         <meta name="twitter:description" content="${description}">
         <meta name="twitter:image" content="${image}">
         <meta property="fb:app_id" content="${FB_APP_ID}">
         <meta property="fb:pages" content="${FB_PAGE_ID}">
-        <meta property="og:site_name" content="${_.get(this.activity, [ 'name' ])} - ${SITE_TITLE}">
+        <meta property="og:site_name" content="${get(this.activity, [ 'name' ])} - ${SITE_TITLE}">
         <meta property="og:locale" content="zh_TW">
         <meta property="og:type" content="article">
-        <meta property="og:title" content="${_.get(this.activity, [ 'name' ])} - ${SITE_TITLE}">
+        <meta property="og:title" content="${get(this.activity, [ 'name' ])} - ${SITE_TITLE}">
         <meta property="og:description" content="${description}">
         <meta property="og:url" content="${url}">
         <meta property="og:image" content="${image}">
