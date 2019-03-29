@@ -1,12 +1,12 @@
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import _ from 'lodash'
+import { map } from 'lodash'
 
 let TRACKING_TARGET
 
 export function visibleTracking (trackingTargs) {
   const browser = typeof window !== 'undefined'
   if (browser) {
-    TRACKING_TARGET = _.map(trackingTargs, (t) => (Object.assign({}, t)))
+    TRACKING_TARGET = map(trackingTargs, (t) => (Object.assign({}, t)))
     window.removeEventListener('scroll', visitTargets)
     window.addEventListener('scroll', visitTargets)
   }
@@ -15,7 +15,7 @@ export function visibleTracking (trackingTargs) {
 function visitTargets () {
   const currTopY = currentYPosition()
   const winHeight = document.documentElement.clientHeight || document.body.clientHeight
-  _.map(TRACKING_TARGET, (o, i) => {
+  map(TRACKING_TARGET, (o, i) => {
     if (!o.seenFlag) {
       isVisible(o.target, { top: currTopY, bottom: currTopY + ((winHeight * 2) / 3) }).then((isSeen) => {
         TRACKING_TARGET[i].seenFlag = isSeen

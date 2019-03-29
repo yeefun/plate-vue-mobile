@@ -208,12 +208,6 @@ export function unLockJS () {
   }
 }
 
-export function consoleLogOnDev ({ msg }) {
-  if (currEnv() === 'dev') {
-    console.log(msg)
-  }
-}
-
 export function currEnv () {
   const exp_domain = new RegExp(`(${[ `www.${SITE_DOMAIN}`, `m.${SITE_DOMAIN}` ].join('|')})`)
   if (process.env.VUE_ENV === 'client') {

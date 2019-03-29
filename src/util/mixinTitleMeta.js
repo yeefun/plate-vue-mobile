@@ -1,5 +1,5 @@
-import _ from 'lodash'
 import { alexa, fb_sdk, gtm_mirrormedia, gtm_likr, scorecardresearch } from './dynamicScript'
+import { forEach, split } from 'lodash'
 
 const debug = require('debug')('CLIENT:mixinTitleMeta')
 let isScriptLoaded = false
@@ -64,11 +64,11 @@ const updateMeta = metaInfo => {
   }
   if (meta) {
     const dynamicMeta = document.querySelectorAll('head meta:not([fixed="true"])')
-    const newMeta = _.split(meta, '>')
-    _.forEach(dynamicMeta, (node) => {
+    const newMeta = split(meta, '>')
+    forEach(dynamicMeta, (node) => {
       document.head.removeChild(node)
     })
-    _.forEach(newMeta, (m) => {
+    forEach(newMeta, (m) => {
       const node = document.createElement('div')
       node.innerHTML = `${m}>`
       const updateMeta = node.querySelector('meta')

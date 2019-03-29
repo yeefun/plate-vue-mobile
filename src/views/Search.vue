@@ -29,7 +29,7 @@
 
 <script>
 
-import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
+import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING } from '../constants'
 import { FB_APP_ID, FB_PAGE_ID } from '../constants'
 import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { adtracker } from 'src/util/adtracking'
@@ -202,7 +202,8 @@ export default {
             sessionId: elSessionId
           })            
         },
-        setCentering: true
+        setCentering: true,
+        sizeMapping: DFP_SIZE_MAPPING
       })
     }
   },

@@ -1,5 +1,5 @@
-import _ from 'lodash'
 import bigInt from 'big-integer'
+import { filter, get } from 'lodash'
 import { setMmCookie } from './comm'
 
 const DEFAULT_DISTRIBUTION = [
@@ -22,7 +22,7 @@ export function getRole ({ mmid, distribution = DEFAULT_DISTRIBUTION }) {
   const digit = sequence[len - 1].toString().length
   const convertedMmid = getBigInt(mmid)
   const remainder = parseInt(convertedMmid.substr(convertedMmid.length - digit)) % sequence[len - 1]
-  const roleInTest = _.get(_.filter(distribution, (o, i) => {
+  const roleInTest = get(filter(distribution, (o, i) => {
     return remainder < sequence[i]
   }), 0)
   return roleInTest.id
