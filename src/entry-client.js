@@ -63,7 +63,16 @@ router.onReady(() => {
   app.$mount('#app')
 })
 
+
 // service worker
-if ('https:' === location.protocol && navigator.serviceWorker) {
+const debugSW = require('debug')('CLIENT:SERVICE-WORKER')
+if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/service-worker.js')
+  .then(() => {
+    debugSW('REGISTERING SW SUCCESSFULLY.')
+  })
+  .catch(() => {
+    debugSW('REGISTERING SW IN FAIL.')
+  })
+  navigator.serviceWorker.addEventListener('message', event => debugSW('Got Msg from dervice-worker!' + event.data))
 }

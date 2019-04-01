@@ -246,7 +246,7 @@ function render (req, res, next) {
     if (err) { return handleError(err) }
     res.send(html)
     !isProd && console.info(`whole request: ${Date.now() - s}ms`)
-    isProd && !isPreview && redisWriting(req.url, html, null, 120)
+    // isProd && !isPreview && redisWriting(req.url, html, null, 60)
   })
 }
 app.use('/story/amp', require('./amp/service/api'))
@@ -256,22 +256,8 @@ app.get('*', (req, res, next) => {
   req.s = Date.now()
   console.log('CURRENT HOST:', _.get(req, 'headers.host', ''), exp_dev.test(_.get(req, 'headers.host', '')))
   next()
-}, fetchFromRedis, (req, res, next) => {
-  if (res.redis) {
-    console.log('Fetch page from Redis.', `${Date.now() - req.s}ms\n`, decodeURIComponent(req.url))
-    if (res.redis.length > 3) {
-      res.status(200).send(res.redis)
-    } else {
-      if (res.redis != '500') {
-        res.status(res.redis).render(res.redis)
-      } else {
-        res.status(res.redis).render(res.redis, { err: '', timestamp: (new Date).toString() })
-      }
-    }
-  } else {
-    debug('Didnt see any html data.', req.url)
-    next()
-  }
+}, (req, res, next) => {
+  next()
 }, isProd ? render : (req, res, next) => {
   readyPromise.then(() => render(req, res, next))
 })
