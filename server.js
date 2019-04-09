@@ -249,7 +249,6 @@ function render (req, res, next) {
     // isProd && !isPreview && redisWriting(req.url, html, null, 60)
   })
 }
-app.use('/story/amp', require('./amp/service/api'))
 
 app.use('/api', require('./api/index'), () => { /** END */ })
 app.get('*', (req, res, next) => {
