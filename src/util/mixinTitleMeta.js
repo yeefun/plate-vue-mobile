@@ -2,6 +2,7 @@ import { alexa, fb_sdk, gtm_mirrormedia, gtm_likr, scorecardresearch } from './d
 import { forEach, split } from 'lodash'
 
 const debug = require('debug')('CLIENT:mixinTitleMeta')
+const timestamp_start = Date.now()
 let isScriptLoaded = false
 let isWindowLoadedHandlerSetup = false
 
@@ -89,8 +90,12 @@ const clientTitleMetaMixin = {
     metaSet && updateMeta(metaSet, this)
   }
 }
+
+process.env.VUE_ENV === 'client' && document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOMContentLoaded.', Date.now() - timestamp_start, 'ms')
+})
 process.env.VUE_ENV === 'client' && !isWindowLoadedHandlerSetup && window.addEventListener('load', () => {
-  console.log('PAGE LOADED.')
+  console.log('PAGE LOADED.', Date.now() - timestamp_start, 'ms')
   if (!isScriptLoaded) {
     const insertCodes = async codes => {
       const script = document.createElement('script')
@@ -101,6 +106,7 @@ process.env.VUE_ENV === 'client' && !isWindowLoadedHandlerSetup && window.addEve
       insertCodes(gtm_mirrormedia).then(() => insertCodes(gtm_likr)),
       insertCodes(fb_sdk),
       insertCodes(scorecardresearch).then(() => insertCodes(alexa)),
+      Promise.resolve()
     ]).then(() => true).catch(() => false)
   }
   isWindowLoadedHandlerSetup = true

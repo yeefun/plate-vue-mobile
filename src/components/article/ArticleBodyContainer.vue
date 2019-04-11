@@ -1,6 +1,5 @@
 <template>
   <div class="article-body-container article-container" v-if="articleStyle !== 'photography'">
-    <LazyItemWrapper :loadAfterPageLoaded="true"><slot name="ADHD"></slot></LazyItemWrapper>
     <ArticleBody :articleData="articleData">
       <slot name="ADAR1" slot="ADAR1" ></slot>
       <slot name="ADAR2" slot="ADAR2"></slot>

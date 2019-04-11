@@ -463,6 +463,10 @@ export function sendAdCoverGA (label) {
   })
 }
 
+export function sendGaClickEvent (eventCategory, eventLabel) {
+  window.ga && window.ga('send', 'event', eventCategory, 'click', eventLabel, { nonInteraction: false })
+}
+
 export function extractSlugFromreferrer (referrer = '') {
   const filteredReferrer = referrer.replace(/^https?:\/\//, '').replace(/\?[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]*$/, '')
   const referrerArr = filteredReferrer.split('/')

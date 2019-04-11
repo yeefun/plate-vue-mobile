@@ -8,9 +8,9 @@
       <a v-if="logoFromEvent" v-show="!isScrolled && !showDfpHeaderLogo && dfpHeaderLogoLoaded" :href="get(logoFromEvent, 'link', '/')" class="logo event" target="_blank" @click.native="sendGaClickEvent('header', 'logo event')">
         <LazyImage :src="get(logoFromEvent, 'image.image.resizedTargets.mobile.url')" />
       </a>
-      <LazyItemWrapper :loadAfterPageLoaded="true" class="logo dfp">
+      <div class="logo dfp">
         <vue-dfp :is="props.vueDfp" v-if="props" v-show="!isScrolled" ref="logoDfp" :config="props.config" :dfpId="props.dfpId" :dfpUnits="props.dfpUnits" :section="props.section" pos="LOGO" @click.native="sendGaClickEvent('header', 'logo dfp')" />
-      </LazyItemWrapper>
+      </div>
       <!-- search and more -->
       <div :class="{ open: openMore }" class="more" v-click-outside="handleClickMoreOutside">
         <button class="btn--more" @click="openMore = true"><img src="/assets/mirrormedia/icon/more_grey@2x.png" alt="" @click="sendGaClickEvent('header', 'more open')"></button>
@@ -60,14 +60,14 @@
   </header>
 </template>
 <script>
-import HeaderSearchBar from '../components/header/HeaderSearchBar.vue'
-import HeaderSidebar from '../components/header/HeaderSidebar.vue'
+import HeaderSearchBar from 'src/components/header/HeaderSearchBar.vue'
+import HeaderSidebar from 'src/components/header/HeaderSidebar.vue'
 import LazyImage from 'src/components/common/LazyImage.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
-import ShareLight from '../components/share/ShareLight.vue'
-import { SECTION_MAP, SITE_TITLE, SOCIAL_LINK } from '../constants/index'
+import ShareLight from 'src/components/share/ShareLight.vue'
+import { SECTION_MAP, SITE_TITLE, SOCIAL_LINK } from 'src/constants/index'
 import { get, } from 'lodash'
-import { sendGaClickEvent } from '../util/comm'
+import { sendGaClickEvent } from 'src/util/comm'
 
 export default {
   naem: 'AppHeader',

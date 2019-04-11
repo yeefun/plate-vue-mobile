@@ -9,12 +9,12 @@
       <section class="article-page-header" v-show="!isArticlePhotography">
         <HeaderR :abIndicator="abIndicator" :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
       </section>
+      <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBHD" extClass="full mobile-only" :config="props.config" />
       <article-body-container
         :articleData="articleData"
         :dfpMode="dfpMode"
         :sectionId="sectionId"
         :routeUpateReferrerSlug="routeUpateReferrerSlug">
-        <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBHD" extClass="full mobile-only" :config="props.config" slot="ADHD" />
         <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBE1" extClass="mobile-only" :config="props.config" slot="ADE1"/>
         <!--ADAR1 START-->
         <span id="innity-custom-adnetwork-span-63518" slot="ADAR1"></span>
