@@ -1,6 +1,8 @@
 <template>
   <div class="content">
     <LazyItemWrapper v-for="(p, index) in content"
+      class="content-item"
+      :class="{ last: index ===  content.length - 1}"
       :key="`${id}-content-${index}`"
       :position="verge.viewportH()">
       <ArticleImg v-if="p.type === 'image'" :image="get(p, 'content.0')" class="innerImg" />
@@ -163,8 +165,8 @@
 </script>
 <style lang="stylus" scoped>
 .content
-  div
-    margin 30px auto
+  .content-item.last
+    margin-bottom 30px
   >>> h2 
     color #000
     margin-top 40px
