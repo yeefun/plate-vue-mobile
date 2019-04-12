@@ -1,8 +1,7 @@
 <template>
   <div class="content">
-    <div v-for="(p, index) in content"
+    <LazyItemWrapper v-for="(p, index) in content"
       :key="`${id}-content-${index}`"
-      :is="blockWrapper(index)"
       :position="verge.viewportH()">
       <ArticleImg v-if="p.type === 'image'" :image="get(p, 'content.0')" class="innerImg" />
       <ArticleVideo v-else-if="p.type === 'video'" :id="`latest-${p.id}`"
@@ -30,22 +29,22 @@
       </div>
       <div v-else v-html="paragraphComposer(p)" :style="{ backgroundColor: isBrief && bgcolor }"></div>
       <slot v-if="!isBrief && index === lastUnstyledParagraph - 1" name="relatedListInContent"></slot>
-      <slot name="ADAR1" v-if="index === firstTwoUnstyledParagraph[ 0 ]"></slot>
-      <slot name="ADAR2" v-if="index === firstTwoUnstyledParagraph[ 1 ]"></slot>
-    </div>
+    </LazyItemWrapper>
+    <slot v-if="isBrief" name="ADAR1"></slot>
   </div>
 </template>
 <script>
-  import { get } from 'lodash'
+  import { get, trim } from 'lodash'
   import Annotation from 'src/components/article/Annotation.vue'
   import ArticleImg from 'src/components/article/ArticleImg.vue'
   import AudioBox from 'src/components/AudioBox.vue'
   import ArticleVideo from 'src/components/article/Video.vue'
   import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
   import Slider from '../Slider.vue'
+  import sanitizeHtml from 'sanitize-html'
   import uuidv4 from 'uuid/v4'
   import verge from 'verge'
-
+  
   export default {
     name: 'ArticleBodyContent',
     components: {
@@ -53,6 +52,7 @@
       AudioBox,
       ArticleImg,
       ArticleVideo,
+      LazyItemWrapper,
       Slider
     },
     computed: {
@@ -96,23 +96,14 @@
         verge 
       }
     },
-    methods: {
-      blockWrapper (index) {
-        switch (index) {
-          case this.firstTwoUnstyledParagraph[ 0 ]:
-          case this.firstTwoUnstyledParagraph[ 1 ]:
-            return 'div'
-          default:
-            return LazyItemWrapper
-        }
-      },        
+    methods: {   
       get,
       paragraphComposer (item) {
         switch (item.type) {
           case 'blockquote':
             return `<blockquote class="quote"><i class="quoteIcon"></i><div class="quote-content">${get(item.content, '0', '')}</div></blockquote>`
           case 'code-block':
-            return `<code>${get(item.content, [ 0 ], '')}</code>`
+            return `<div class="code">${get(item.content, [ 0 ], '')}</div>`
           case 'embeddedcode':
             return `<div class=\"embedded\ ${get(item.content, '0.alignment', '')}">${get(item.content, '0.embeddedCode', '')}<div class=\"caption\">${get(item.content, [ 0, 'caption' ], '')}</div></div>`
           case 'header-two':
@@ -144,7 +135,7 @@
             )).join('')
             return `<ul class="${get(item, 'alignment', '')} unordered-list-item">${_liStrUnordered}</ul>`
           case 'unstyled':
-            return item.content.toString().length > 0 ? `<p>${item.content.toString()}</p>` : ''
+            return trim(sanitizeHtml(item.content.join(''), { allowedTags: [] })).length > 0 ? `<p>${item.content.join('')}</p>` : ''
 
           case 'youtube':
             return `<div class=\"youtube\">
@@ -172,11 +163,14 @@
 </script>
 <style lang="stylus" scoped>
 .content
+  div
+    margin 30px auto
   >>> h2 
     color #000
     margin-top 40px
-    padding 20px
-  
+    padding 0 20px
+  >>> .annotation
+    padding 0 20px
   >>> p 
     color #171717
     font-size 18px
@@ -216,7 +210,6 @@
     text-align center
     margin 1.5em auto
     clear both
-
     > div:not(.caption)
       margin 0 auto
     > .caption 
@@ -250,13 +243,15 @@
       border-bottom 1px solid #3195b3
       padding-bottom 5px
       
-  >>> code 
+  >>> .code 
     line-height 2rem
-      
+    padding 0 20px
+    margin 20px
   >>> blockquote.blockquote 
     clear both
     padding 0
     margin 70px 0
+    padding 0 20px
 
     .content 
       border-top 3px solid #255577
@@ -312,6 +307,7 @@
     clear both
     display flex
     margin 3em 0
+    padding 0 20px
 
     i 
       background-image url(/assets/mirrormedia/icon/quote.png)
@@ -474,6 +470,24 @@
           text-align left
           line-height 1.5rem
           padding 0 25px
+@media (min-width 400px)
+  .content
+    >>> p,   
+    >>> h2,
+    >>> .audioBox,
+    >>> blockquote.quote,
+    >>> blockquote.blockquote,
+    >>> .annotation,
+    >>> .code 
+      padding-right 40px
+      padding-left 40px
+    >>> .info-box-container
+      width calc(100vw - 80px)
+      margin-left auto
+      margin-right auto
+    >>> .embedded 
+      width calc(100vw - 40px)
+
 @media (min-width 499px)  
   .content     
     >>> .info-box-container

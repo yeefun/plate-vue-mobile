@@ -5,13 +5,13 @@
       <template v-for="(o, i) in popArticles">
         <div class="pop_item">
           <figure>
-            <router-link :to="o.slug" :id="'popular-' + i">
+            <router-link :to="o.slug" :id="'popular-' + i" target="_blank">
               <LazyImage :src="getImage(o, 'mobile')" :caption="get(o, 'title')" />
             </router-link>
             <div class="pop_item--colorBlock" :style="getSectionStyle(get(o, 'sections.0', ''))" v-text="get(o, 'sections.0.title')" />
           </figure>
           <div class="pop_item_title">
-            <router-link :to="o.slug" :id="'popular-' + i" v-text="getTruncatedVal(o.title, 21)" />
+            <router-link :to="o.slug" :id="'popular-' + i" v-text="getTruncatedVal(o.title, 21)" target="_blank" />
           </div>
         </div>
         <slot :name="`microAd${getMicroAdName(i)}`" v-if="(i === 1 || i === 2 || i === 3)"></slot>
@@ -52,6 +52,9 @@
     font-size 18px
     padding 0 20px
     margin 40px auto
+    .pop_title
+      > h3
+        font-size 1.5rem
     .pop_list 
       margin-top 10px
       display flex
@@ -109,7 +112,6 @@
           display flex
           justify-content center
           align-items flex-start
-        
           a 
             width 100%
             max-height 100%

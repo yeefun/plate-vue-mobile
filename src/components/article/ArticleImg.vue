@@ -180,5 +180,9 @@
       margin-top 10px
       width 100%
       text-align justify
-
+  @media (min-width 400px)
+    .content-image
+      .caption 
+        padding-left 40px
+        padding-right 40px
 </style>

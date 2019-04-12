@@ -2,8 +2,8 @@
   <div class="article-body-container article-container" v-if="articleStyle !== 'photography'">
     <ArticleBody :articleData="articleData">
       <slot name="ADAR1" slot="ADAR1" ></slot>
-      <slot name="ADAR2" slot="ADAR2"></slot>
     </ArticleBody>
+    <slot name="ADAR2"></slot>
     <LazyItemWrapper :position="verge.viewportH()">
       <RecommendList
         v-if="!isAd"
@@ -37,7 +37,7 @@
         <slot name="ADE1"></slot>
       </div>
       <div class="google-recommendeds">
-        <div><h3>推薦文章</h3></div>
+        <div class="title"><h3>推薦文章</h3></div>
         <div id="matchedContentContainer" class="matchedContentContainer"></div>
       </div>       
       <PopList :pop="popularlist" v-if="isPoplistActive" :currEnv="dfpMode">
@@ -177,8 +177,8 @@
     margin-bottom 25px
     margin 25px auto
   .facebook-page
-    display none
     margin-top 15px
+    text-align center
     .fb-page, .fb-page span, .fb-page span iframe[style]
       width 100% !important  
 
@@ -205,6 +205,9 @@
   .facebook-comments, .google-recommendeds
     padding 0 20px
     margin 25px 0
+    .title
+      > h3
+        font-size 1.5rem
   a, a:hover, a:link, a:visited
     display inline
 

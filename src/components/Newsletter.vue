@@ -252,7 +252,7 @@ $duration = 1.4s
   position relative
   width calc(100% - 50px)
   min-height 70px
-  margin 55px auto 1em
+  margin 75px auto 1em
   padding 1em 1em
   border 1px solid #eaeaea
   border-top 20px solid #0c5a80
@@ -376,10 +376,13 @@ $duration = 1.4s
   .newsletter
     width 100%
 
+@media (min-width 400px)
+  .newsletter
+    width calc(100% - 20px)
+
 @media (min-width: 600px)
   .newsletter
     width calc(100% - 2em)
-    margin 1em 0 1em 2em
     padding 1em 2em .5em 3em
     border-top none
     border-bottom none

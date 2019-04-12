@@ -1,6 +1,6 @@
 <template>
   <section class="relateds-in-content" :id="`relateds-in-content-${id}`">
-    <h3>往下繼續閱讀</h3>
+    <h3 v-show="relateds.length">往下繼續閱讀</h3>
     <div v-for="related in relateds" :key="related.id" class="related">
       <div class="related__title">
         <a :id="`related-title-${related.slug}`" :href="getHref(related)" target="_blank" v-text="related.title"></a>
@@ -50,7 +50,8 @@ export default {
 </script>
 <style lang="stylus" scoped>
 .relateds-in-content
-  margin-bottom 20px
+  margin-top 30px
+  margin-bottom 30px
   clear both
   padding 0 20px
   > h3

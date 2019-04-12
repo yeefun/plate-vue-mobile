@@ -76,6 +76,13 @@
         line-height 1.3
         text-align justify
 
+@media (min-width 400px)
+  .hero-image
+    figure 
+      figcaption
+        padding-left 40px
+        padding-right 40px
+
 @media (min-width: 500px)
   .hero-image
     width calc(100% + 100px)

@@ -1,5 +1,9 @@
 <template>
   <main class="article-body">
+    <div class="post-info category date">
+      <div class="category-item"><span class="categorySquare" v-if="!isAd" v-text="category.categoryTitle" :style="category.style"></span></div>
+      <div class="date-item" v-text="date"></div>
+    </div>  
     <div class="post-info title"><h1 v-text="title"></h1></div>
     <div class="post-info subtitle"><h2 v-text="subtitle"></h2></div>
     <div class="post-info credit" v-html="credit"></div>
@@ -9,11 +13,11 @@
       <HeroImage v-else :heroCaption="heroCaption" :heroImage="heroImage" />
     </div>
     <ArticleBodyContent class="post-brief fb-quotable" :isBrief="true"
-      :content="brief" :bgcolor="category.color || '#bcbcbc'" />
+      :content="brief" :bgcolor="category.color || '#bcbcbc'">
+      <slot name="ADAR1" slot="ADAR1"></slot>
+    </ArticleBodyContent>
     <ArticleBodyContent class="post-content fb-quotable" :content="content">
       <RelatedListInContent :relateds="relateds" slot="relatedListInContent" />
-      <slot name="ADAR1" slot="ADAR1"></slot>
-      <slot name="ADAR2" slot="ADAR2"></slot>
     </ArticleBodyContent>
   </main>
 </template>
@@ -26,6 +30,7 @@
   import HeroVideo from 'src/components/article/HeroVideo.vue'
   import RelatedListInContent from 'src/components/article/RelatedListInContent.vue'
   import ShareLight from 'src/components/share/ShareLight.vue'
+  import moment from 'moment'
 
   export default {
     name: 'ArticleBody',
@@ -56,6 +61,12 @@
       },
       content () { return get(this.articleData, 'content.apiData', []) },      
       credit () { return getCredit(this.articleData, 'blue') },
+      date () {
+        const publishedDate = get(this.articleData, 'publishedDate', '')
+        const normalizedDt = new Date(publishedDate)
+        const datetime = moment(normalizedDt).format('YYYY.MM.DD HH:mm')
+        return datetime
+      },      
       heroCaption () { return get(this.articleData, 'heroCaption', '') },
       heroImage () { return get(this.articleData, 'heroImage', { image: {}, }) },
       heroVideo () {
@@ -64,6 +75,9 @@
         return get(heroVideo, 'video')
           ? Object.assign(get(heroVideo, 'video'), { id: get(heroVideo, 'id', '') }, { poster })
           : heroVideo
+      },
+      isAd () {
+        return get(this.articleData, 'isAdvertised', false)
       },
       relateds () {
         const items = get(this.articleData, 'relateds', []) || []
@@ -116,6 +130,30 @@
         display inline-block
         line-height 1.5rem
         margin-right 10px
+    &.category.date
+      display flex
+      margin-top 20px
+      justify-content space-between
+      align-items flex-end
+    &.category
+      .category-item
+        font-size 21px
+        display flex
+        justify-content flex-start
+        align-items center
+
+        .categorySquare 
+          display inline-flex
+          height 24px
+          padding-left 10px
+          justify-content center
+          align-items center    
+    &.date
+      .date-item
+        font-style italic
+        font-size 17px
+        color #a1a1a1
+        font-weight normal
   .post-sharer
     text-align center
   .post-brief
@@ -142,5 +180,9 @@
       
       i, cite, var, address, dfn 
         font-style normal  
-  
+@media (min-width 400px)
+  .article-body
+    > div:not(.post-leading):not(.post-content)
+      padding-right 40px
+      padding-left 40px
 </style>
