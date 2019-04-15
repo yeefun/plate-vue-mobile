@@ -60,7 +60,7 @@
       <div class="list-view" v-else>
         <HeaderR :abIndicator="abIndicator" :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
         <LazyItemWrapper :loadAfterPageLoaded="true">
-          <div><vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" :size="get($store, 'getters.adSize')" /></div>
+          <div :key="sectionId"><vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" :size="get($store, 'getters.adSize')" /></div>
         </LazyItemWrapper>
         <div class="list-title container" :style="{ color: sectionColor }">
           <span class="list-title__text" v-text="title"></span>

@@ -9,7 +9,9 @@
       <section class="article-page-header" v-show="!isArticlePhotography">
         <HeaderR :abIndicator="abIndicator" :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
       </section>
-      <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBHD" extClass="full mobile-only" :config="props.config" :size="get($store, 'getters.adSize')" />
+      <div :key="sectionId">
+        <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBHD" extClass="full mobile-only" :config="props.config" :size="get($store, 'getters.adSize')" />
+      </div>
       <article-body-container
         :articleData="articleData"
         :dfpMode="dfpMode"
