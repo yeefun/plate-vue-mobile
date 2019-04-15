@@ -8,15 +8,15 @@
     <template slot-scope="props" slot="dfpPos">
       <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
       <article-body-external :articleData="articleData" :dfpMode="dfpMode">
-        <vue-dfp :is="props.vueDfp" pos="MBHD" class="dfp dfp--mobile center" :config="props.config" style="margin: 0 auto; padding: 20px 0;" slot="ADHD"></vue-dfp>
-        <vue-dfp :is="props.vueDfp" pos="MBE1" class="dfp dfp--mobile center" :config="props.config" slot="ADE1" />
-        <vue-dfp :is="props.vueDfp" pos="MBAR1" class="dfp dfp--mobile center" :config="props.config" slot="ADAR1"/>
-        <vue-dfp :is="props.vueDfp" pos="MBAR2" class="dfp dfp--mobile center" :config="props.config" slot="ADAR2"/>
+        <vue-dfp :is="props.vueDfp" pos="MBHD" class="dfp dfp--mobile center" :config="props.config" style="margin: 0 auto; padding: 20px 0;" slot="ADHD" :size="get($store, 'getters.adSize')"></vue-dfp>
+        <vue-dfp :is="props.vueDfp" pos="MBE1" class="dfp dfp--mobile center" :config="props.config" slot="ADE1" :size="get($store, 'getters.adSize')" />
+        <vue-dfp :is="props.vueDfp" pos="MBAR1" class="dfp dfp--mobile center" :config="props.config" slot="ADAR1" :size="get($store, 'getters.adSize')" />
+        <vue-dfp :is="props.vueDfp" pos="MBAR2" class="dfp dfp--mobile center" :config="props.config" slot="ADAR2" :size="get($store, 'getters.adSize')" />
       </article-body-external>
 
       <div class="article-page-footer">
         <lazy-item-wrapper :position="verge.viewportH()" :strict="true">
-          <vue-dfp :is="props.vueDfp" pos="MBFT" class="dfp dfp--mobile center" :config="props.config" />
+          <vue-dfp :is="props.vueDfp" pos="MBFT" class="dfp dfp--mobile center" :config="props.config" :size="get($store, 'getters.adSize')" />
         </lazy-item-wrapper>
         <div class="footer"><Footer /></div>
       </div>

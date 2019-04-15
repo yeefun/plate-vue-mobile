@@ -37,7 +37,7 @@
           </div>
           <portraitWall-list :articles="articles" :initialMediaData="portraitWallListImages"></portraitWall-list>
           <div><vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
-            :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp"></vue-dfp></div>
+            :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp" :size="get($store, 'getters.adSize')" /></div>
           <section class="footer container">
             <app-footer style="padding: 0 2rem; margin-bottom: 40px;"></app-footer>
           </section>
@@ -52,7 +52,7 @@
           </div>
           <group-list :articles='articles' :tags="tags" :viewport="viewport"></group-list>
           <div><vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
-            :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp"></vue-dfp></div>
+            :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp" :size="get($store, 'getters.adSize')"/></div>
           <section class="footer container">
             <app-footer style="padding: 0 2rem; margin-bottom: 40px;"></app-footer>
           </section>
@@ -66,7 +66,7 @@
           </div>
           <article-list ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='false'></article-list>
           <div><vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
-            :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp"></vue-dfp></div>
+            :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp" :size="get($store, 'getters.adSize')" /></div>
           <article-list ref="articleListAutoScroll" id="articleListAutoScroll" :articles='autoScrollArticlesLoadMore' :hasDFP='false'
             v-show="hasAutoScroll"></article-list>
           <loading :show="loading"></loading>

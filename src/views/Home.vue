@@ -6,13 +6,13 @@
           <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" activeSection="home" />
         </section>
         <LazyItemWrapper :loadAfterPageLoaded="true">
-          <vue-dfp :is="props.vueDfp" pos="LMBHD" :config="props.config" />
+          <vue-dfp :is="props.vueDfp" pos="LMBHD" :config="props.config" :size="get($store, 'getters.adSize')" />
         </LazyItemWrapper>
         <section class="home-mainContent">
           <editor-choice :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
           <main>
             <LazyItemWrapper :loadAfterPageLoaded="true">
-              <vue-dfp :is="props.vueDfp" pos="LMBL1" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LMBL1" :config="props.config" :size="get($store, 'getters.adSize')"/>
             </LazyItemWrapper>
             <MirrorMediaTVAside v-if="hasEventEmbedded" :mediaData="eventMod" />
             <div class="aside-title" ref="aside_title"><h2 v-text="$t('homepage.focus')"></h2></div>
@@ -25,7 +25,7 @@
               </div>
             </div>
             <LazyItemWrapper :loadAfterPageLoaded="true">
-              <vue-dfp :is="props.vueDfp" pos="LMBL2" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LMBL2" :config="props.config" :size="get($store, 'getters.adSize')"/>
             </LazyItemWrapper>
             <LatestArticleMain id="latestArticle" target="_blank"
               :abIndicator="abIndicator"

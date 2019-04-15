@@ -6,29 +6,29 @@
         <SingleVideoBody :video="video" :videos="$store.state.playlist[OATH_ALL_VIDEO_PLAYLIST_ID]">
           <ShareLight slot="share" :gtmCategory="'article'" />
           <template v-if="mounted">
-            <vue-dfp :is="props.vueDfp" slot="MBHD" :config="props.config" class="dfp" pos="MBHD" />
+            <vue-dfp :is="props.vueDfp" slot="MBHD" :config="props.config" class="dfp" pos="MBHD" :size="get($store, 'getters.adSize')" />
           </template>
           <template v-if="mounted">
-            <vue-dfp :is="props.vueDfp" slot="MBFT" :config="props.config" class="dfp" pos="MBFT" />
+            <vue-dfp :is="props.vueDfp" slot="MBFT" :config="props.config" class="dfp" pos="MBFT" :size="get($store, 'getters.adSize')" />
           </template>
           <template v-if="mounted">
-            <vue-dfp :is="props.vueDfp" slot="MBE1" :config="props.config" class="dfp" pos="MBE1" />
+            <vue-dfp :is="props.vueDfp" slot="MBE1" :config="props.config" class="dfp" pos="MBE1" :size="get($store, 'getters.adSize')" />
           </template>
         </SingleVideoBody>
       </template>
       <template v-else>
         <VideoLeading>
-          <vue-dfp :is="props.vueDfp" v-if="mounted" slot="LMBHD" :config="props.config" class="dfp" pos="LMBHD" />
+          <vue-dfp :is="props.vueDfp" v-if="mounted" slot="LMBHD" :config="props.config" class="dfp" pos="LMBHD" :size="get($store, 'getters.adSize')" />
         </VideoLeading>
         <template v-for="(item, index) in playlist">
           <VideoList :key="item.id" :items="$store.state.playlist[item.id]" :playlist="item" @loadmore="handleLoadmore">
             <router-link v-if="!isCategoryPage" slot="more" :to="`/category/${OATH_PLAYLIST[item.id].categoryName}`" class="btn--more">看更多<img src="/assets/mirrormedia/icon/arrow-slideshow-blue-right.png" alt="看更多"></router-link>
             <template v-if="mounted && isCategoryPage">
-              <vue-dfp :is="props.vueDfp" :key="`${index}-LMBFT`" slot="LMBFT" :config="props.config" class="dfp" pos="LMBFT" />
+              <vue-dfp :is="props.vueDfp" :key="`${index}-LMBFT`" slot="LMBFT" :config="props.config" class="dfp" pos="LMBFT" :size="get($store, 'getters.adSize')" />
             </template>
           </VideoList>
           <template v-if="mounted && !isCategoryPage">
-            <vue-dfp :is="props.vueDfp" v-if="index === 2" :key="`${index}-LMBFT`" :config="props.config" class="dfp" pos="LMBFT" />
+            <vue-dfp :is="props.vueDfp" v-if="index === 2" :key="`${index}-LMBFT`" :config="props.config" class="dfp" pos="LMBFT" :size="get($store, 'getters.adSize')" />
           </template>
         </template>
       </template>

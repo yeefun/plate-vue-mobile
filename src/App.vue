@@ -23,6 +23,7 @@
     const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
     const height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
     const viewport = { width: width, height: height }
+    console.log('VIEWPORT MUTATION: ', viewport)
     return store.dispatch('UPDATE_VIEWPORT', viewport)
   }
 

@@ -20,7 +20,7 @@
       </div>
       <LazyItemWrapper :loadAfterPageLoaded="true">
         <DfpST :props="props">
-          <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
+          <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" :size="get($store, 'getters.adSize')" />
         </DfpST>
       </LazyItemWrapper>           
     </template>
