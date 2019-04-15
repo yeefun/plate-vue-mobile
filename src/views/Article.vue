@@ -9,27 +9,27 @@
       <section class="article-page-header" v-show="!isArticlePhotography">
         <HeaderR :abIndicator="abIndicator" :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
       </section>
-      <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBHD" extClass="full mobile-only" :config="props.config" />
+      <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBHD" extClass="full mobile-only" :config="props.config" :size="adSize" />
       <article-body-container
         :articleData="articleData"
         :dfpMode="dfpMode"
         :sectionId="sectionId"
         :routeUpateReferrerSlug="routeUpateReferrerSlug">
-        <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBE1" extClass="mobile-only" :config="props.config" slot="ADE1"/>
+        <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBE1" extClass="mobile-only" :config="props.config" slot="ADE1" :size="adSize"/>
         <!--ADAR1 START-->
         <span id="innity-custom-adnetwork-span-63518" slot="ADAR1"></span>
         <span id="innity-custom-premium-span-12738" slot="ADAR1"></span>            
-        <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR1" extClass="mobile-only" :config="props.config" slot="ADAR1" key="MBAR1" />
+        <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR1" extClass="mobile-only" :config="props.config" slot="ADAR1" key="MBAR1" :size="adSize"/>
         <!--ADAR1 END-->
         <!--ADAR2 START-->
         <span id="innity-custom-adnetwork-span-68557" slot="ADAR2"></span>
         <span id="innity-custom-premium-span-12739" slot="ADAR2"></span>           
-        <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR2" extClass="mobile-only" :config="props.config" slot="ADAR2" />
+        <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR2" extClass="mobile-only" :config="props.config" slot="ADAR2" :size="adSize"/>
         <!--ADAR2 END-->
       </article-body-container>
       <div class="article-page-footer">
         <lazy-item-wrapper :position="verge.viewportH()" :strict="true">
-          <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBFT" :extClass="'full mobile-only'" :config="props.config" />
+          <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBFT" :extClass="'full mobile-only'" :config="props.config" :size="adSize"/>
         </lazy-item-wrapper>
         <div class="footer"><Footer /></div>
       </div>
@@ -110,7 +110,7 @@
         && fetchPartners(store)
     })
   }
-  
+
   const fetchSSRData = store => store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] })
   const fetchCommonData = store => store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'projects' ] })
 
@@ -256,6 +256,7 @@
     data () {
       return {
         abIndicator: '',
+        adSize: '',
         dfpid: DFP_ID,
         dfpMode: 'prod',
         dfpUnits: DFP_UNITS,
@@ -422,6 +423,7 @@
       next()
     },    
     mounted () {
+      this.adSize = verge.viewportW() > 320 ? '' : 'less-than-320-only'
       this.updateSysStage()
       this.abIndicator = this.getMmid()
       const scrollTriggerRegister = new ScrollTriggerRegister([
