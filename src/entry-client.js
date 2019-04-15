@@ -7,7 +7,8 @@ import { createApp } from './app'
 const debug = require('debug')('ENTRY-CLIENT')
 
 const { host, pathname, search, } = location
-const exp_dev = /dev|localhost/
+// const exp_dev = /dev|localhost/
+const exp_dev = /localhost/
 const useragent = new UserAgent().parse(navigator.userAgent)
 debug('STAGE:', exp_dev.test(host) ? 'DEV' : 'PROD')
 debug('CURR PATH:', host, pathname, search)
