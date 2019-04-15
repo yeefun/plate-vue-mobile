@@ -53,7 +53,7 @@ const updateMeta = metaInfo => {
     document.querySelector('title').innerHTML = title
   }
   if (url) {
-    const alternate = document.head.querySelector(`link[rel='alternate']`)
+    const alternate = document.head.querySelector(`link[rel='canonical']`)
     alternate && (alternate.href = url)
   }
   if (adTrace) {

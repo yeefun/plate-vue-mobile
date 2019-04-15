@@ -31,7 +31,7 @@
 
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING } from '../constants'
 import { FB_APP_ID, FB_PAGE_ID } from '../constants'
-import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
+import { SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { adtracker } from 'src/util/adtracking'
 import { currEnv, unLockJS } from '../util/comm'
 import { get } from 'lodash'
@@ -115,7 +115,7 @@ export default {
   metaSet () {
     const title = (this.title) ? `${this.title} - ${SITE_TITLE}` : SITE_TITLE
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
-    const relUrl = `${SITE_MOBILE_URL}${this.$route.fullPath}`
+    const relUrl = `${SITE_URL}${this.$route.fullPath}`
     return {
       url: relUrl,
       title: title,

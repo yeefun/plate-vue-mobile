@@ -111,7 +111,7 @@
 
 import { AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY＿INTERVIEW_ID, CATEGORY＿ORALREADING_ID, EXTERNALS, FB_APP_ID,
   FB_PAGE_ID, MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SECTION_MAP, TAG, TAG_INTERVIEW_ID, TAG_ORALREADING_ID, VIDEOHUB_ID } from 'src/constants'
-import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL} from 'src/constants'
+import { SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL} from 'src/constants'
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING } from 'src/constants'
 import { adtracker } from 'src/util/adtracking'
 import { camelize } from 'humps'
@@ -487,7 +487,7 @@ export default {
   metaSet () {
     const type = this.type
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
-    const relUrl = `${SITE_MOBILE_URL}${this.$route.fullPath}`
+    const relUrl = `${SITE_URL}${this.$route.fullPath}`
     let ogImage
     let ogTitle
     let ogDescription

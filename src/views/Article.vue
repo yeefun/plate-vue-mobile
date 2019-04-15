@@ -54,7 +54,7 @@
   </vue-dfp-provider>
 </template>
 <script>
-  import { FB_APP_ID, FB_PAGE_ID, DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, SITE_OGIMAGE, SITE_TITLE, SITE_TITLE_SHORT, SITE_MOBILE_URL, SITE_URL, SECTION_WATCH_ID } from '../constants'
+  import { FB_APP_ID, FB_PAGE_ID, DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, SITE_OGIMAGE, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, SECTION_WATCH_ID } from '../constants'
   import { MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT } from 'src/constants'
   import { ScrollTriggerRegister } from 'src/util/scrollTriggerRegister'
   import { adtracker } from 'src/util/adtracking'
@@ -374,7 +374,7 @@
       const topicId = get(topics, '_id', '')
 
       return {
-        url: `${SITE_MOBILE_URL}/story/${slug}/`,
+        url: `${SITE_URL}/story/${slug}/`,
         title: title,
         meta: `
           <meta name="robots" content="${robotsValue}">

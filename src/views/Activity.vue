@@ -26,7 +26,7 @@
 <script>
 
 import { FB_APP_ID, FB_PAGE_ID } from '../constants'
-import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL } from '../constants'
+import { SITE_DESCRIPTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL } from '../constants'
 import { getImage, getTruncatedVal } from '../util/comm.js'
 import { find, findIndex, get } from 'lodash'
 import ActivityLightbox from '../components/activity/ActivityLightbox.vue'
@@ -146,7 +146,7 @@ export default {
     const ogDescription = sanitizeHtml(get(this.$store.state, [ 'activities', 'items', '0', 'brief', 'html' ]), { allowedTags: [] })
     const description = ogDescription !== '' ? this.getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
     return {
-      url: `${SITE_MOBILE_URL}/activity/${this.$route.params.activityId}`,
+      url: `${SITE_URL}/activity/${this.$route.params.activityId}`,
       title: `${get(this.activity, [ 'name' ])} - ${SITE_TITLE}`,
       meta: `
         <meta name="robots" content="index">

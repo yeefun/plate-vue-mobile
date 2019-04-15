@@ -69,7 +69,7 @@ import VideoList from '../components/video/VideoList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import titleMetaMixin from '../util/mixinTitleMeta'
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING, FB_APP_ID, FB_PAGE_ID, OATH_ALL_VIDEO_PLAYLIST_ID, OATH_PLAYLIST } from '../constants'
-import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL} from '../constants'
+import { SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL} from '../constants'
 import { adtracker } from 'src/util/adtracking'
 import { currEnv, sendAdCoverGA, updateCookie } from '../util/comm'
 import { get, truncate, } from 'lodash'
@@ -201,7 +201,7 @@ export default {
   mixins: [ titleMetaMixin ],
   metaSet () {
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
-    const relUrl = `${SITE_MOBILE_URL}${this.$route.fullPath}`
+    const relUrl = `${SITE_URL}${this.$route.fullPath}`
     const sections = get(this.$store, 'state.commonData.sections.items', []) || []
     const videohub = sections.filter(section => section.name === 'videohub')[0]
     
