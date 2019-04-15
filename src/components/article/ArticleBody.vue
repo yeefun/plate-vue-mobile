@@ -7,7 +7,10 @@
     <div class="post-info title"><h1 v-text="title"></h1></div>
     <div class="post-info subtitle"><h2 v-text="subtitle"></h2></div>
     <div class="post-info credit" v-html="credit"></div>
-    <div class="post-sharer"><ShareLight :gtmCategory="'article'" /></div>
+    <div class="post-sharer tts">
+      <AudioPlayer class="tts" :post="articleData" />
+      <ShareLight :gtmCategory="'article'" />
+    </div>
     <div class="post-leading">
       <HeroVideo v-if="heroVideo" class="article-heromedia" :heroCaption="heroCaption" :video="heroVideo" />
       <HeroImage v-else :heroCaption="heroCaption" :heroImage="heroImage" />
@@ -26,6 +29,7 @@
   import { filter, get, isObject, reduce } from 'lodash'
   import { getCredit, getImage } from 'src/util/comm'
   import ArticleBodyContent from 'src/components/article/ArticleBodyContent.vue'
+  import AudioPlayer from 'src/components/audioPlayer/Container.vue'
   import HeroImage from 'src/components/article/HeroImage.vue'
   import HeroVideo from 'src/components/article/HeroVideo.vue'
   import RelatedListInContent from 'src/components/article/RelatedListInContent.vue'
@@ -36,6 +40,7 @@
     name: 'ArticleBody',
     components: {
       ArticleBodyContent,
+      AudioPlayer,
       HeroImage,
       HeroVideo,
       RelatedListInContent,
@@ -101,7 +106,7 @@
   margin 0 auto
   padding 30px 0 0
 
-  > div:not(.post-leading):not(.post-content)
+  > div:not(.post-leading):not(.post-content):not(.post-sharer)
     padding-right 25px
     padding-left 25px
     margin 25px 0
@@ -155,7 +160,14 @@
         color #a1a1a1
         font-weight normal
   .post-sharer
-    text-align center
+    display flex
+    justify-content center
+    align-items center
+    width calc(100% - 50px)
+    margin 25px auto
+    padding 0 25px
+    > div:not(.tts)
+      margin-left 20px
   .post-brief
     margin-top 60px
     line-height 36px
