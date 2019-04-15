@@ -20,18 +20,26 @@
       <slot name="ADAR1" slot="ADAR1"></slot>
     </ArticleBodyContent>
     <ArticleBodyContent class="post-content fb-quotable" :content="content">
-      <RelatedListInContent :relateds="relateds" slot="relatedListInContent" />
+      <RelatedListInContent :relateds="relateds" slot="relatedListInContent">
+        <MicroAd v-for="ad in get(microAds, 'article')"
+          class="related"
+          :currEnv="dfpMode" :currUrl="articleUrl"
+          :id="`${get(ad, 'pcId')}`"
+          :key="`${get(ad, 'pcId')}`" /> 
+      </RelatedListInContent>
     </ArticleBodyContent>
   </main>
 </template>
 <script>
   import { SECTION_MAP } from 'src/constants'
+  import { microAds } from 'src/constants/microAds'
   import { filter, get, isObject, reduce } from 'lodash'
   import { getCredit, getImage } from 'src/util/comm'
   import ArticleBodyContent from 'src/components/article/ArticleBodyContent.vue'
   import AudioPlayer from 'src/components/audioPlayer/Container.vue'
   import HeroImage from 'src/components/article/HeroImage.vue'
   import HeroVideo from 'src/components/article/HeroVideo.vue'
+  import MicroAd from 'src/components/MicroAd.vue'
   import RelatedListInContent from 'src/components/article/RelatedListInContent.vue'
   import ShareLight from 'src/components/share/ShareLight.vue'
   import moment from 'moment'
@@ -43,6 +51,7 @@
       AudioPlayer,
       HeroImage,
       HeroVideo,
+      MicroAd,
       RelatedListInContent,
       ShareLight,
     },
@@ -92,11 +101,18 @@
       title () { return get(this.articleData, 'title') },      
     },
     data () {
-      return {}
+      return {
+        microAds
+      }
+    },
+    methods: {
+      get
     },
     mounted () {},
     props: {
-      articleData: {}
+      articleData: {},
+      articleUrl: {},
+      dfpMode: {},
     }
   }
 </script>

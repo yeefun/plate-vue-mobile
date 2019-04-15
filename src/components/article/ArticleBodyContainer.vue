@@ -1,7 +1,7 @@
 <template>
   <div class="article-body-container article-container" v-if="articleStyle !== 'photography'">
-    <ArticleBody :articleData="articleData">
-      <slot name="ADAR1" slot="ADAR1" ></slot>
+    <ArticleBody :articleData="articleData" :dfpMode="dfpMode" :articleUrl="articleUrl">
+      <slot name="ADAR1" slot="ADAR1" ></slot> 
     </ArticleBody>
     <slot name="ADAR2"></slot>
     <LazyItemWrapper :position="verge.viewportH()">
@@ -40,14 +40,6 @@
         <div class="title"><h3>推薦文章</h3></div>
         <div id="matchedContentContainer" class="matchedContentContainer"></div>
       </div>       
-      <PopList :pop="popularlist" v-if="isPoplistActive" :currEnv="dfpMode">
-        <MicroAd v-for="(a, i) in get(microAds, 'article')"
-          class="pop_item margin-top-0"
-          :currEnv="dfpMode" :currUrl="articleUrl"
-          :id="`${get(a, 'pcId')}`"
-          :key="`${get(a, 'pcId')}`"
-          :slot="`microAd${i}`" />
-      </PopList>     
       <div class="facebook-comments" v-html="fbBlock"></div>
     </LazyItemWrapper>
   </div>
@@ -58,17 +50,14 @@
   </div>
 </template>
 <script>
-  import { SECTION_MAP, SITE_URL, SOCIAL_LINK } from 'src/constants'
+  import { SITE_URL, SOCIAL_LINK } from 'src/constants'
   import { find, get, map } from 'lodash'
-  import { microAds } from 'src/constants/microAds'
   // import ArticleBody from 'src/components/article/ArticleBody.vue'
   // import ArticleBodyPhotography from 'src/components/article/ArticleBodyPhotography.vue'
   import Footer from 'src/components/Footer.vue'
   import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
   import Newsletter from 'src/components/Newsletter.vue'
-  import MicroAd from 'src/components/MicroAd.vue'
   import RecommendList from 'src/components/article/RecommendList.vue'
-  import PopList from 'src/components/article/PopList.vue'
   import verge from 'verge'
 
   const ArticleBody = () => import('src/components/article/ArticleBody.vue')
@@ -82,8 +71,6 @@
       Footer,
       LazyItemWrapper,
       Newsletter,
-      MicroAd,
-      PopList,
       RecommendList,
     },
     computed: {
@@ -97,12 +84,6 @@
         return `<div class="fb-comments" data-href="${this.articleUrl}" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>`
       },
       isAd () { return get(this.articleData, 'isAdvertised', false) },
-      isPoplistActive () {
-        return get(SECTION_MAP, `${this.sectionId}.isShowPoplist`, true)
-      },
-      popularlist () {
-        return get(this.$store, 'state.articlesPopList.report', [])
-      },
       recommendlist () {
         return get(this.$store, 'state.articlesRecommendList.relatedNews', [])
       },
@@ -116,7 +97,6 @@
     data () {
       return {
         SOCIAL_LINK,
-        microAds,
         verge
       }
     },

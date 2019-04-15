@@ -110,8 +110,7 @@
         && fetchPartners(store)
     })
   }
-
-  const fetchPop = store => store.dispatch('FETCH_ARTICLES_POP_LIST', {})
+  
   const fetchSSRData = store => store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] })
   const fetchCommonData = store => store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'projects' ] })
 
@@ -447,7 +446,6 @@
           fetchImages(this.$store, { ids: relatedImages, max_results: relatedImages.length  })
         }        
         Promise.all([
-          fetchPop(this.$store),
           fetchEvent(this.$store, 'embedded'),
           fetchEvent(this.$store, 'logo'),
         ]).then(() => {
