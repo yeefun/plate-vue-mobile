@@ -228,8 +228,9 @@
       margin 0 auto
 
   >>> .audioBox
-    width 100%
-    padding 20px
+    width calc(100% - 40px)
+    margin 0 auto
+    padding 0
 
   >>> .video
     text-align center
@@ -476,7 +477,6 @@
   .content
     >>> p,   
     >>> h2,
-    >>> .audioBox,
     >>> blockquote.quote,
     >>> blockquote.blockquote,
     >>> .annotation,
@@ -487,8 +487,10 @@
       width calc(100vw - 80px)
       margin-left auto
       margin-right auto
-    >>> .embedded 
+    >>> .embedded
       width calc(100vw - 40px)
+    >>> .audioBox
+      width calc(100% - 80px)
 
 @media (min-width 499px)  
   .content     
