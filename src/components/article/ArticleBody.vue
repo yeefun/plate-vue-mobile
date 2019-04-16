@@ -19,7 +19,8 @@
       :content="brief" :bgcolor="category.color || '#bcbcbc'">
       <slot name="ADAR1" slot="ADAR1"></slot>
     </ArticleBodyContent>
-    <ArticleBodyContent class="post-content fb-quotable" :content="content">
+    <ArticleBodyContent class="post-content fb-quotable" :content="content"
+      :publishedDate="articleData.publishedDate" :updatedAt="articleData.updatedAt" >
       <RelatedListInContent :relateds="relateds" slot="relatedListInContent">
         <MicroAd v-for="ad in get(microAds, 'article')"
           class="related"

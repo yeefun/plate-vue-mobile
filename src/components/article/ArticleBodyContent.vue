@@ -31,6 +31,9 @@
       </div>
       <div v-else v-html="paragraphComposer(p)" :style="{ backgroundColor: isBrief && bgcolor }"></div>
       <slot v-if="!isBrief && index === lastUnstyledParagraph - 1" name="relatedListInContent"></slot>
+      <p v-if="updatedAt && publishedDate && (index ===  content.length - 1) && showUpdatedTime" class="updated-time">更新時間｜
+        <span>{{ moment(updatedAt).format('YYYY.MM.DD HH:mm') }}</span>
+      </p>
     </LazyItemWrapper>
     <slot v-if="isBrief" name="ADAR1"></slot>
   </div>
@@ -43,6 +46,7 @@
   import ArticleVideo from 'src/components/article/Video.vue'
   import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
   import Slider from '../Slider.vue'
+  import moment from 'moment'
   import sanitizeHtml from 'sanitize-html'
   import uuidv4 from 'uuid/v4'
   import verge from 'verge'
@@ -82,7 +86,10 @@
           }
         })
         return last
-      }      
+      },
+      showUpdatedTime () {
+        return moment(this.updatedAt).format('YYYY.MM.DD HH:mm') !== moment(this.publishedDate).format('YYYY.MM.DD HH:mm')
+      }
     },
     data () {
       return {
@@ -100,6 +107,7 @@
     },
     methods: {   
       get,
+      moment,
       paragraphComposer (item) {
         switch (item.type) {
           case 'blockquote':
@@ -159,7 +167,9 @@
       isBrief: {
         default: false
       },
-      bgcolor: {}
+      bgcolor: {},
+      publishedDate: {},
+      updatedAt: {},
     },
   }
 </script>
@@ -180,6 +190,12 @@
     margin 1.5em 0
     text-align justify
     padding 0 20px
+  >>> .updated-time
+    color #064f77
+    font-size 1rem
+    line-height 1.5
+    span
+      color #61a4cd
   
   >>> .youtube 
     clear both
