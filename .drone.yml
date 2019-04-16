@@ -1,10 +1,64 @@
 workspace:
-  base: /js
-  path: github.com/plate-vue-mobile
+  base: /mirror-media
+  path: plate-vue-mobile
 pipeline:
+  # Start build node builder for plate-vue-mobile
+  # --------------------------------- Build node-builder base image ---------------------------
+  builder-start:
+    image: gcr.io/mirrormedia-1470651750304/drone-slack:v1.0.0
+    pull: true
+    channel: ground_control
+    secrets: [slack_webhook]
+    username: drone
+    link_names: true
+    icon_url: https://avatars2.githubusercontent.com/u/2181346?s=200&v=4
+    recipient: ${DRONE_COMMIT_AUTHOR}
+    usermaps:
+      chiangkeith: chiangkeith
+      FalseChord: Yen
+      hcchien: hcchien
+      hsuehyungtan: noah.tan
+      kwhsiung: kwhsiung
+      ichiaohsu: mmich
+    when:
+      event: push
+      branch: builder
+    template: >
+      Commit:*${DRONE_COMMIT_SHA:0:7}* push to *{{build.branch}}*. Start to build node-builder.
+
+  publish:
+    image: plugins/gcr
+    repo: mirrormedia-1470651750304/${DRONE_REPO_NAME}
+    tag:
+    - node-10.15.3-builder
+    build_args: NODE_BASE=10.15.3-alpine
+    dockerfile: docker/Dockerfile.builder
+    environment:
+      - DOCKER_LAUNCH_DEBUG=true
+    secrets: [google_credentials]
+    when:
+      event: push
+      branch: builder
+
+  builder-finish:
+    image: plugins/slack
+    channel: ground_control
+    secrets: [slack_webhook]
+    username: drone
+    icon_url: https://avatars2.githubusercontent.com/u/2181346?s=200&v=4
+    when:
+      event: push
+      branch: builder
+    template: >
+      {{#success build.status}}
+        node-builder was successfully built.
+      {{else}}
+        Houston, we have a problem. <${DRONE_BUILD_LINK}| Builder> failed.
+      {{/success}}
+  # -------------------------------------------- Test -----------------------------------------------
   start_slack:
     image: plugins/slack
-    channel: jenkins
+    channel: ground_control
     secrets: [slack_webhook]
     username: plate-vue-mobile
     icon_url: https://vuejs.org/images/logo.png
@@ -14,7 +68,7 @@ pipeline:
     when:
       event: [push]
       branch: [master, dev, speedup]
-  
+
   restore-cache:
     image: drillster/drone-volume-cache
     restore: true
@@ -35,7 +89,7 @@ pipeline:
     when:
       event: [push]
       branch: [master, dev, speedup]
-  
+
   builds:
     image: plugins/gcr
     repo: mirrormedia-1470651750304/${DRONE_REPO_NAME}
@@ -67,7 +121,7 @@ pipeline:
     when:
       event: [push]
       branch: [dev, speedup]
-  
+
   rebuild-cache:
     image: drillster/drone-volume-cache
     rebuild: true
@@ -80,7 +134,7 @@ pipeline:
 
   finish_slack:
     image: plugins/slack
-    channel: jenkins
+    channel: ground_control
     secrets: [slack_webhook]
     username: plate-vue-mobile
     icon_url: https://vuejs.org/images/logo.png
