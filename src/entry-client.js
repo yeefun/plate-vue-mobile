@@ -16,10 +16,7 @@ debug('useragent.isTablet', useragent.isTablet)
 if (!exp_dev.test(location.host)) {
   debug('CURR DEVICE:', useragent.platform, useragent.browser)
   if (SITE_URL) {
-    const exp_desktop_host = new RegExp(`^${SITE_URL.replace(/https?:\/\//g, '')}`)
-    const isCurrentHostDesktop = exp_desktop_host.test(location.host)
-    debug('isCurrentHostDesktop', isCurrentHostDesktop)
-    if (!useragent.isMobile && !useragent.isTablet && isCurrentHostDesktop) {
+    if (!useragent.isMobile && !useragent.isTablet) {
       /** Redirect to desktop version */
       debug('GOING TO', `${SITE_URL}${location.pathname}${location.search}`)
       location.replace(`${SITE_URL}${location.pathname}${location.search}`)
