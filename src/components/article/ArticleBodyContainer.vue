@@ -39,7 +39,8 @@
       <div class="google-recommendeds">
         <div class="title"><h3>推薦文章</h3></div>
         <div id="matchedContentContainer" class="matchedContentContainer"></div>
-      </div>       
+      </div>
+      <PopList :pop="popularlist" v-if="isPoplistActive" :currEnv="dfpMode"></PopList>
       <div class="facebook-comments" v-html="fbBlock"></div>
     </LazyItemWrapper>
   </div>
@@ -50,13 +51,14 @@
   </div>
 </template>
 <script>
-  import { SITE_URL, SOCIAL_LINK } from 'src/constants'
+  import { SECTION_MAP, SITE_URL, SOCIAL_LINK } from 'src/constants'
   import { find, get, map } from 'lodash'
   // import ArticleBody from 'src/components/article/ArticleBody.vue'
   // import ArticleBodyPhotography from 'src/components/article/ArticleBodyPhotography.vue'
   import Footer from 'src/components/Footer.vue'
   import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
   import Newsletter from 'src/components/Newsletter.vue'
+  import PopList from 'src/components/article/PopList.vue'
   import RecommendList from 'src/components/article/RecommendList.vue'
   import verge from 'verge'
 
@@ -71,6 +73,7 @@
       Footer,
       LazyItemWrapper,
       Newsletter,
+      PopList,
       RecommendList,
     },
     computed: {
@@ -84,6 +87,12 @@
         return `<div class="fb-comments" data-href="${this.articleUrl}" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>`
       },
       isAd () { return get(this.articleData, 'isAdvertised', false) },
+      isPoplistActive () {
+        return get(SECTION_MAP, `${this.sectionId}.isShowPoplist`, true)
+      },
+      popularlist () {
+        return get(this.$store, 'state.articlesPopList.report', [])
+      },
       recommendlist () {
         return get(this.$store, 'state.articlesRecommendList.relatedNews', [])
       },

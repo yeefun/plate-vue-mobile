@@ -124,8 +124,8 @@
   padding 30px 0 0
 
   > div:not(.post-leading):not(.post-content):not(.post-sharer)
-    padding-right 25px
-    padding-left 25px
+    padding-right 20px
+    padding-left 20px
     margin 25px 0
 
   .post-leading
@@ -211,7 +211,8 @@
         font-style normal  
 @media (min-width 400px)
   .article-body
-    > div:not(.post-leading):not(.post-content)
+    > div:not(.post-leading):not(.post-content), > div:not(.post-leading):not(.post-content):not(.post-sharer)
       padding-right 40px
       padding-left 40px
+    
 </style>

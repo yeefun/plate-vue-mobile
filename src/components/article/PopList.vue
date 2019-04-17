@@ -31,7 +31,7 @@
       LazyImage,
     },
     computed: {
-      popArticles () { return take(this.pop, 6) }
+      popArticles () { return take(this.pop, 9) }
     },
     methods: {
       getImage,

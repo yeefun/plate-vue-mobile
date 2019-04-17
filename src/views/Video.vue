@@ -420,6 +420,7 @@ export default {
   },
   methods: {
     currEnv,
+    get,
     getMmid () {
       const mmid = Cookie.get('mmid')
       let assisgnedRole = get(this.$route, [ 'query', 'ab' ])
