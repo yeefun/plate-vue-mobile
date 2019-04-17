@@ -26,9 +26,9 @@ export default {
   display flex
   align-items center
   justify-content center
-  width 25px
-  height 25px
-  overflow hidden
+  // width 25px
+  // height 25px
+  // overflow hidden
   &__play
     cursor pointer
     height 34px
