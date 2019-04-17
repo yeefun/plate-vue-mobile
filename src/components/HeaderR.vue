@@ -23,8 +23,11 @@
           <a :href="SOCIAL_LINK.DOWNLOADAPP" target="_blank" @click="sendGaClickEvent('header', 'more download')" v-text="$t('HEADER.DOWNLOADAPP')"></a>
         </div>     
       </div>
-      <button v-show="mounted" class="btn--search" @click="handleSearchBtn"><img src="/assets/mirrormedia/icon/search.svg" alt="" @click="sendGaClickEvent('header', 'search')"></button>
-      <input v-model="keyword" class="search" type="search" @keyup.enter="search(keyword)">
+      <SearchNav
+        :sections="sections"
+        :isScrolled="isScrolled"
+        class="search-nav"
+      />
       <ShareLight class="share"/>
     </section>
     <!-- scrollable header -->
@@ -56,7 +59,6 @@
       </div>
     </section>
     <HeaderSidebar :class="{ open: openSidebar }" :partners="partners" :sections="sections" :topics="topics" class="header__sidebar" @closeSidebar="openSidebar = false" />
-    <HeaderSearchBar :class="{ open: openSearchBar }" class="header__search-bar" @closeSearchBar="openSearchBar = false" @search="search" />
   </header>
 </template>
 <script>
@@ -65,6 +67,7 @@ import HeaderSidebar from 'src/components/header/HeaderSidebar.vue'
 import LazyImage from 'src/components/common/LazyImage.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import ShareLight from 'src/components/share/ShareLight.vue'
+import SearchNav from '../components/searchNav/SearchNav.vue'
 import { SECTION_MAP, SITE_TITLE, SOCIAL_LINK } from 'src/constants/index'
 import { get, } from 'lodash'
 import { sendGaClickEvent } from 'src/util/comm'
@@ -77,6 +80,7 @@ export default {
     LazyImage,
     LazyItemWrapper,
     ShareLight,
+    SearchNav
   },
   directives: {
     'click-outside': {
@@ -306,6 +310,10 @@ export default {
     &.open
       transform translateY(0)
 
+.search-nav
+  order 1
+  margin 0 0 0 auto
+
 @media (max-width: 1199px)
   .header.scrolled
     height 90px
@@ -314,7 +322,7 @@ export default {
       top 0
       left 0
       right 0
-      z-index 500
+      z-index 501
       height 50px
       padding 0 2em
       background-color #f5f5f5

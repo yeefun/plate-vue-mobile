@@ -1,4 +1,4 @@
-const { get, map, isString, toNumber } = require('lodash')
+const { get, map, isString, toNumber, concat, compact } = require('lodash')
 const { fetchFromRedisForAPI, insertIntoRedis, redisFetching, redisFetchingRecommendNews, redisWriting } = require('./middle/redisHandler') 
 const config = require('./config')
 const bodyParser = require('body-parser')
@@ -270,27 +270,45 @@ router.use('/search', (req, res) => {
     if (!err && data) {
       res.json(JSON.parse(data))
     } else {
-      console.error(`\n[ERROR] Fetch data from Redis in fail.`, `/search${req.url}`)
-      console.error(`${err}\n`)
+      console.warn(`\n[WARN] Fetch data from Redis in fail.`, `/search${req.url}`)
+      console.warn(`${err}\n`)
       const keywords = get(req, 'query.keyword', '').split(',')
+      const mustKeywords = map(keywords, k => ({
+        'multi_match' : {
+          'query': k,
+          'type': 'phrase',
+          'fields': [ 'title^2', 'brief', 'content', 'writers.name' ]
+        }
+      }))
+
+      let where = {}
+      try {
+        where = JSON.parse(get(req, 'query.where', '{}'))
+      } catch (error) {
+        console.error('\n[ERROR] parsing "where" query in search api')
+        console.error(`where query: ${JSON.stringify(get(req, 'query.where', '{}'))}`)
+      }
+      const section = get(where, 'section', '')
+      const category = get(where, 'category', '')
+      const mustScopeSection = section !== '' && { 'match' : { 'sections._id': section } }
+      const mustScopeCategory = category !== '' && { 'match' : { 'categories._id': category } }
+      const mustScope = compact([ mustScopeSection, mustScopeCategory ])
+      const must = mustScope.length !== 0 ? concat(mustKeywords, mustScope) : mustKeywords
       const test = {
         'from': (toNumber(get(req, 'query.page', 1)) - 1) * toNumber(get(req, 'query.max_results', 12)),
         'size': toNumber(get(req, 'query.max_results', 12)),
         'query': {
           'bool': {
-            'must': map(keywords, k => ({
-              'multi_match' : {
-                'query': k,
-                'type': 'phrase',
-                'fields': [ 'title', 'brief' ]
-              }
-            }))
+            'must': must
           }
         },
         'sort' : {
           'publishedDate': { 'order': 'desc' }
         }
       }
+
+      console.log('Perform esSearch')
+      console.log(must)
       superagent
       .post(esSearch_url)
       .timeout({ response: config.SEARCH_TIMEOUT, deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000, })
