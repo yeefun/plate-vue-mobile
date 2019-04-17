@@ -3,9 +3,9 @@
     <h3 v-show="relateds.length">往下繼續閱讀</h3>
     <div v-for="related in relateds" :key="related.id" class="related">
       <div class="related__title">
-        <a :id="`related-title-${related.slug}`" :href="getHref(related)" target="_blank" v-text="related.title"></a>
+        <a :href="getHref(related)" target="_blank" @click="sendGaClickEvent('article', 'related')" v-text="related.title"></a>
       </div>
-      <a v-if="getImage(related.heroImage)" :id="`related-img-${related.slug}`" :href="getHref(related)" class="related__img" target="_blank">
+      <a v-if="getImage(related.heroImage)" :href="getHref(related)" class="related__img" target="_blank" @click="sendGaClickEvent('article', 'related')">
         <LazyImage :src="getImage(related.heroImage)" :alt="related.title" />
       </a>
     </div>
@@ -16,7 +16,7 @@
 import LazyImage from 'src/components/common/LazyImage.vue'
 import uuidv4 from 'uuid/v4'
 import { get } from 'lodash'
-import { getHref } from '../../util/comm'
+import { getHref, sendGaClickEvent } from '../../util/comm'
 
 export default {
   name: 'RelatedListInContent',
@@ -43,6 +43,7 @@ export default {
       const image = get(item, 'image.resizedTargets.mobile.url') || get(item, 'image.url')
       return image ? image : undefined
     },
+    sendGaClickEvent
   },
   mounted () {
     this.id = uuidv4()

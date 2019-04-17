@@ -2,26 +2,26 @@
   <div class="listArticleBlock" :class="{ noHoverEffect: removeHoverEffect }" >
     <template v-if="articleType === 'campaign' || articleType === 'projects' || articleType === 'readr'">
       <figure class="listArticleBlock__figure">
-        <a :href="getHrefFull(article)" :id="`latest-${get(article, 'slug')}-img`" target="_blank">
+        <a :href="getHrefFull(article)" target="_blank" @click="sendGaClickEvent('listing', 'latest')">
           <LazyImage :src="getImage(article, 'mobile')" :caption="get(article, 'title')" />
         </a>
         <div class="listArticleBlock__figure--colorBlock" :style="{ backgroundColor: sectionColor }" v-text="colorBlockTitle" />
       </figure>
       <div class="listArticleBlock__content">
-        <h2><a :href="getHrefFull(article)" :id="`latest-${get(article, 'slug')}-title`" target="_blank" v-text="get(article, 'title')"></a></h2>
-        <p><a :href="getHrefFull(article)" :id="`latest-${get(article, 'slug')}-descr`" target="_blank" v-text="getBrief(article, 45)"></a></p>
+        <h2><a :href="getHrefFull(article)" target="_blank" @click="sendGaClickEvent('listing', 'latest')" v-text="get(article, 'title')"></a></h2>
+        <p><a :href="getHrefFull(article)" target="_blank" @click="sendGaClickEvent('listing', 'latest')" v-text="getBrief(article, 45)"></a></p>
       </div>
     </template>
     <template v-else-if="articleType === 'video'">
       <figure class="listArticleBlock__figure">
-        <a :href="`https://youtu.be/${get(article, 'snippet.resourceId.videoId')}`" :id="`latest-${get(article, 'snippet.resourceId.videoId')}-img`" target="_blank">
+        <a :href="`https://youtu.be/${get(article, 'snippet.resourceId.videoId')}`" target="_blank" @click="sendGaClickEvent('listing', 'latest')">
           <img v-lazy="get(article, 'snippet.thumbnails.high.url')" :alt="get(article, 'snippet.title')" />
         </a>
         <div class="listArticleBlock__figure--colorBlock" :style="{ backgroundColor: sectionColor }">Video</div>
       </figure>
       <div class="listArticleBlock__content">
-        <h2><a :href="`https://youtu.be/${get(article, 'snippet.resourceId.videoId')}`" :id="`latest-${get(article, 'snippet.resourceId.videoId')}-title`" v-text="get(article, 'snippet.title')" target="_blank" /></h2>
-        <p><a :href="`https://youtu.be/${get(article, 'snippet.resourceId.videoId')}`" :id="`latest-${get(article, 'snippet.resourceId.videoId')}-descr`" v-text="getTruncatedVal(get(article, 'snippet.description'), 45)" target="_blank" /></p>
+        <h2><a :href="`https://youtu.be/${get(article, 'snippet.resourceId.videoId')}`" @click="sendGaClickEvent('listing', 'latest')" v-text="get(article, 'snippet.title')" target="_blank" /></h2>
+        <p><a :href="`https://youtu.be/${get(article, 'snippet.resourceId.videoId')}`" @click="sendGaClickEvent('listing', 'latest')" v-text="getTruncatedVal(get(article, 'snippet.description'), 45)" target="_blank" /></p>
       </div>
     </template>
     <template v-else-if="articleType === 'audio'">
@@ -49,26 +49,26 @@
     </template>
     <template v-else-if="articleType === 'topic'">
       <figure class="listArticleBlock__figure">
-        <router-link :to="`/topic/${get(article, 'id')}`" :id="`latest-${get(article, 'id')}-img`" target="_blank">
+        <router-link :to="`/topic/${get(article, 'id')}`" target="_blank" @click.native="sendGaClickEvent('listing', 'latest')">
           <LazyImage :src="getImage(article, 'mobile')" :caption="get(article, 'name')" />
         </router-link>
       </figure>
       <div class="listArticleBlock__content">
-        <h2><router-link :to="`/topic/${get(article, 'id')}`" :id="`latest-${get(article, 'id')}-title`" target="_blank" v-text="get(article, 'name')"></router-link></h2>
-        <p><router-link :to="`/topic/${get(article, 'id')}`" :id="`latest-${get(article, [ 'id' ])}-descr`" target="_blank" v-text="getBrief(article, 45)"></router-link></p>
+        <h2><router-link :to="`/topic/${get(article, 'id')}`" target="_blank" @click.native="sendGaClickEvent('listing', 'latest')" v-text="get(article, 'name')"></router-link></h2>
+        <p><router-link :to="`/topic/${get(article, 'id')}`" target="_blank" @click.native="sendGaClickEvent('listing', 'latest')" v-text="getBrief(article, 45)"></router-link></p>
       </div>
     </template>
     <template v-else>
       <figure class="listArticleBlock__figure">
-        <router-link :to="getHref(article)" :id="`latest-${get(article, 'slug')}-img`" target="_blank">
+        <router-link :to="getHref(article)" target="_blank" @click.native="sendGaClickEvent('listing', 'latest')">
           <LazyImage :src="getImage(article, 'mobile')" :caption="get(article, 'title')" />
         </router-link>
         <div class="listArticleBlock__figure--colorBlock" :style="{ backgroundColor: sectionColor }" v-text="colorBlockTitle" />
       </figure>
       <div class="listArticleBlock__content">
         <div class="listArticleBlock__content--colorBlock" :style="{ backgroundColor: sectionColor }" v-text="colorBlockTitle" />
-        <h2><router-link :to="getHref(article)" :id="`latest-${get(article, 'slug')}-title`" target="_blank" v-text="get(article, 'title')"></router-link></h2>
-        <p><router-link :to="getHref(article)" :id="`latest-${get(article, 'slug')}-descr`" target="_blank" v-text="getBrief(article, 45)"></router-link></p>
+        <h2><router-link :to="getHref(article)" target="_blank" @click.native="sendGaClickEvent('listing', 'latest')"  v-text="get(article, 'title')"></router-link></h2>
+        <p><router-link :to="getHref(article)" target="_blank" @click.native="sendGaClickEvent('listing', 'latest')" v-text="getBrief(article, 45)"></router-link></p>
       </div>
     </template>
   </div>
@@ -77,7 +77,7 @@
 <script>
 
 import { SECTION_MAP, MARKETING_CATGORY_ID, } from '../../constants'
-import { getBrief, getHref, getHrefFull, getImage, getTruncatedVal } from '../../util/comm'
+import { getBrief, getHref, getHrefFull, getImage, getTruncatedVal, sendGaClickEvent } from '../../util/comm'
 import { get } from 'lodash'
 import LazyImage from 'src/components/common/LazyImage.vue'
 import moment from 'moment'
@@ -187,7 +187,8 @@ export default {
       return moment.utc(duration * 1000).format('HH:mm:ss')
     },
     getTruncatedVal,
-    get
+    get,
+    sendGaClickEvent
   },
   watch: {
     togglePause: function () {

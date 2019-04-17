@@ -44,6 +44,7 @@
 
 <script>
 import { get } from 'lodash'
+import { sendGaClickEvent } from 'src/util/comm'
 
 import SearchInput from './SearchInput.vue'
 import SearchSelect from './SearchSelect.vue'
@@ -94,6 +95,7 @@ export default {
   methods: {
     onSearchInputEnter() {
       this.search()
+      sendGaClickEvent('header', 'search')
     },
     search() {
       if (this.input !== '') {

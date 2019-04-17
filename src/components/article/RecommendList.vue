@@ -18,7 +18,7 @@
 <script>
   import { get, map, take } from 'lodash'
   import { SECTION_MAP, RELATED_LIST_MAX, RECOMM_HITORY_MAX_IN_LOCALSTORAGE } from '../../constants'
-  import { extractSlugFromreferrer, getHref, getHrefFull } from '../../util/comm'
+  import { extractSlugFromreferrer, getHref, getHrefFull, sendGaClickEvent } from '../../util/comm'
   import Deque from 'double-ended-queue'
   import HashTable from 'jshashtable'
 
@@ -82,10 +82,12 @@
           }
           dqueue.enqueue(slug)
           setTimeout(() => localStorage.setItem('recommsClickHistory', dqueue.toString()), 1000)
+          sendGaClickEvent('article', 'recommend')
         } catch (e) {
           debug(e)
         }
       },
+      sendGaClickEvent,
       shouldShowItem (article) {
         return article.style !== 'projects' && article.style !== 'campaign' && article.style !== 'readr'
       },

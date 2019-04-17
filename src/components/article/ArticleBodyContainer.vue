@@ -20,7 +20,9 @@
         <a :href="SOCIAL_LINK.AUTH" target="_blank">了解內容授權資訊</a>。</div>
       <div class="article-tags">
         <p>相關關鍵字：</p>
-        <div class="tags" v-html="tags" v-if="tags.length > 0"></div>    
+        <div class="tags" v-if="tags.length > 0">
+          <a v-for="tag in tags" :key="tag.id" :href="`/tag/${tag.id}`" @click="sendGaClickEvent('article', 'tag')" v-text="tag.name"></a>
+        </div>    
       </div>
       <div class="facebook-page">
         <div class="fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-adapt-container-width="true" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
@@ -52,7 +54,8 @@
 </template>
 <script>
   import { SECTION_MAP, SITE_URL, SOCIAL_LINK } from 'src/constants'
-  import { find, get, map } from 'lodash'
+  import { find, get } from 'lodash'
+  import { sendGaClickEvent } from '../../util/comm'
   // import ArticleBody from 'src/components/article/ArticleBody.vue'
   // import ArticleBodyPhotography from 'src/components/article/ArticleBodyPhotography.vue'
   import Footer from 'src/components/Footer.vue'
@@ -97,10 +100,7 @@
         return get(this.$store, 'state.articlesRecommendList.relatedNews', [])
       },
       tags () {
-        const tags = get(this.articleData, 'tags', [])
-        return map(tags, t => (
-          `<a href=\"/tag/${get(t, 'id', '')}\" id=\"tag-${get(t, 'id', '')}\">${get(t, 'name', '')}</a>`
-        )).join('')
+        return this.articleData.tags || []
       },
     },
     data () {
@@ -111,6 +111,7 @@
     },
     methods: {
       get,
+      sendGaClickEvent
     },
     mounted () {
             

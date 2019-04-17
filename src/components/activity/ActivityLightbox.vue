@@ -34,6 +34,7 @@
 <script>
 
 import { filter, get, slice } from 'lodash'
+import { sendGaClickEvent } from '../../util/comm'
 import ActivityLightboxMenu from './ActivityLightboxMenu.vue'
 import ActivityLightboxSlider from './ActivityLightboxSlider.vue'
 
@@ -144,7 +145,7 @@ export default {
           picture: imageUrl,
           description
         }, function () {})
-      window.ga('send', 'event', 'activity', 'click', 'share-node')
+      sendGaClickEvent('activity', 'share')
     },
     touchend (e) {
       const deltaX = e.changedTouches[0].pageX - this.touchStartValueX

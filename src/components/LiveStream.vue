@@ -11,6 +11,7 @@
 
 import _ from 'lodash'
 import Cookie from 'vue-cookie'
+import { sendGaClickEvent } from '../util/comm'
 
 export default {
   name: 'live-stream',
@@ -40,8 +41,18 @@ export default {
       Cookie.set('liveStreamClosed', 'true', { expires: '10m' })
       this.showLiveStream = false
     },
+    sendGaClickEvent (action) {
+      if (this.$route.path === '/') {
+        sendGaClickEvent('home', `${this.type} ${action}`)
+      } else if (this.$route.path.match(/\/story\//)) {
+        sendGaClickEvent('article', `${this.type} ${action}`)
+      } else {
+        sendGaClickEvent('listing', `${this.type} ${action}`)
+      }
+    },
     toggleZoomIn () {
       this.hasZoomIn = !this.hasZoomIn
+      this.hasZoomIn ? this.sendGaClickEvent('open') : this.sendGaClickEvent('close')
     }
   },
   mounted () {

@@ -2,29 +2,29 @@
   <div class="group">
     <a
       class="group__hero-image"
-      :id="createId(groupedArticle, true)"
       :href="getHref(groupedArticle)"
       target="_blank"
-      rel="noopener">
+      rel="noopener"
+      @click="sendGaClickEvent('home', 'group')">
       <LazyImage :src="getImage(groupedArticle, 'mobile')" />
     </a>
     <div class="group__articles articles">
       <a
         class="articles__item"
-        :id="createId(groupedArticle)"
         :href="getHref(groupedArticle)"
         target="_blank"
         rel="noopener"
+        @click="sendGaClickEvent('home', 'group')"
         v-text="getTruncatedVal(groupedArticle.title, 22)">
       </a>
       <a
         v-for="(article, i) in get(groupedArticle, 'relateds').slice(0, 3)"
         :key="i"
         class="articles__item"
-        :id="createId(article)"
         :href="getHref(article)"
         target="_blank"
         rel="noopener"
+        @click="sendGaClickEvent('home', 'group')"
         v-text="getTruncatedVal(article.title, 22)">
       </a>
     </div>
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { getHref, getHrefFull, getImage, getTruncatedVal } from 'src/util/comm'
+import { getHref, getHrefFull, getImage, getTruncatedVal, sendGaClickEvent } from 'src/util/comm'
 import { get, } from 'lodash'
 import LazyImage from 'src/components/common/LazyImage.vue'
 
@@ -62,9 +62,7 @@ export default {
     getImage,
     getTruncatedVal,
     get,
-    createId (article, isImg = false) {
-      return `group-latest-0-${get(article, 'slug', Date.now())}${isImg ? '-img' : ''}`
-    }
+    sendGaClickEvent
   }
 }
 </script>

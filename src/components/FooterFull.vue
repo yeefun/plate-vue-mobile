@@ -12,13 +12,13 @@
     <div class="footerFull__vertDivider"></div>
     <div class="footerFull__link">
       <div class="footerFull__link--subscribe">
-        <a :href="socialLink.SUBSCRIBE" id="footer-full-subscribe" target="_blank">訂閱鏡週刊</a> - <a :href="socialLink.AD" id="footer-full-ad" >廣告合作</a>
+        <a :href="socialLink.SUBSCRIBE" target="_blank" @click="sendGaClickEvent('footer', 'footer subscribe')">訂閱鏡週刊</a> - <a :href="socialLink.AD" @click="sendGaClickEvent('footer', 'footer ad')">廣告合作</a>
       </div>
       <div class="footerFull__link--horizDivider"></div>
       <div class="footerFull__link--socialMedia">
-        <a :href="socialLink.FACEBOOK" id="footer-full-fb" target="_blank"><img class="facebook" src="/assets/mirrormedia/icon/facebook_white.png" alt="Facebook"></a>
-        <a :href="socialLink.LINE" id="footer-full-line" target="_blank"><img class="line" src="/assets/mirrormedia/icon/line_white.png" alt="Line"></a>
-        <a :href="socialLink.WEIBO" id="footer-full-weibo" target="_blank"><img class="weibo" src="/assets/mirrormedia/icon/weibo_white.png" alt="微博"></a>
+        <a :href="socialLink.FACEBOOK" target="_blank" @click="sendGaClickEvent('footer', 'footer fb')"><img class="facebook" src="/assets/mirrormedia/icon/facebook_white.png" alt="Facebook"></a>
+        <a :href="socialLink.LINE" target="_blank" @click="sendGaClickEvent('footer', 'footer line')"><img class="line" src="/assets/mirrormedia/icon/line_white.png" alt="Line"></a>
+        <a :href="socialLink.WEIBO" target="_blank" @click="sendGaClickEvent('footer', 'footer weibo')"><img class="weibo" src="/assets/mirrormedia/icon/weibo_white.png" alt="微博"></a>
       </div>
     </div>
   </footer>
@@ -27,6 +27,7 @@
 
 import { SOCIAL_LINK } from '../constants/index'
 import { forEach, find, get, } from 'lodash'
+import { sendGaClickEvent } from '../util/comm'
 
 export default {
   name: 'footer-full',
@@ -73,7 +74,8 @@ export default {
     },
     getSectionLogoHeight () {
       return get(this.sectionLogo, [ 'image', 'height' ])
-    }
+    },
+    sendGaClickEvent
   }
 }
 </script>

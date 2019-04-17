@@ -1,14 +1,15 @@
 <template>
   <footer class="left">
     <div class="mobile-follow">
-      <a :href="SOCIAL_LINK.SUBSCRIBE" target="_blank">訂閱鏡週刊</a> - 
-      <router-link to="/story/ad1018001" target="_blank">廣告合作</router-link> - 
-      <router-link to="/category/campaign" target="_blank">活動專區</router-link>
+      <a :href="SOCIAL_LINK.SUBSCRIBE" target="_blank" @click="sendGaClickEvent('footer', 'footer subscribe')">訂閱鏡週刊</a> - 
+      <router-link to="/story/ad1018001" target="_blank" @click.native="sendGaClickEvent('footer', 'footer ad')">廣告合作</router-link> - 
+      <router-link to="/category/campaign" target="_blank" @click.native="sendGaClickEvent('footer', 'footer activity')">活動專區</router-link>
     </div>
   </footer>
 </template>
 <script>
   import { SOCIAL_LINK } from '../constants'
+  import { sendGaClickEvent } from '../util/comm'
 
   export default {
     name: 'AppFooter',
@@ -17,6 +18,9 @@
         SOCIAL_LINK
       }
     },
+    methods: {
+      sendGaClickEvent
+    }
   }
 </script>
 <style lang="stylus" scoped>

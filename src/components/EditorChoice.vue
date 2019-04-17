@@ -7,8 +7,7 @@
       <router-link class="editorChoice__block--img" v-if="item.style !== 'projects'"
         :to="getHref(item)"
         :target="target"
-        data-gtm-category="home"
-        data-gtm="choice">
+        @click.native="sendGaClickEvent('home', 'choice')">
         <EditorChoiceItem
           :src="getImage(item, 'mobile')"
           :srcset="getSrcSet(get(item, 'heroImage.image'))"
@@ -20,8 +19,7 @@
       <a class="editorChoice__block--img" v-else
         :href="`https://www.mirrormedia.mg${getHref(item)}`"
         :target="target"
-        data-gtm-category="home"
-        data-gtm="choice">
+        @click="sendGaClickEvent('home', 'choice')">
         <EditorChoiceItem
           :src="getImage(item, 'mobile')"
           :srcset="getSrcSet(get(item, 'heroImage.image'))"
@@ -35,7 +33,7 @@
 </template>
 <script>
 import { SECTION_MAP } from 'src/constants'
-import { getHref, getImage, getSection, getTitle, getTruncatedVal } from 'src/util/comm'
+import { getHref, getImage, getSection, getTitle, getTruncatedVal, sendGaClickEvent } from 'src/util/comm'
 import { get } from 'lodash'
 import EditorChoiceItem from 'src/components/EditorChoiceItem.vue'
 
@@ -66,6 +64,7 @@ export default {
       const sectionId = get(sect, 'id')
       return { backgroundColor: get(SECTION_MAP, `${sectionId}.bgcolor`, '#bcbcbc') }
     },
+    sendGaClickEvent,
   }
 }
 </script>
