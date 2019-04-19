@@ -1,0 +1,13 @@
+# Dockerfile for building server on dev
+# It copy the whole folder(with dist files) and expose port
+ARG NODE_BASE=10.15.3-alpine
+FROM node:${NODE_BASE} AS stage
+
+ENV NODE_SOURCE /usr/src
+WORKDIR $NODE_SOURCE
+
+COPY . .
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
