@@ -7,12 +7,13 @@
     :mode="dfpMode">
     <template slot-scope="props" slot="dfpPos">
       <section class="article-page-header" v-show="!isArticlePhotography">
-        <HeaderR :abIndicator="abIndicator" :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+        <HeaderR :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
       </section>
       <div :key="sectionId">
         <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBHD" extClass="full mobile-only" :config="props.config" :size="get($store, 'getters.adSize')" />
       </div>
       <article-body-container
+        :abIndicator="abIndicator"
         :articleData="articleData"
         :dfpMode="dfpMode"
         :sectionId="sectionId"
@@ -246,14 +247,12 @@
         if (get(articleData, 'sections.length') === 0) {
           window.ga('set', 'contentGroup1', '')
           window.ga('set', 'contentGroup2', '')
-          // window.ga('set', 'contentGroup3', '')
-          window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         } else {
           window.ga('set', 'contentGroup1', `${get(articleData, 'sections.0.name')}`)
           window.ga('set', 'contentGroup2', `${get(articleData, 'categories.0.name')}`)
-          // window.ga('set', 'contentGroup3', '')
-          window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         }
+        // window.ga('set', 'contentGroup3', '')
+        window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         window.ga('send', 'pageview', { title: `${get(articleData, 'title', '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
     },
@@ -400,7 +399,7 @@
           <meta property="og:description" content="${ogDescription.length > 0 ? truncate(ogDescription, 197) : pureBrief}">
           <meta property="og:url" content="${SITE_URL}/story/${slug}/">
           <meta property="og:image" content="${ogImageUrl.length > 0 ? ogImageUrl : (imageUrl.length > 0 ? imageUrl : SITE_OGIMAGE)}">
-        `, // <meta name="mm-opt" content="article${abIndicator}">
+        `,
         link: `<link rel="amphtml" href="${SITE_URL}/story/amp/${slug}/">`,
         adTrace: adTrace
       }

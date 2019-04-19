@@ -1,5 +1,5 @@
 <template>
-  <main class="article-body">
+  <main :class="[ abIndicator ? abIndicator.toLowerCase() : '']" class="article-body">
     <div class="post-info category date">
       <div class="category-item"><span class="categorySquare" v-if="!isAd" v-text="category.categoryTitle" :style="category.style"></span></div>
       <div class="date-item" v-text="date"></div>
@@ -111,6 +111,7 @@
     },
     mounted () {},
     props: {
+      abIndicator: {},
       articleData: {},
       articleUrl: {},
       dfpMode: {},
@@ -209,6 +210,17 @@
       
       i, cite, var, address, dfn 
         font-style normal  
+  &.b
+    padding 20px 0 0
+    > div:not(.post-leading):not(.post-content):not(.post-sharer)
+      margin 0
+    .post-info
+      &.title
+        h1
+          font-size 1.75rem
+          line-height 1.5
+          margin 13px 0 0
+
 @media (min-width 400px)
   .article-body
     > div:not(.post-leading):not(.post-content), > div:not(.post-leading):not(.post-content):not(.post-sharer)
