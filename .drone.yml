@@ -145,7 +145,6 @@ pipeline:
     service_account: tiller
     secrets: [api_server, kubernetes_token]
     values: image.tag=${DRONE_BRANCH}-${DRONE_COMMIT_SHA:0:7}
-    namespace: review
     when:
       event: push
       branch: master
