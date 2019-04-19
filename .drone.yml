@@ -139,7 +139,7 @@ pipeline:
     release: "plate-vue-mobile"
     wait: true
     upgrade: true
-    reuse_values: true
+    reuse_values: false
     recreate_pods: true
     client_only: true
     service_account: tiller
