@@ -1,0 +1,9 @@
+ARG STAGE_VERSION=stable
+FROM gcr.io/mirrormedia-1470651750304/plate-vue-mobile:${STAGE_VERSION}
+
+ENV NODE_SOURCE /usr/src
+WORKDIR $NODE_SOURCE
+
+COPY ./api/config.js $NODE_SOURCE/api/config.js
+
+CMD ["npm", "start"]
