@@ -187,7 +187,7 @@ const fetchFromRedisForAPI = (req, res, next) => {
       res.header('Cache-Control', 'public, max-age=300')
       res.json(JSON.parse(data))
     } else {
-      console.warn(`\n[WARN] Fetch data from Redis in fail. \n${req.url}`)
+      console.warn(`\n[WARN] Fetch data from Redis in fail. \n${req.url}\n${error}`)
       next(error)
     }
   })
