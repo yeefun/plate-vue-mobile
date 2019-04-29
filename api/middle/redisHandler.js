@@ -113,7 +113,7 @@ const redisFetching = (url, callback) => {
           })
         }
       } else {
-        console.log('fetching ttl in fail ', err)
+        console.warn(`[WARN] fetching ttl in fail. ${decodedUrl} \n ${err}`)
       }
     })
     if (timeoutHandler.timeout <= 0) { return }
