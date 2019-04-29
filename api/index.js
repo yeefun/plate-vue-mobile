@@ -19,6 +19,13 @@ const loggingClient = new Logging({
 
 const apiHost = config.API_PROTOCOL + '://' + config.API_HOST + ':' + config.API_PORT
 
+const UrlForRedisStoreOneMonth = [
+  '/combo?endpoint=sections&endpoint=topics',
+  '/combo?endpoint=sectionfeatured&endpoint=sections&endpoint=topics',
+  '/combo?endpoint=sections',
+  '/combo?endpoint=projects'
+]
+
 const isValidJSONString = str => {
   try {
     JSON.parse(str)
@@ -77,8 +84,7 @@ const fetchStaticJson = (req, res, fileName) => {
           status: errWrapped.status,
           text: errWrapped.text
         })
-        console.error(`error during fetch data from ${fileName} : ${url}`)
-        console.error(error)
+        console.error(`error during fetch data from ${fileName} : ${url}\n${error}`)
       })
     }
   })
@@ -113,8 +119,7 @@ router.get('/newsletter/:userEmail', async (req, res) => {
       )
     res.json(JSON.parse(response.text))
   } catch (error) {
-    console.error(`\n[ERROR] GET newsletter api.`, url)
-    console.error(`${error}\n`)
+    console.error(`\n[ERROR] GET newsletter api.`, url, `\n${error}\n`)
     const status = get(error, 'status') || 500
     const info = JSON.parse(get(error, 'response.text')) || error
     res.header('Cache-Control', 'no-cache')
@@ -144,8 +149,7 @@ router.post('/newsletter', jsonParser, async (req, res) => {
       throw { status: 400, response: { text: "{\"_error\": {\"code\": 400, \"message\": \"Bad request.\"}}" }}
     }
   } catch (error) {
-    console.error(`\n[ERROR] POST newsletter api.`, url, { user: req.body.user, item: req.body.item })
-    console.error(`${error}\n`)
+    console.error(`\n[ERROR] POST newsletter api.`, url, { user: req.body.user, item: req.body.item }, `\n${error}\n`)
     const status = get(error, 'status') || 500
     const info = JSON.parse(get(error, 'response.text')) || error
     res.header('Cache-Control', 'no-cache')
@@ -173,8 +177,7 @@ router.get('/video/:id', fetchFromRedisForAPI, async (req, res, next) => {
       let message = get(error, 'response.text')
       message = message ? get(JSON.parse(message), 'failureCause.message') : error
       res.status(status).send(message)
-      console.error(`\n[ERROR] GET oath api.`, url)
-      console.error(`${error}\n`)
+      console.error(`\n[ERROR] GET oath api.`, url, `\n${error}\n`)
     }
   }
 }, insertIntoRedis)
@@ -201,8 +204,7 @@ router.get('/video/playlist/:playlistId', fetchFromRedisForAPI, async (req, res,
       let message = get(error, 'response.text')
       message = message ? get(JSON.parse(message), 'failureCause.message') : error
       res.status(status).send(message)
-      console.error(`\n[ERROR] GET oath api.`, url)
-      console.error(`${error}\n`)
+      console.error(`\n[ERROR] GET oath api.`, url, `\n${error}\n`)
     }
   }
 }, insertIntoRedis)
@@ -228,8 +230,7 @@ router.get('/playlistng/:ids', fetchFromRedisForAPI, async (req, res, next) => {
       let message = get(error, 'response.text')
       message = message ? get(JSON.parse(message), 'failureCause.message') : error
       res.status(status).send(message)
-      console.error(`\n[ERROR] GET oath api.`, url)
-      console.error(`${error}\n`)
+      console.error(`\n[ERROR] GET oath api.`, url, `\n${error}\n`)
     }
   }
 }, insertIntoRedis)
@@ -242,8 +243,7 @@ router.get('/playlist', (req, res) => {
     if (!err && data) {
       res.json(JSON.parse(data))
     } else {
-      console.error(`\n[ERROR] Fetch data from Redis in fail.`, `${url}?${req.url}`)
-      console.error(`${err}\n`)
+      console.warn(`\n[WARN] Fetch data from Redis in fail.`, `${url}?${req.url}`, `\n${err}\n`)
       superagent
       .get(url)
       .timeout(config.YOUTUBE_API_TIMEOUT)
@@ -253,8 +253,7 @@ router.get('/playlist', (req, res) => {
         res.json(response.body)
       })
       .catch(error => {
-        console.error(`\n[ERROR] GET youtube api.`, url)
-        console.error(`${error}\n`)
+        console.error(`\n[ERROR] GET youtube api.`, url, `\n${error}\n`)
         const status = get(error, 'status') || 500
         const info = JSON.parse(get(error, 'response.text')) || error
         res.header('Cache-Control', 'no-cache')
@@ -270,8 +269,7 @@ router.use('/search', (req, res) => {
     if (!err && data) {
       res.json(JSON.parse(data))
     } else {
-      console.warn(`\n[WARN] Fetch data from Redis in fail.`, `/search${req.url}`)
-      console.warn(`${err}\n`)
+      console.warn(`\n[WARN] Fetch data from Redis in fail.`, `/search${req.url}\n${err}\n`)
       const keywords = get(req, 'query.keyword', '').split(',')
       const mustKeywords = map(keywords, k => ({
         'multi_match' : {
@@ -285,8 +283,7 @@ router.use('/search', (req, res) => {
       try {
         where = JSON.parse(get(req, 'query.where', '{}'))
       } catch (error) {
-        console.error('\n[ERROR] parsing "where" query in search api')
-        console.error(`where query: ${JSON.stringify(get(req, 'query.where', '{}'))}`)
+        console.error('\n[ERROR] parsing "where" query in search api', `\nwhere query: ${JSON.stringify(get(req, 'query.where', '{}'))}`)
       }
       const section = get(where, 'section', '')
       const category = get(where, 'category', '')
@@ -307,8 +304,7 @@ router.use('/search', (req, res) => {
         }
       }
 
-      console.log('Perform esSearch')
-      console.log(must)
+      console.log(`Perform esSearc \n${must}`)
       superagent
       .post(esSearch_url)
       .timeout({ response: config.SEARCH_TIMEOUT, deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000, })
@@ -324,9 +320,7 @@ router.use('/search', (req, res) => {
           status: errWrapped.status,
           text: errWrapped.text
         })
-        console.error(`\n[ERROR] POST elastic search api`, esSearch_url)
-        console.error(test)
-        console.error(`${error}\n`)
+        console.error(`\n[ERROR] POST elastic search api`, esSearch_url, `\n${test}\n${error}\n`)
       })
     }
   })
@@ -341,8 +335,7 @@ router.use('/twitter', (req, res) => {
   } else {
     client.get('statuses/user_timeline', query, (err, data) => {
       if (err) {
-        console.error(`\n[ERROR] GET twitter api.`, req.url)
-        console.error(`${err}\n`)
+        console.error(`\n[ERROR] GET twitter api: ${err}.`, req.url)
         res.status(500).send(err)
       } else {
         res.json(data)
@@ -361,8 +354,7 @@ router.use('/tracking', async (req, res) => {
     await log.write(entry)
     res.send({ msg: 'Logging successfully.' })
   } catch (error) {
-    console.error(`\n[ERROR] Client info logging error occurred.`)
-    console.error(`${error}\n`)
+    console.error(`\n[ERROR] Client info logging error occurred: ${error}.`)
     res.status(500).send(error)
   }
 })
@@ -381,8 +373,7 @@ router.use('/related_news', (req, res) => {
       res.json(parsed)
     } else {
       if (err) {
-        console.error(`\n[ERROR] Fetch data from related-newsredis.`)
-        console.error(`${err}\n`)
+        console.error(`\n[ERROR] Fetch data from related-newsredis: \n${err}.`)
       }
       res.json({ count: 0, result: [] })
     }
@@ -406,8 +397,12 @@ router.get('*', (req, res, next) => {
       )
     const data = JSON.parse(response.text)
     const dataAmount = get(data, '_meta.total')
-    console.log(`\n[LOG] Fetch data from Api. Time: ${Date.now() - req.startTime}ms. Amount: ${dataAmount}`)
-    console.log(`${decodeURIComponent(req.url)}\n`)
+    let timePeriod = Date.now() - req.startTime
+    if (timePeriod < 1000) {
+      console.log(`\n[LOG] Fetch data from Api ${decodeURIComponent(req.url)}. Time: ${timePeriod}ms. Amount: ${dataAmount}`)
+    } else {
+      console.warn(`\n[WARN] Fetch data from Api ${decodeURIComponent(req.url)}. Time: ${timePeriod}ms. Amount: ${dataAmount}`)
+    }
     if ((data._items || data._endpoints) && dataAmount >= 0) {
       res.dataString = response.text
 
@@ -416,7 +411,8 @@ router.get('*', (req, res, next) => {
        */
       const exp_post_query = /^\/posts\?[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]*&clean=content/
       dataAmount > 0 && exp_post_query.test(req.url) && (res.redisTTL = 60 * 60 * 24 * 7)
-      
+      // redis ttl be 30 days.
+      UrlForRedisStoreOneMonth.filter(url => url === req.url).length > 0 && (res.redisTTL = 60 * 60 * 24 * 30)
       next()
     }
     res.header('Cache-Control', 'public, max-age=300')
@@ -424,8 +420,7 @@ router.get('*', (req, res, next) => {
   } catch (error) {
     const errWrapped = handlerError(error)
     if (errWrapped.status !== 404) {
-      console.error(`\n[ERROR] Fetch data from from api.`, req.url)
-      console.error(`${errWrapped.text}\n`)
+      console.error(`\n[ERROR] Fetch data from from api.`, req.url, `\n${errWrapped.text}\n`)
     } else {
       console.error(`\n[ERROR] Not Found.`, req.url)
     }
