@@ -182,8 +182,9 @@ const fetchFromRedis = (req, res, next) => {
 const fetchFromRedisForAPI = (req, res, next) => {
   debug('Trying to fetching data from redis...', req.url)
   redisFetching(req.url, ({ error, data }) => {
+    let start = Date.now()
     if (!error && data) {
-      let start = Date.now()
+	  let timePeriod = Date.now() - start
 	  if (timePeriod > 500) {
         console.log('Fetch data from Redis.', `${timePeriod}ms`, req.url)
       }
