@@ -67,7 +67,7 @@ const redisPoolRecommendNews = isProd ? RedisConnectionPool('redisPoolRecommendN
 class TimeoutHandler {
   constructor (callback) {
     this.isResponded = false
-    this.timeout = REDIS_CONNECTION_TIMEOUT || 2000
+    this.timeout = REDIS_CONNECTION_TIMEOUT || 200
 
     this.destroy = this.destroy.bind(this)
     this.init = this.init.bind(this)
@@ -75,7 +75,7 @@ class TimeoutHandler {
   }
   init (callback) {
     this.timeoutHandler = setInterval(() => {
-      this.timeout -= 1000
+      this.timeout -= 100
       if (this.isResponded) {
         this.destroy()
         return
@@ -84,7 +84,7 @@ class TimeoutHandler {
         this.destroy()
         callback && callback({ err: 'ERROR: Timeout occured while connecting to redis.', data: null })
       }
-    }, 1000)
+    }, 100)
   }
   destroy () {
     clearInterval(this.timeoutHandler)
@@ -97,7 +97,7 @@ const redisFetching = (url, callback) => {
   try {
     decodedUrl = decodeURIComponent(url)
   } catch (error) {
-    console.error('[ERROR] Decoding url in fail while fetching data to Redis. URIError: URI malformed.\n', url)
+    console.error('[ERROR] Decoding url in fail while fetching data to Redis. URIError: URI malformed.', url)
     decodedUrl = url
   }
   redisPoolRead.get(decodedUrl, (error, data) => {
@@ -113,7 +113,7 @@ const redisFetching = (url, callback) => {
           })
         }
       } else {
-        console.warn(`[WARN] fetching ttl in fail. ${decodedUrl} \n ${err}`)
+        console.warn(`[WARN] fetching ttl in fail. ${decodedUrl} ${err}`)
       }
     })
     if (timeoutHandler.timeout <= 0) { return }
@@ -127,7 +127,7 @@ const redisWriting = (url, data, callback, timeout) => {
   try {
     decodedUrl = decodeURIComponent(url)
   } catch (error) {
-    console.error('[ERROR] Decoding url in fail while writing data to Redis. URIError: URI malformed.\n', url)
+    console.error('[ERROR] Decoding url in fail while writing data to Redis. URIError: URI malformed.', url)
     decodedUrl = url
   }
   debug('Going to Writing things to redis...')
@@ -135,12 +135,12 @@ const redisWriting = (url, data, callback, timeout) => {
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
     if(err) {
-      console.error(`\n[ERROR] Write data to Redis in fail. ${decodedUrl}\n${err}\n`)
+      console.error(`[ERROR] Write data to Redis in fail. ${decodedUrl}  ${err}`)
     } else {
       debug('Set timeout as:', timeout || REDIS_TIMEOUT)
       redisPoolWrite.expire(decodedUrl, timeout || REDIS_TIMEOUT || 5000, function(error, d) {
         if(error) {
-          console.error(`\n[ERROR] Set redis expire time in fail. ${decodedUrl}\n${err}\n`)
+          console.error(`[ERROR] Set redis expire time in fail. ${decodedUrl} ${err}\n`)
         } else {
           callback && callback()
         }
@@ -183,7 +183,10 @@ const fetchFromRedisForAPI = (req, res, next) => {
   debug('Trying to fetching data from redis...', req.url)
   redisFetching(req.url, ({ error, data }) => {
     if (!error && data) {
-      console.log('Fetch data from Redis.', `${Date.now() - req.startTime}ms\n`, req.url)
+      let start = Date.now()
+	  if (timePeriod > 500) {
+        console.log('Fetch data from Redis.', `${timePeriod}ms`, req.url)
+      }
       res.header('Cache-Control', 'public, max-age=300')
       res.json(JSON.parse(data))
     } else {
