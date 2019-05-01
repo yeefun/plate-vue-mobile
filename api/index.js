@@ -391,8 +391,8 @@ router.get('*', (req, res, next) => {
       .get(apiHost + req.url)
       .timeout(
         {
-          response: config.API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
-          deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000, // but allow 1 minute for the file to finish loading.
+          response: 200, //config.API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
+          deadline: config.API_DEADLINE ? config.API_DEADLINE : 800, //60000, // but allow 1 minute for the file to finish loading.
         }
       )
     const data = JSON.parse(response.text)
