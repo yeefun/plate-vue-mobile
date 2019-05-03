@@ -70,7 +70,7 @@ const fetchStaticJson = (req, res, fileName) => {
         debug('Fetch static json file from api.', url)
         if (response) {
           redisWriting(url, response.text)
-          res.header('Cache-Control', 'public, max-age=300')
+          res.header('Cache-Control', 'public, max-age=600')
           res.json(JSON.parse(response.text))
         } else {
           res.header('Cache-Control', 'no-cache')
@@ -160,7 +160,7 @@ router.post('/newsletter', jsonParser, async (req, res) => {
 router.get('/video/:id', fetchFromRedisForAPI, async (req, res, next) => {
   if (res.redis) {
     const resData = JSON.parse(res.redis)
-    res.header('Cache-Control', 'public, max-age=300')
+    res.header('Cache-Control', 'public, max-age=600')
     res.json(resData)
   } else {
     const url = `${config.OATH_PROTOCOL}://${config.OATH_HOST}/${config.OATH_COMPANY_KEY}/video/${req.params.id}`
@@ -185,7 +185,7 @@ router.get('/video/:id', fetchFromRedisForAPI, async (req, res, next) => {
 router.get('/video/playlist/:playlistId', fetchFromRedisForAPI, async (req, res, next) => {
   if (res.redis) {
     const resData = JSON.parse(res.redis)
-    res.header('Cache-Control', 'public, max-age=300')
+    res.header('Cache-Control', 'public, max-age=600')
     res.json(resData)
   } else {
     const limit = req.query.max_results || 4
@@ -212,7 +212,7 @@ router.get('/video/playlist/:playlistId', fetchFromRedisForAPI, async (req, res,
 router.get('/playlistng/:ids', fetchFromRedisForAPI, async (req, res, next) => {
   if (res.redis) {
     const resData = JSON.parse(res.redis)
-    res.header('Cache-Control', 'public, max-age=300')
+    res.header('Cache-Control', 'public, max-age=600')
     res.json(resData)
   } else {
     const limit = req.query.max_results || 10
@@ -417,7 +417,7 @@ router.get('*', (req, res, next) => {
       UrlForRedisStoreOneMonth.filter(url => url === req.url).length > 0 && (res.redisTTL = 60 * 60 * 24 * 30)
       next()
     }
-    res.header('Cache-Control', 'public, max-age=300')
+    res.header('Cache-Control', 'public, max-age=600')
     res.send(data)
   } catch (error) {
     const errWrapped = handlerError(error)
