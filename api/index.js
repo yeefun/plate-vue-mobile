@@ -63,7 +63,7 @@ const fetchStaticJson = (req, res, fileName) => {
       .timeout(
         {
           response: 1000, //config.API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
-          deadline: config.API_DEADLINE ? config.API_DEADLINE : 5000, // but allow 1 minute for the file to finish loading.
+          deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000, // but allow 1 minute for the file to finish loading.
         }
       )
       .then(response => {
@@ -114,7 +114,7 @@ router.get('/newsletter/:userEmail', async (req, res) => {
       .timeout(
         {
           response: config.API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
-          deadline: config.API_DEADLINE ? config.API_DEADLINE : 5000, // but allow 1 minute for the file to finish loading.
+          deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000, // but allow 1 minute for the file to finish loading.
         }
       )
     res.json(JSON.parse(response.text))
@@ -141,7 +141,7 @@ router.post('/newsletter', jsonParser, async (req, res) => {
         .timeout(
           {
             response: config.API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
-            deadline: config.API_DEADLINE ? config.API_DEADLINE : 5000, // but allow 1 minute for the file to finish loading.
+            deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000, // but allow 1 minute for the file to finish loading.
           }
         )
       res.status(200).json({ user: response.body.user, item: response.body.result })
@@ -394,7 +394,7 @@ router.get('*', (req, res, next) => {
       .timeout(
         {
           response: 1000, //config.API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
-          deadline: config.API_DEADLINE ? config.API_DEADLINE : 5000, //60000, // but allow 1 minute for the file to finish loading.
+          deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000, // but allow 1 minute for the file to finish loading.
         }
       )
     const data = JSON.parse(response.text)
