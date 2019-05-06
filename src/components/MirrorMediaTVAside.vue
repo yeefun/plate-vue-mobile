@@ -43,9 +43,6 @@
       showTitle: {
         default: () => true
       },
-      abIndicator: {
-        default: () => ''
-      }
     }
   }
 </script>

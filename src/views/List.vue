@@ -20,7 +20,7 @@
       <!--PAGE STYLE IS VIDEO END-->
       <!--PAGE STYLE IS “grand-seiko-2018” START-->
       <div class="list-view" v-else-if="pageStyle === 'grand-seiko-2018'"> 
-        <HeaderR :abIndicator="abIndicator" :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+        <HeaderR :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
         <list-slider class="gs"></list-slider>
         <article-list ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP' :currEnv = "dfpMode"></article-list>
         <LazyItemWrapper :position="verge.viewportH()" :strict="true">
@@ -37,7 +37,7 @@
       <!--PAGE STYLE IS “grand-seiko-2018” END-->
       <!--PAGE STYLE IS LIGHT START-->
       <div class="list-view" v-else-if="pageStyle === 'light'">
-        <HeaderR :abIndicator="abIndicator" :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+        <HeaderR :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
         <LazyItemWrapper :loadAfterPageLoaded="true">
           <div><vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" :size="get($store, 'getters.adSize')" /></div>
         </LazyItemWrapper>
@@ -58,7 +58,7 @@
       <!--PAGE STYLE IS LIGHT END-->
       <!--PAGE STYLE IS NORMAL START-->
       <div class="list-view" v-else>
-        <HeaderR :abIndicator="abIndicator" :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+        <HeaderR :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
         <LazyItemWrapper :loadAfterPageLoaded="true">
           <div :key="sectionId"><vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" :size="get($store, 'getters.adSize')" /></div>
         </LazyItemWrapper>
@@ -560,7 +560,7 @@ export default {
         <meta property="og:description" content="${ogDescription}">
         <meta property="og:url" content="${ogUrl}">
         <meta property="og:image" content="${ogImage}">
-      ` // <meta name="mm-opt" content="">
+      `
     }
   },
   data () {
@@ -1058,7 +1058,7 @@ export default {
     fetchListData(this.$store, this.type, this.pageStyle, this.uuid, false, false)
     fetchEvent(this.$store, 'embedded')
     fetchEvent(this.$store, 'logo')
-    this.abIndicator = this.getMmid()
+    // this.abIndicator = this.getMmid()
   },
   mounted () {
     this.updateViewport()
@@ -1070,19 +1070,15 @@ export default {
     if (this.type === EXTERNALS) {
       window.ga('set', 'contentGroup1', 'external')
       window.ga('set', 'contentGroup2', this.uuid)
-      // window.ga('set', 'contentGroup3', '')
-      window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
     } else if (this.sectionName === 'other') {
       window.ga('set', 'contentGroup1', '')
       window.ga('set', 'contentGroup2', '')
-      // window.ga('set', 'contentGroup3', '')
-      window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
     } else {
       window.ga('set', 'contentGroup1', this.sectionName)
       window.ga('set', 'contentGroup2', '')
-      // window.ga('set', 'contentGroup3', '')
-      window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
     }
+    window.ga('set', 'contentGroup3', '')
+    // window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
     window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: document.location.href })
   },
   updated () {

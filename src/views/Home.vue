@@ -3,7 +3,7 @@
     <template slot-scope="props" slot="dfpPos">
       <div class="home-view">
         <section class="home-header">
-          <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" activeSection="home" />
+          <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" activeSection="home" />
         </section>
         <LazyItemWrapper :loadAfterPageLoaded="true">
           <vue-dfp :is="props.vueDfp" pos="LMBHD" :config="props.config" :size="get($store, 'getters.adSize')" />
@@ -28,7 +28,6 @@
               <vue-dfp :is="props.vueDfp" pos="LMBL2" :config="props.config" :size="get($store, 'getters.adSize')"/>
             </LazyItemWrapper>
             <LatestArticleMain id="latestArticle" target="_blank"
-              :abIndicator="abIndicator"
               :latestList="latestArticle"
               :viewport="viewport">
             </LatestArticleMain>
@@ -145,10 +144,6 @@ export default {
   },
   mixins: [ titleMetaMixin ],
   metaSet () {
-    // let abIndicator = ''
-    // if (process.env.VUE_ENV === 'client') {
-    //   abIndicator = this.getMmid()
-    // }
     return {
       url: SITE_URL,
       title: SITE_TITLE,
@@ -169,7 +164,7 @@ export default {
         <meta property="og:description" content="${SITE_DESCRIPTION}">
         <meta property="og:url" content="${SITE_URL}">
         <meta property="og:image" content="${SITE_OGIMAGE}">
-      ` // <meta name="mm-opt" content="home${abIndicator}">
+      `
     }
   },
   data () {
@@ -363,7 +358,7 @@ export default {
     }, 
   },
   beforeMount () {
-    this.abIndicator = this.getMmid()
+    // this.abIndicator = this.getMmid()
     const jobs = [
       fetchEvent(this.$store, 'embedded'),
       fetchEvent(this.$store, 'logo'),
@@ -390,8 +385,8 @@ export default {
 
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
-    // window.ga('set', 'contentGroup3', '')
-    window.ga('set', 'contentGroup3', `home${this.abIndicator}`)
+    window.ga('set', 'contentGroup3', '')
+    // window.ga('set', 'contentGroup3', `home${this.abIndicator}`)
     window.ga('send', 'pageview', { title: SITE_TITLE, location: document.location.href })
   },
   updated () {

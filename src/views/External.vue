@@ -6,7 +6,7 @@
     :mode="dfpMode"
     :section="'other'">
     <template slot-scope="props" slot="dfpPos">
-      <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+      <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
       <article-body-external :articleData="articleData" :dfpMode="dfpMode">
         <vue-dfp :is="props.vueDfp" pos="MBHD" class="dfp dfp--mobile center" :config="props.config" style="margin: 0 auto; padding: 20px 0;" slot="ADHD" :size="get($store, 'getters.adSize')"></vue-dfp>
         <vue-dfp :is="props.vueDfp" pos="MBE1" class="dfp dfp--mobile center" :config="props.config" slot="ADE1" :size="get($store, 'getters.adSize')" />
@@ -134,10 +134,6 @@
       const category = get(partner, 'name', '')
       const ogDescription = truncate(brief, 197) || SITE_DESCRIPTION
       const imageUrl = thumb || SITE_OGIMAGE
-      // let abIndicator
-      // if (process.env.VUE_ENV === 'client') {
-      //   abIndicator = this.$_external_getMmid()
-      // }
 
       return {
         url: `${SITE_URL}/external/${name}/`,
@@ -160,7 +156,7 @@
           <meta property="og:description" content="${ogDescription}">
           <meta property="og:url" content="${SITE_URL}/external/${name}/">
           <meta property="og:image" content="${imageUrl}">
-        ` // <meta name="mm-opt" content="external${abIndicator}">
+        `
       }
     },  
     components: {
@@ -364,7 +360,7 @@
     },     
     mounted () {
       this.updateSysStage()
-      this.abIndicator = this.getMmid()
+      // this.abIndicator = this.getMmid()
       const scrollTriggerRegister = new ScrollTriggerRegister([
         { target: '#matchedContentContainer', offset: 400, cb: this.insertMatchedContentScript },
         { target: '#matchedContentContainer', offset: 400, cb: this.initializeFBComments }

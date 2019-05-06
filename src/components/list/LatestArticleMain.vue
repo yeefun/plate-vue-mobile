@@ -1,5 +1,5 @@
 <template>
-  <div v-if="(latestList.length > 0)" :class="abIndicator.toLowerCase()" class="latest-main-container" >
+  <div v-if="(latestList.length > 0)" class="latest-main-container" >
     <div class="latest-main-container_title"><h3>最新文章</h3></div>
     <div class="latest-list">
       <template v-for="(articles, index) in latestArticleArr">
@@ -123,9 +123,6 @@ export default {
     this.updateSysStage()
   },
   props: {
-    abIndicator: {
-      type: String
-    },
     latestList: {
       default: () => ([])
     },

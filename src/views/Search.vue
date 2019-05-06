@@ -3,7 +3,7 @@
     <template slot-scope="props" slot="dfpPos">
       <div class="search-view">
         <section style="width: 100%;">
-          <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
         </section>
         <div class="search-title container">
           <span class="search-title__text" v-text="title"></span>
@@ -140,7 +140,7 @@ export default {
         <meta property="og:description" content="${SITE_DESCRIPTION}">
         <meta property="og:url" content="${ogUrl}">
         <meta property="og:image" content="${SITE_OGIMAGE}">
-      ` // <meta name="mm-opt" content="">
+      `
     }
   },
   data () {
@@ -262,11 +262,11 @@ export default {
       this.updateViewport()
     })
     this.updateSysStage()
-    this.abIndicator = this.getMmid()
+    // this.abIndicator = this.getMmid()
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
-    // window.ga('set', 'contentGroup3', '')
-    window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
+    window.ga('set', 'contentGroup3', '')
+    // window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
     window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: document.location.href })
   },
   updated () {

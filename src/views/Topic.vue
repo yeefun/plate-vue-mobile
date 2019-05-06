@@ -30,7 +30,7 @@
         </template>
 
         <template v-else-if="topicType === 'portraitWall'">
-          <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
             <leading :type="get(topic, 'leading')" v-if="get(topic, 'leading')" :mediaData="portraitWallSlideImages"></leading>
@@ -45,7 +45,7 @@
         </template>
 
         <template v-else-if="topicType === 'group'">
-          <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
             <leading :type="get(topic, 'leading')" v-if="get(topic, 'leading')" :mediaData="mediaData"></leading>
@@ -59,7 +59,7 @@
         </template>
 
         <template v-else>
-          <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
             <leading :type="get(topic, [ 'leading' ])" v-if="get(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
@@ -295,7 +295,7 @@ export default {
         <meta property="og:description" content="${metaDescription}">
         <meta property="og:url" content="${ogUrl}">
         <meta property="og:image" content="${metaImage}">
-      ` // <meta name="mm-opt" content="">
+      `
     }
   },
   data () {
@@ -495,7 +495,7 @@ export default {
       }
       fetchTopicAllImages(this.$store, this.uuid)
     }
-    this.abIndicator = this.getMmid()
+    // this.abIndicator = this.getMmid()
   },
   mounted () {
     this.updateViewport()
@@ -505,8 +505,8 @@ export default {
 
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
-    // window.ga('set', 'contentGroup3', '')
-    window.ga('set', 'contentGroup3', `topic${this.abIndicator}`)
+    window.ga('set', 'contentGroup3', '')
+    // window.ga('set', 'contentGroup3', `topic${this.abIndicator}`)
     window.ga('send', 'pageview', { title: `${get(this.topic, [ 'name' ])} - ${SITE_TITLE}`, location: document.location.href })
 
     window.addEventListener('resize', this.updateViewport)

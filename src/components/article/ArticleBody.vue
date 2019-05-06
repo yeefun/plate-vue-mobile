@@ -1,11 +1,11 @@
 <template>
-  <main :class="[ abIndicator ? abIndicator.toLowerCase() : '']" class="article-body">
+  <main class="article-body">
     <div class="post-info category date">
       <div class="category-item"><span class="categorySquare" v-if="!isAd" v-text="category.categoryTitle" :style="category.style"></span></div>
       <div class="date-item" v-text="date"></div>
     </div>  
     <div class="post-info title"><h1 v-text="title"></h1></div>
-    <div class="post-info subtitle"><h2 v-text="subtitle"></h2></div>
+    <div v-if="subtitle" class="post-info subtitle"><h2 v-text="subtitle"></h2></div>
     <div class="post-info credit" v-html="credit"></div>
     <div class="post-sharer tts">
       <AudioPlayer class="tts" :post="articleData" />
@@ -111,7 +111,6 @@
     },
     mounted () {},
     props: {
-      abIndicator: {},
       articleData: {},
       articleUrl: {},
       dfpMode: {},
@@ -122,23 +121,23 @@
 .article-body
   font-family "Noto Sans TC", STHeitiTC-Light, "Microsoft JhengHei", sans-serif
   margin 0 auto
-  padding 30px 0 0
+  padding 20px 0 0
 
   > div:not(.post-leading):not(.post-content):not(.post-sharer)
     padding-right 20px
     padding-left 20px
-    margin 25px 0
+    margin 0
 
   .post-leading
     margin 40px 0
   .post-info
     &.title
       h1 
-        font-size 2rem
+        font-size 1.75rem
         font-weight 400
-        line-height 2.5rem
+        line-height 1.25
         color #000
-        margin 15px 0 0
+        margin 13px 0 0
         text-align justify  
       & + div
         margin-top 25px  
@@ -147,7 +146,7 @@
         font-size 1.7rem
         margin 5px 0 25px 0
     &.credit
-      text-align center
+      margin-top 25px !important
       >>> span
         color #000
         display inline-block
@@ -186,6 +185,12 @@
     padding 0 25px
     > div:not(.tts)
       margin-left 20px
+    &.tts
+      width calc(100% - 80px)
+      padding 0 !important
+      > .player
+        flex 1
+        justify-content flex-start
   .post-brief
     margin-top 60px
     line-height 36px
@@ -210,16 +215,7 @@
       
       i, cite, var, address, dfn 
         font-style normal  
-  &.b
-    padding 20px 0 0
-    > div:not(.post-leading):not(.post-content):not(.post-sharer)
-      margin 0
-    .post-info
-      &.title
-        h1
-          font-size 1.75rem
-          line-height 1.5
-          margin 13px 0 0
+  
 
 @media (min-width 400px)
   .article-body
