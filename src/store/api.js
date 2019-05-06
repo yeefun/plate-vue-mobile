@@ -101,7 +101,7 @@ function loadArticlesByUuid (uuid = '', type = '', params = {}) {
   params.related ? (params.useMetaEndpoint = true) : ''
   params.sort = params.sort || '-publishedDate'
   let url
-  params.useMetaEndpoint ? url = `${_host}/api/meta` : url = `${_host}/api/listing`
+  params.useMetaEndpoint ? url = `${_host}/api/meta` : url = `${_host}/api/getlist`
   const query = _buildQuery(params)
   url = `${url}?${query}`
   return _doFetch(url)
@@ -193,7 +193,7 @@ function loadImage (uuid = '') {
 
 function loadLatestArticle (params = {}) {
   const query = _buildQuery(params)
-  let url = `${_host}/api/listing`
+  let url = `${_host}/api/getlist`
   url = `${url}?${query}`
   return _doFetch(url)
 }
