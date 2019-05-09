@@ -82,7 +82,7 @@
   const debugDFP = require('debug')('CLIENT:DFP')
   const fetchArticles = (store, slug) => store.dispatch('FETCH_ARTICLES', {
     params: {
-      clean: 'content',
+      // clean: 'content',
       where: {
         'slug': { '$in': [ slug ] }
       }
