@@ -116,13 +116,13 @@
   export default {
     name: 'External',
     asyncData ({ store, route: { params: { name }}}) {
-      console.log('name', name)
+      // console.log('name', name)
       return fetchData(store, name)
     },  
     mixins: [ titleMetaMixin ],
     metaSet () {
-      console.log('this.articleData.name', this.articleData.name)
-      console.log('this.articleData', this.articleData)
+      // console.log('this.articleData.name', this.articleData.name)
+      // console.log('this.articleData', this.articleData)
       if (!this.articleData.name && process.env.VUE_ENV === 'server') {
         const e = new Error()
         e.massage = 'Page Not Found'
@@ -337,6 +337,12 @@
       updateSysStage () {
         this.dfpMode = currEnv()
       },
+      sendGA (articleData) {
+        window.ga('set', 'contentGroup1', 'external')
+        window.ga('set', 'contentGroup2', `${get(articleData, [ 'partner', 'name' ], '')}`)
+        window.ga('set', 'contentGroup3', '')
+        window.ga('send', 'pageview', { title: `${get(articleData, [ 'title' ], '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
+      }
     },
     beforeRouteUpdate (to, from, next) {
       fetchExternal(this.$store, to.params.slug)
@@ -367,7 +373,7 @@
       ])
       scrollTriggerRegister.init()
 
-      if (isEmpty(this.articleData)) {
+      if (!isEmpty(this.articleData)) {
         this.sendGA(this.articleData)
         this.hasSentFirstEnterGA = true
       }

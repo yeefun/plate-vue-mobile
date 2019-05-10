@@ -433,7 +433,7 @@
       ])
       scrollTriggerRegister.init()
 
-      if (isEmpty(this.articleData)) {
+      if (!isEmpty(this.articleData)) {
         this.sendGA && this.sendGA(this.articleData)
         this.hasSentFirstEnterGA = true
       }
