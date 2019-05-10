@@ -242,18 +242,6 @@
         const _sectionId = get(this.articleData, 'sections.0.id')
         return this.dfpUnits[ _sectionId ] ? _sectionId : 'other'
       },
-      sendGA (articleData) {
-        if (get(articleData, 'sections.length') === 0) {
-          window.ga('set', 'contentGroup1', '')
-          window.ga('set', 'contentGroup2', '')
-        } else {
-          window.ga('set', 'contentGroup1', `${get(articleData, 'sections.0.name')}`)
-          window.ga('set', 'contentGroup2', `${get(articleData, 'categories.0.name')}`)
-        }
-        window.ga('set', 'contentGroup3', '')
-        // window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
-        window.ga('send', 'pageview', { title: `${get(articleData, 'title', '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
-      },
     },
     data () {
       return {
@@ -341,6 +329,18 @@
       },           
       updateSysStage () {
         this.dfpMode = currEnv()
+      },
+      sendGA (articleData) {
+        if (get(articleData, 'sections.length') === 0) {
+          window.ga('set', 'contentGroup1', '')
+          window.ga('set', 'contentGroup2', '')
+        } else {
+          window.ga('set', 'contentGroup1', `${get(articleData, 'sections.0.name')}`)
+          window.ga('set', 'contentGroup2', `${get(articleData, 'categories.0.name')}`)
+        }
+        window.ga('set', 'contentGroup3', '')
+        // window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
+        window.ga('send', 'pageview', { title: `${get(articleData, 'title', '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
     },
     mixins: [ titleMetaMixin ],
