@@ -83,9 +83,7 @@
   const fetchArticles = (store, slug) => store.dispatch('FETCH_ARTICLES', {
     params: {
       clean: 'content',
-      where: {
-        'slug': { '$in': [ slug ] }
-      }
+      where: { 'slug':  slug }
     },
     preview: get(store, 'state.route.query.preview')
   })

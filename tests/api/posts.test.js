@@ -13,13 +13,13 @@ test('Api: fetch posts', async () => {
 })
 
 test('Api: fetch posts', async () => {
-  const response = await request(app).get('/api/posts?where={"slug":{"$in":["20180807fin003"]}}')
+  const response = await request(app).get('/api/posts?where={"slug":"20180807fin003"}')
   expect(response.body).toBeInstanceOf(Object)
   expect(response.body).toHaveProperty('_items')
 })
 
 test('Api: fetch posts with clean=content', async () => {
-  const response = await request(app).get('/api/posts?where={"slug":{"$in":["20180807fin003"]}}&clean=content')
+  const response = await request(app).get('/api/posts?where={"slug":"20180807fin003"}&clean=content')
   expect(response.body).toBeInstanceOf(Object)
   expect(response.body).toHaveProperty('_items')
   expect(response.body['_items'][0]['brief']['html']).toBeUndefined()
