@@ -6,8 +6,8 @@
         <template v-for="o in filteredRecommends">
           <div v-if="o" class="related-list__list__item">
             <div class="title">
-              <router-link @click.native="recommendsClickHandler(get(o, [ 'slug' ]), $event)" :to="routerLinkUrl(o)" v-text="get(o, [ 'title' ], '')" :id="`recommend-${get(o, [ 'slug' ], Date.now())}`" v-if="shouldShowItem(o)"></router-link>
-              <a @click="recommendsClickHandler(get(o, [ 'slug' ]), $event)" :href="getHrefFull(o)" v-text="get(o, [ 'title' ], '')" :id="`recommend-${get(o, [ 'slug' ], Date.now())}`" v-else></a>
+              <router-link @click.native="recommendsClickHandler(get(o, [ 'slug' ]), $event)" :to="routerLinkUrl(o)" v-text="get(o, [ 'title' ], '')" :id="`recommend-${get(o, [ 'slug' ], Date.now())}`" v-if="shouldShowItem(o)" target="_blank"></router-link>
+              <a @click="recommendsClickHandler(get(o, [ 'slug' ]), $event)" :href="getHrefFull(o)" v-text="get(o, [ 'title' ], '')" :id="`recommend-${get(o, [ 'slug' ], Date.now())}`" target="_blank" v-else></a>
             </div>
           </div>
         </template>
