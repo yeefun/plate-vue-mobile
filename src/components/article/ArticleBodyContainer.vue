@@ -1,6 +1,6 @@
 <template>
   <div class="article-body-container article-container" v-if="articleStyle !== 'photography'">
-    <ArticleBody :articleData="articleData" :dfpMode="dfpMode" :articleUrl="articleUrl">
+    <ArticleBody :abIndicator="abIndicator" :articleData="articleData" :dfpMode="dfpMode" :articleUrl="articleUrl">
       <slot name="ADAR1" slot="ADAR1" ></slot> 
     </ArticleBody>
     <slot name="ADAR2"></slot>
@@ -117,6 +117,7 @@
             
     },
     props: {
+      abIndicator: {},
       articleData: {},
       dfpMode: {},
       sectionId: {},

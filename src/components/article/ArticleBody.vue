@@ -1,16 +1,25 @@
 <template>
-  <main class="article-body">
+  <main :class="abIndicator.toLowerCase()" class="article-body">
     <div class="post-info category date">
       <div class="category-item"><span class="categorySquare" v-if="!isAd" v-text="category.categoryTitle" :style="category.style"></span></div>
       <div class="date-item" v-text="date"></div>
     </div>  
     <div class="post-info title"><h1 v-text="title"></h1></div>
     <div v-if="subtitle" class="post-info subtitle"><h2 v-text="subtitle"></h2></div>
-    <div class="post-info credit" v-html="credit"></div>
-    <div class="post-sharer tts">
-      <AudioPlayer class="tts" :post="articleData" />
-      <ShareLight :gtmCategory="'article'" />
-    </div>
+    <template v-if="abIndicator === 'B'">
+      <div class="post-sharer tts">
+        <AudioPlayer class="tts" :post="articleData" />
+        <ShareLight :abIndicator="abIndicator" :gtmCategory="'article'" />
+      </div>
+      <div class="post-info credit" v-html="credit"></div>
+    </template>
+    <template v-else>
+      <div class="post-info credit" v-html="credit"></div>
+      <div class="post-sharer tts">
+        <AudioPlayer class="tts" :post="articleData" />
+        <ShareLight :abIndicator="abIndicator" :gtmCategory="'article'" />
+      </div>
+    </template>
     <div class="post-leading">
       <HeroVideo v-if="heroVideo" class="article-heromedia" :heroCaption="heroCaption" :video="heroVideo" />
       <HeroImage v-else :heroCaption="heroCaption" :heroImage="heroImage" />
@@ -111,6 +120,7 @@
     },
     mounted () {},
     props: {
+      abIndicator: {},
       articleData: {},
       articleUrl: {},
       dfpMode: {},
@@ -186,7 +196,7 @@
     > div:not(.tts)
       margin-left 20px
     &.tts
-      width calc(100% - 80px)
+      width calc(100% - 40px)
       padding 0 !important
       > .player
         flex 1
@@ -215,12 +225,27 @@
       
       i, cite, var, address, dfn 
         font-style normal  
-  
-
+  &.b
+    .post-sharer
+      flex-direction column
+      flex-wrap wrap
+      > .player
+        order 2
+        width 100%
+        margin-top 2em
+        >>> .player__middle
+          flex 1
+      > div:not(.tts)
+        width 100%
+        margin-left 0
+      
 @media (min-width 400px)
   .article-body
     > div:not(.post-leading):not(.post-content), > div:not(.post-leading):not(.post-content):not(.post-sharer)
       padding-right 40px
       padding-left 40px
+    .post-sharer
+      &.tts
+        width calc(100% - 80px)
     
 </style>

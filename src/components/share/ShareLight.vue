@@ -1,7 +1,13 @@
 <template>
-  <div class="share-light">
-    <button @click="shareFacebook"><img src="/assets/mirrormedia/icon/share-fb.png" alt="分享至 Facebook"></button>
-    <button @click="shareLine"><img src="/assets/mirrormedia/icon/share-line.png" alt="分享至 Line"></button>
+  <div :class="abIndicator.toLowerCase()" class="share-light">
+    <button class="facebook" @click="shareFacebook">
+      {{ abIndicator === 'B' ? '分享至 Facebook' : '' }}
+      <img v-if="abIndicator !== 'B'" src="/assets/mirrormedia/icon/share-fb.png" alt="分享至 Facebook">
+    </button>
+    <button class="line" @click="shareLine">
+      {{ abIndicator === 'B' ? '分享至 LINE' : '' }}
+      <img v-if="abIndicator !== 'B'" src="/assets/mirrormedia/icon/share-line.png" alt="分享至 Line">
+    </button>
   </div>
 </template>
 <script>
@@ -11,6 +17,10 @@ import { sendGaClickEvent, shareLine, shareFacebook } from '../../util/comm'
 export default {
   name: 'ShareLight',
   props: {
+    abIndicator: {
+      type: String,
+      default: 'A'
+    },
     gtmCategory: {
       type: String,
       default: 'header'
@@ -49,4 +59,17 @@ export default {
       margin-left 10px
     img
       width 100%
+  &.b
+    button
+      flex 1
+      padding 1em 0
+      color #fff
+      font-size .75rem
+      border-radius 35px
+      & + button
+        margin-left 15px
+      &.facebook
+        background-color #4267b2
+      &.line
+        background-color #00b900
 </style>
