@@ -1,13 +1,12 @@
 <template>
   <div :class="abIndicator.toLowerCase()" class="share-light">
-    <!-- <span>{{ `${abIndicator} ${!abIndicator} ${abIndicator !== 'B'}`  }}</span> -->
     <button class="facebook" @click="shareFacebook">
-      <span v-if="abIndicator === 'B'">分享至 Facebook</span>
-      <img v-else src="/assets/mirrormedia/icon/share-fb.png" alt="分享至 Facebook">
+      <span>分享至 Facebook</span>
+      <img src="/assets/mirrormedia/icon/share-fb.png" alt="分享至 Facebook">
     </button>
     <button class="line" @click="shareLine">
-      <span v-if="abIndicator === 'B'">分享至 LINE</span>
-      <img v-else src="/assets/mirrormedia/icon/share-line.png" alt="分享至 Line">
+      <span>分享至 LINE</span>
+      <img src="/assets/mirrormedia/icon/share-line.png" alt="分享至 Line">
     </button>
   </div>
 </template>
@@ -26,6 +25,9 @@ export default {
       type: String,
       default: 'header'
     }
+  },
+  mounted () {
+    this.$forceUpdate()
   },
   methods: {
     shareFacebook () {
@@ -59,6 +61,8 @@ export default {
       margin-left 10px
     img
       width 100%
+    span
+      display none
   &.b
     button
       flex 1
@@ -72,4 +76,8 @@ export default {
         background-color #4267b2
       &.line
         background-color #00b900
+      img
+        display none
+      span
+        display inline
 </style>
