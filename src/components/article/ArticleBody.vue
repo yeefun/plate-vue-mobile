@@ -188,13 +188,13 @@
         font-weight normal
   .post-sharer
     display flex
-    justify-content center
     align-items center
     width calc(100% - 50px)
     margin 25px auto
     padding 0 25px
-    > div:not(.tts)
-      margin-left 20px
+    > div
+      & + div
+        margin-left 20px
     &.tts
       width calc(100% - 40px)
       padding 0 !important

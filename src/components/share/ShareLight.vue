@@ -46,7 +46,6 @@ export default {
   display flex
   justify-content center
   align-items flex-start
-  margin 0 0 0 auto  
   button
     display inline-block
     width 35px
