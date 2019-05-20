@@ -186,7 +186,7 @@ const fetchFromRedisForAPI = (req, res, next) => {
     if (!error && data) {
 	  let timePeriod = Date.now() - start
 	  if (timePeriod > 500) {
-        console.log('Fetch data from Redis.', `${timePeriod}ms`, req.url)
+        console.log('[Mobile]Fetch data from Redis.', `${timePeriod}ms`, req.url)
       }
       res.header('Cache-Control', 'public, max-age=300')
       res.json(JSON.parse(data))
