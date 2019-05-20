@@ -113,11 +113,11 @@
       get,
       sendGaClickEvent
     },
-    mounted () {
-            
-    },
     props: {
-      abIndicator: {},
+      abIndicator: {
+        type: String,
+        default: 'A'
+      },
       articleData: {},
       dfpMode: {},
       sectionId: {},

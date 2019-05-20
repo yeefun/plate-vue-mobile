@@ -6,20 +6,13 @@
     </div>  
     <div class="post-info title"><h1 v-text="title"></h1></div>
     <div v-if="subtitle" class="post-info subtitle"><h2 v-text="subtitle"></h2></div>
-    <template v-if="abIndicator === 'B'">
+    <div :class="[ abIndicator === 'B' ? 'ab-test' : '' ]">
       <div class="post-sharer tts">
         <AudioPlayer class="tts" :post="articleData" />
         <ShareLight :abIndicator="abIndicator" :gtmCategory="'article'" />
       </div>
       <div class="post-info credit" v-html="credit"></div>
-    </template>
-    <template v-else>
-      <div class="post-info credit" v-html="credit"></div>
-      <div class="post-sharer tts">
-        <AudioPlayer class="tts" :post="articleData" />
-        <ShareLight :abIndicator="abIndicator" :gtmCategory="'article'" />
-      </div>
-    </template>
+    </div>
     <div class="post-leading">
       <HeroVideo v-if="heroVideo" class="article-heromedia" :heroCaption="heroCaption" :video="heroVideo" />
       <HeroImage v-else :heroCaption="heroCaption" :heroImage="heroImage" />
@@ -120,7 +113,10 @@
     },
     mounted () {},
     props: {
-      abIndicator: {},
+      abIndicator: {
+        type: String,
+        default: 'A'
+      },
       articleData: {},
       articleUrl: {},
       dfpMode: {},
@@ -196,7 +192,8 @@
       & + div
         margin-left 20px
     &.tts
-      width calc(100% - 40px)
+      // width calc(100% - 40px)
+      width 100%
       padding 0 !important
       > .player
         flex 1
@@ -225,6 +222,14 @@
       
       i, cite, var, address, dfn 
         font-style normal  
+  .ab-test
+    display flex
+    flex-direction column
+    .post-sharer.tts
+      order 2
+      margin 25px auto 0
+    .credit
+      order 1
   &.b
     .post-sharer
       flex-direction column
@@ -246,6 +251,6 @@
       padding-left 40px
     .post-sharer
       &.tts
-        width calc(100% - 80px)
-    
+        // width calc(100% - 80px)
+        width 100%
 </style>

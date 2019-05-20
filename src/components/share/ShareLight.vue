@@ -1,12 +1,13 @@
 <template>
   <div :class="abIndicator.toLowerCase()" class="share-light">
+    <!-- <span>{{ `${abIndicator} ${!abIndicator} ${abIndicator !== 'B'}`  }}</span> -->
     <button class="facebook" @click="shareFacebook">
-      {{ abIndicator === 'B' ? '分享至 Facebook' : '' }}
-      <img v-if="abIndicator !== 'B'" src="/assets/mirrormedia/icon/share-fb.png" alt="分享至 Facebook">
+      <span v-if="abIndicator === 'B'">分享至 Facebook</span>
+      <img v-else src="/assets/mirrormedia/icon/share-fb.png" alt="分享至 Facebook">
     </button>
     <button class="line" @click="shareLine">
-      {{ abIndicator === 'B' ? '分享至 LINE' : '' }}
-      <img v-if="abIndicator !== 'B'" src="/assets/mirrormedia/icon/share-line.png" alt="分享至 Line">
+      <span v-if="abIndicator === 'B'">分享至 LINE</span>
+      <img v-else src="/assets/mirrormedia/icon/share-line.png" alt="分享至 Line">
     </button>
   </div>
 </template>
