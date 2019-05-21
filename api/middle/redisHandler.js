@@ -103,6 +103,7 @@ const redisFetching = (url, callback) => {
   redisPoolRead.get(decodedUrl, (error, data) => {
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
+	/*
     redisPoolRead.ttl(decodedUrl, (err, dt) => {
       if (!err && dt) {
         if (dt <= -1) {
@@ -116,6 +117,7 @@ const redisFetching = (url, callback) => {
         console.warn(`[WARN] fetching ttl in fail. ${decodedUrl} ${err}`)
       }
     })
+	*/
     if (timeoutHandler.timeout <= 0) { return }
     callback && callback({ error, data })
     timeoutHandler = null
