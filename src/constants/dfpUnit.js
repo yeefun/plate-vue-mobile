@@ -2,8 +2,8 @@ export default {
   'default': { // default
     // MBHD, MBAR1, MBAR2, MBE1, MBFT, MBCVR : position on mobile article page
     'MBHD': { 'aduid': 'mm_mobile_other_ap_300x250_HD', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ 'margin: 0 auto', 'padding: 20px 0' ] },
-    'MBAR1': { 'aduid': 'mm_mobile_other_ap_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
-    'MBAR2': { 'aduid': 'mm_mobile_other_ap_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
+    'MBAR1': { 'aduid': 'mm_mobile_other_ap_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
+    'MBAR2': { 'aduid': 'mm_mobile_other_ap_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
     'MBE1': { 'aduid': 'mm_mobile_other_ap_300x250_E1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mm_mobile_other_ap_320x100_FT', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
@@ -52,8 +52,8 @@ export default {
 
     // MBHD, MBAR1, MBAR2, MBE1, MBFT : position on mobile article page
     'MBHD': { 'aduid': 'mirror_m_oth_300x250_HD', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ 'margin: 0 auto', 'padding: 20px 0' ] },
-    'MBAR1': { 'aduid': 'mirror_m_oth_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
-    'MBAR2': { 'aduid': 'mirror_m_oth_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
+    'MBAR1': { 'aduid': 'mirror_m_oth_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
+    'MBAR2': { 'aduid': 'mirror_m_oth_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
     'MBE1': { 'aduid': 'mirror_m_oth_300x250_E1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_oth_300x250_FT', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
@@ -82,8 +82,8 @@ export default {
   '57e1e0e5ee85930e00cad4e9': { // news-people
     // MBHD, MBAR1, MBAR2, MBE1, MBFT, MBCVR : position on mobile article page
     'MBHD': { 'aduid': 'mirror_m_news_300x250_HD', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ 'margin: 0 auto', 'padding: 20px 0' ] },
-    'MBAR1': { 'aduid': 'mirror_m_news_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
-    'MBAR2': { 'aduid': 'mirror_m_news_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
+    'MBAR1': { 'aduid': 'mirror_m_news_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
+    'MBAR2': { 'aduid': 'mirror_m_news_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
     'MBE1': { 'aduid': 'mirror_m_news_300x250_E1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_news_300x250_FT', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
@@ -112,8 +112,8 @@ export default {
   '596441d04bbe120f002a319a': { // businessmoney
     // MBHD, MBAR1, MBAR2, MBE1, MBFT, MBCVR : position on mobile article page
     'MBHD': { 'aduid': 'mirror_m_fin_300x250_HD', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ 'margin: 0 auto', 'padding: 20px 0' ] },
-    'MBAR1': { 'aduid': 'mirror_m_fin_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
-    'MBAR2': { 'aduid': 'mirror_m_fin_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
+    'MBAR1': { 'aduid': 'mirror_m_fin_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
+    'MBAR2': { 'aduid': 'mirror_m_fin_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
     'MBE1': { 'aduid': 'mirror_m_fin_300x250_E1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_fin_300x250_FT', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFTOOP': { 'aduid': 'mirror_m_fin_300x250_FT', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ], 'outOfPage': true },
@@ -143,8 +143,8 @@ export default {
   '5964418a4bbe120f002a3198': { // culture
     // MBHD, MBAR1, MBAR2, MBE1, MBFT, MBCVR : position on mobile article page
     'MBHD': { 'aduid': 'mirror_m_cul_300x250_HD', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ 'margin: 0 auto', 'padding: 20px 0' ] },
-    'MBAR1': { 'aduid': 'mirror_m_cul_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
-    'MBAR2': { 'aduid': 'mirror_m_cul_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
+    'MBAR1': { 'aduid': 'mirror_m_cul_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
+    'MBAR2': { 'aduid': 'mirror_m_cul_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
     'MBE1': { 'aduid': 'mirror_m_cul_300x250_E1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_cul_300x250_FT', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
@@ -173,8 +173,8 @@ export default {
   '5971aa8ce531830d00e32812': { // mafalda
     // MBHD, MBAR1, MBAR2, MBE1, MBFT, MBCVR : position on mobile article page
     'MBHD': { 'aduid': 'mirror_m_mafa_300x250_HD', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ 'margin: 0 auto', 'padding: 20px 0' ] },
-    'MBAR1': { 'aduid': 'mirror_m_mafa_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
-    'MBAR2': { 'aduid': 'mirror_m_mafa_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
+    'MBAR1': { 'aduid': 'mirror_m_mafa_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
+    'MBAR2': { 'aduid': 'mirror_m_mafa_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
     'MBE1': { 'aduid': 'mirror_m_mafa_300x250_E1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_mafa_300x250_FT', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
@@ -203,8 +203,8 @@ export default {
   '5975ab2de531830d00e32b2f': { // videohub
     // MBHD, MBAR1, MBAR2, MBE1, MBFT, MBCVR : position on mobile article page
     'MBHD': { 'aduid': 'mirror_m_video_300x250_HD', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ 'margin: 0 auto', 'padding: 20px 0' ] },
-    'MBAR1': { 'aduid': 'mirror_m_oth_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
-    'MBAR2': { 'aduid': 'mirror_m_oth_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
+    'MBAR1': { 'aduid': 'mirror_m_oth_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
+    'MBAR2': { 'aduid': 'mirror_m_oth_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
     'MBE1': { 'aduid': 'mirror_m_video_300x250_E1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_video_300x250_FT', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
@@ -224,8 +224,8 @@ export default {
   '5964400d4bbe120f002a3191': { // international
     // MBHD, MBAR1, MBAR2, MBE1, MBFT, MBCVR : position on mobile article page
     'MBHD': { 'aduid': 'mirror_m_int_300x250_HD', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ 'margin: 0 auto', 'padding: 20px 0' ] },
-    'MBAR1': { 'aduid': 'mirror_m_int_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
-    'MBAR2': { 'aduid': 'mirror_m_int_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
+    'MBAR1': { 'aduid': 'mirror_m_int_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
+    'MBAR2': { 'aduid': 'mirror_m_int_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
     'MBE1': { 'aduid': 'mirror_m_int_300x250_E1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_int_300x250_FT', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
@@ -254,8 +254,8 @@ export default {
   '596441604bbe120f002a3197': { // people
     // MBHD, MBAR1, MBAR2, MBE1, MBFT, MBCVR : position on mobile article page
     'MBHD': { 'aduid': 'mirror_m_peo_300x250_HD', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ 'margin: 0 auto', 'padding: 20px 0' ] },
-    'MBAR1': { 'aduid': 'mirror_m_peo_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
-    'MBAR2': { 'aduid': 'mirror_m_peo_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
+    'MBAR1': { 'aduid': 'mirror_m_peo_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
+    'MBAR2': { 'aduid': 'mirror_m_peo_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
     'MBE1': { 'aduid': 'mirror_m_peo_300x250_E1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_peo_300x250_FT', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
@@ -284,8 +284,8 @@ export default {
   '57e1e11cee85930e00cad4ea': { // entertainment
     // MBHD, MBAR1, MBAR2, MBE1, MBFT, MBCVR : position on mobile article page
     'MBHD': { 'aduid': 'mirror_m_ent_300x250_HD', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ 'margin: 0 auto', 'padding: 20px 0' ] },
-    'MBAR1': { 'aduid': 'mirror_m_ent_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
-    'MBAR2': { 'aduid': 'mirror_m_ent_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
+    'MBAR1': { 'aduid': 'mirror_m_ent_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
+    'MBAR2': { 'aduid': 'mirror_m_ent_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
     'MBE1': { 'aduid': 'mirror_m_ent_300x250_E1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_ent_300x250_FT', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
@@ -314,8 +314,8 @@ export default {
   '57dfe399ee85930e00cad4d6': { // food-travel
     // MBHD, MBAR1, MBAR2, MBE1, MBFT, MBCVR : position on mobile article page
     'MBHD': { 'aduid': 'mirror_m_tra_300x250_HD', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ 'margin: 0 auto', 'padding: 20px 0' ] },
-    'MBAR1': { 'aduid': 'mirror_m_tra_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
-    'MBAR2': { 'aduid': 'mirror_m_tra_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
+    'MBAR1': { 'aduid': 'mirror_m_tra_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
+    'MBAR2': { 'aduid': 'mirror_m_tra_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
     'MBE1': { 'aduid': 'mirror_m_tra_300x250_E1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_tra_300x250_FT', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
@@ -354,8 +354,8 @@ export default {
     // -- Category, Article Page
     // MBHD, MBAR1, MBAR2, MBE1, MBFT, MBCVR : position on mobile article page
     'MBHD': { 'aduid': 'mirror_m_wat_300x250_HD', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ 'margin: 0 auto', 'padding: 20px 0' ] },
-    'MBAR1': { 'aduid': 'mirror_m_wat_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
-    'MBAR2': { 'aduid': 'mirror_m_wat_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
+    'MBAR1': { 'aduid': 'mirror_m_wat_300x250_AT1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
+    'MBAR2': { 'aduid': 'mirror_m_wat_300x250_AT2', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto' ] },
     'MBE1': { 'aduid': 'mirror_m_wat_300x250_E1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_wat_300x250_FT', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },

@@ -22,7 +22,7 @@
         <!--ADAR1 START-->
         <span id="innity-custom-adnetwork-span-63518" slot="ADAR1"></span>
         <span id="innity-custom-premium-span-12738" slot="ADAR1"></span>            
-        <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR1" extClass="mobile-only" :config="props.config" slot="ADAR1" key="MBAR1" :size="get($store, 'getters.adSize')"/>
+        <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR1" extClass="mobile-only" :config="props.config" slot="ADAR1" key="MBAR1" :size="get($store, 'getters.adSize')" class="dfp-at-1"/>
         <!--ADAR1 END-->
         <!--ADAR2 START-->
         <span id="innity-custom-adnetwork-span-68557" slot="ADAR2"></span>
@@ -497,4 +497,9 @@
 <style lang="stylus" scoped>
 .article-page-header
   width 100%
+.dfp-at-1
+  position relative
+  left -20px
+  width calc(100% + 40px)
+
 </style>
