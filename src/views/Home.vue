@@ -407,7 +407,7 @@ export default {
   width 100%
 
 .editorChoice
-  margin-top 40px
+  margin-top 20px
 
 .articleList-block
   display block

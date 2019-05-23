@@ -127,7 +127,7 @@
 .article-body
   font-family "Noto Sans TC", STHeitiTC-Light, "Microsoft JhengHei", sans-serif
   margin 0 auto
-  padding 20px 0 0
+  padding 0
 
   > div:not(.post-leading):not(.post-content):not(.post-sharer)
     padding-right 20px
