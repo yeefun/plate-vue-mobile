@@ -497,9 +497,11 @@
 <style lang="stylus" scoped>
 .article-page-header
   width 100%
-.dfp-at-1
-  position relative
-  left -20px
-  width calc(100% + 40px)
+
+@media (max-width: 374px)
+  .dfp-at-1
+    position relative !important
+    left -20px !important
+    width calc(100% + 40px) !important
 
 </style>
