@@ -62,6 +62,7 @@
   import { ScrollTriggerRegister } from 'src/util/scrollTriggerRegister'
   import { adtracker } from 'src/util/adtracking'
   import { currEnv, lockJS, sendAdCoverGA, unLockJS, updateCookie } from 'src/util/comm'
+  import { currentYPosition, } from 'kc-scroll'
   import { find, get, isEmpty, map } from 'lodash'
   import { getRole } from 'src/util/mmABRoleAssign'
   // import { updateJSONLDScript } from 'src/util/schemaOrg'
@@ -128,6 +129,8 @@
     ids,
     max_results
   })
+
+  const showAdCover = store => store.dispatch('SHOW_AD_COVER')
 
   export default {
     name: 'Article',
@@ -250,6 +253,7 @@
         dfpUnits: DFP_UNITS,
         dfpHeaderLogoLoaded: false,
         hasSentFirstEnterGA: false,
+        isAdCoverCalledYet: false,
         lowPriorityDataLoader: false,
         routeUpateReferrerSlug: 'N/A',
         showDfpHeaderLogo: false,
@@ -341,6 +345,15 @@
         window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         window.ga('send', 'pageview', { title: `${get(articleData, 'title', '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
+      scrollEventHandlerForAd () {
+        if (this.isAdCoverCalledYet) { return }
+        const currentTop = currentYPosition()
+        if (currentTop > 1) {
+          showAdCover(this.$store)
+          this.isAdCoverCalledYet = true
+          window.removeEventListener('scroll', this.scrollEventHandlerForAd)
+        }
+      }
     },
     mixins: [ titleMetaMixin ],
     metaSet () {
@@ -432,6 +445,9 @@
       ])
       scrollTriggerRegister.init()
 
+      // Control whether ad cover are displayed
+      window.addEventListener('scroll', this.scrollEventHandlerForAd)
+
       if (!isEmpty(this.articleData)) {
         this.sendGA && this.sendGA(this.articleData)
         this.hasSentFirstEnterGA = true
@@ -466,6 +482,11 @@
         this.initializeFBComments()
         this.updateMatchedContentScript()
         this.updateMediafarmersScript()
+
+        window.removeEventListener('scroll', this.scrollEventHandlerForAd)
+        this.isAdCoverCalledYet = false
+        window.addEventListener('scroll', this.scrollEventHandlerForAd)
+
         this.sendGA(this.articleData)
       },
       articleData (value) {

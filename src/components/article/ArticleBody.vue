@@ -221,7 +221,9 @@
         font-weight bold
       
       i, cite, var, address, dfn 
-        font-style normal  
+        font-style normal
+    >>> .ad-container
+      line-height normal
   .ab-test
     display flex
     flex-direction column

@@ -56,11 +56,9 @@ export default {
     /**
      *  Have ad-cover be rendered as soon as #list-item-${index} gets visible.
      */
-    /** 
-     *  Dont show ad cover on listing page for now.
-     *  window.addEventListener('scroll', this.scrollEventHandlerForAd) 
-     */
-     
+
+    // Control whether ad cover are displayed
+    window.addEventListener('scroll', this.scrollEventHandlerForAd) 
   }
 }
 </script>
