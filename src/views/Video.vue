@@ -41,7 +41,7 @@
           <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
         </DfpST>
       </LazyItemWrapper>         
-      <DfpCover v-if="mounted && isTimeToShowAdCover" v-show="showDfpCoverAdFlag">
+      <DfpCover v-if="mounted" v-show="showDfpCoverAdFlag">
         <vue-dfp :is="props.vueDfp" pos="LMBCVR" :config="props.config" slot="ad-cover" />
       </DfpCover>
       <DfpCover v-if="mounted && showDfpCoverAd2Flag" :showCloseBtn="false" class="raw">
@@ -358,9 +358,6 @@ export default {
     },
     isSingleVideoPage () {
       return this.$route.fullPath.match(/\/video\//)
-    },
-    isTimeToShowAdCover () {
-      return get(this.$store, 'state.isTimeToShowAdCover', false)
     },
     playlist () {
       const playlist = Object.values(this.$store.state.playlist.info) || []

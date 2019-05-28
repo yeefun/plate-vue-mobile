@@ -39,7 +39,7 @@
       <dfp-st :props="props">
         <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
       </dfp-st>
-      <dfp-cover v-if="!hiddenAdvertised && isTimeToShowAdCover" v-show="showDfpCoverAdFlag"> 
+      <dfp-cover v-if="!hiddenAdvertised" v-show="showDfpCoverAdFlag"> 
         <vue-dfp :is="props.vueDfp" pos="MBCVR" :config="props.config" slot="ad-cover" /> 
       </dfp-cover> 
       <dfp-cover v-if="!hiddenAdvertised && showDfpCoverAd2Flag" :showCloseBtn="false" class="raw"> 
@@ -62,7 +62,6 @@
   import { ScrollTriggerRegister } from 'src/util/scrollTriggerRegister'
   import { adtracker } from 'src/util/adtracking'
   import { currEnv, lockJS, sendAdCoverGA, unLockJS, updateCookie } from 'src/util/comm'
-  import { currentYPosition, } from 'kc-scroll'
   import { find, get, isEmpty, map } from 'lodash'
   import { getRole } from 'src/util/mmABRoleAssign'
   // import { updateJSONLDScript } from 'src/util/schemaOrg'
@@ -129,8 +128,6 @@
     ids,
     max_results
   })
-
-  const showAdCover = store => store.dispatch('SHOW_AD_COVER')
 
   export default {
     name: 'Article',
@@ -238,7 +235,6 @@
       isLockJS () {
         return get(this.articleData, 'lockJS')
       },    
-      isTimeToShowAdCover () { return get(this.$store, 'state.isTimeToShowAdCover', false) },
       sectionName () { return get(this.articleData, 'sections.0.name') },
       sectionId () {
         const _sectionId = get(this.articleData, 'sections.0.id')
@@ -253,7 +249,6 @@
         dfpUnits: DFP_UNITS,
         dfpHeaderLogoLoaded: false,
         hasSentFirstEnterGA: false,
-        isAdCoverCalledYet: false,
         lowPriorityDataLoader: false,
         routeUpateReferrerSlug: 'N/A',
         showDfpHeaderLogo: false,
@@ -344,15 +339,6 @@
         // window.ga('set', 'contentGroup3', '')
         window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         window.ga('send', 'pageview', { title: `${get(articleData, 'title', '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
-      },
-      scrollEventHandlerForAd () {
-        if (this.isAdCoverCalledYet) { return }
-        const currentTop = currentYPosition()
-        if (currentTop > 1) {
-          showAdCover(this.$store)
-          this.isAdCoverCalledYet = true
-          window.removeEventListener('scroll', this.scrollEventHandlerForAd)
-        }
       }
     },
     mixins: [ titleMetaMixin ],
@@ -445,9 +431,6 @@
       ])
       scrollTriggerRegister.init()
 
-      // Control whether ad cover are displayed
-      window.addEventListener('scroll', this.scrollEventHandlerForAd)
-
       if (!isEmpty(this.articleData)) {
         this.sendGA && this.sendGA(this.articleData)
         this.hasSentFirstEnterGA = true
@@ -482,11 +465,6 @@
         this.initializeFBComments()
         this.updateMatchedContentScript()
         this.updateMediafarmersScript()
-
-        window.removeEventListener('scroll', this.scrollEventHandlerForAd)
-        this.isAdCoverCalledYet = false
-        window.addEventListener('scroll', this.scrollEventHandlerForAd)
-
         this.sendGA(this.articleData)
       },
       articleData (value) {

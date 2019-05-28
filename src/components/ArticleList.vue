@@ -12,13 +12,8 @@
 
 <script>
 
-import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { get } from 'lodash'
 import ListArticleBlock from './list/ListArticleBlock.vue'
-import verge from 'verge'
-
-const showAdCover = store => store.dispatch('SHOW_AD_COVER')
-const debugDFP = require('debug')('CLIENT:DFP')
 
 export default {
   name: 'articleList',
@@ -39,27 +34,7 @@ export default {
     pauseAllAudio (index) {
       this.togglePause = index
     },
-    scrollEventHandlerForAd () {
-      if (this.isAdCoverCalledYet) { return }
-      const currentTop = currentYPosition()
-      const eleTop = elmYPosition('#list-item-2')
-      const device_height = verge.viewportH()
-      if (currentTop + device_height > eleTop) {
-        debugDFP('SHOW ADCOVER!')
-        showAdCover(this.$store)
-        this.isAdCoverCalledYet = true
-        window.removeEventListener('scroll', this.scrollEventHandlerForAd)
-      }
-    },      
   },
-  mounted () {
-    /**
-     *  Have ad-cover be rendered as soon as #list-item-${index} gets visible.
-     */
-
-    // Control whether ad cover are displayed
-    window.addEventListener('scroll', this.scrollEventHandlerForAd) 
-  }
 }
 </script>
 <style lang="stylus" scoped>

@@ -95,7 +95,7 @@
       <DfpST :props="props">
         <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
       </DfpST>
-      <DfpCover v-if="isTimeToShowAdCover" v-show="showDfpCoverAdFlag">
+      <DfpCover v-show="showDfpCoverAdFlag">
         <vue-dfp :is="props.vueDfp" pos="LMBCVR" :config="props.config" slot="ad-cover" />
       </DfpCover>
       <DfpCover v-if="showDfpCoverAd2Flag" :showCloseBtn="false" class="raw">
@@ -668,7 +668,6 @@ export default {
           }
           window.addEventListener('noad2', loadInnityAd)
           window.parent.addEventListener('noad2', loadInnityAd)
-
           switch (position) {
             case 'LMBCVR':
               sendAdCoverGA('dfp')
@@ -757,9 +756,6 @@ export default {
     },
     isMobile () {
       return this.viewport < 1200
-    },
-    isTimeToShowAdCover () {
-      return get(this.$store, 'state.isTimeToShowAdCover', false)
     },
     latestList () {
       return get(this.$store, 'state.latestArticle.items', [])

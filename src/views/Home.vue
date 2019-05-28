@@ -34,7 +34,7 @@
           </main>
         </section>
         <loading :show="loading" />
-        <DfpCover v-if="isTimeToShowAdCover" v-show="showDfpCoverAdFlag">
+        <DfpCover v-show="showDfpCoverAdFlag">
           <vue-dfp :is="props.vueDfp" pos="LMBCVR" :config="props.config" slot="ad-cover" />
         </DfpCover>
         <DfpCover v-if="showDfpCoverAd2Flag" :showCloseBtn="false" class="raw">
@@ -70,8 +70,6 @@ import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
 import titleMetaMixin from 'src/util/mixinTitleMeta'
 
-const showAdCover = store => store.dispatch('SHOW_AD_COVER')
-const debugDFP = require('debug')('CLIENT:DFP')
 const debug = require('debug')('CLIENT:Home')
 const fetchSSRData = store => (
   store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections' ] }).then(() => (
@@ -176,7 +174,6 @@ export default {
       dfpUnits: DFP_UNITS,
       hasScrollLoadMore: get(this.$store, 'state.latestArticles.meta.page', PAGE) > 1,
       isVponSDKLoaded: false,
-      isAdCoverCalledYet: false,
       loading: false,
       page: get(this.$store, 'state.latestArticles.meta.page', PAGE),
       showDfpCoverAdFlag: false,
@@ -214,7 +211,6 @@ export default {
           }
           window.addEventListener('noad2', loadInnityAd)
           window.parent.addEventListener('noad2', loadInnityAd)
-
           switch (position) {
             case 'LMBCVR':
               sendAdCoverGA('dfp')
@@ -290,7 +286,6 @@ export default {
       remove(latest, o => includes(choicesAndGrouped_slugs, o.slug))
       return this.notFirstPageNow ? latest : latestFirstPage
     },
-    isTimeToShowAdCover () { return get(this.$store, 'state.isTimeToShowAdCover', false) },
     notFirstPageNow () { return get(this.$store, 'state.latestArticles.meta.page', 1) !== 1 },
   },
   methods: {
@@ -344,18 +339,6 @@ export default {
         }
       }
     },
-    scrollEventHandlerForAd () {
-      if (this.isAdCoverCalledYet) { return }
-      const currentTop = currentYPosition()
-      const eleTop = elmYPosition('#homepage-focus-news')
-      const device_height = this.$store.state.viewport.height
-      if (currentTop + device_height > eleTop) {
-        debugDFP('SHOW ADCOVER!')
-        showAdCover(this.$store)
-        this.isAdCoverCalledYet = true
-        window.removeEventListener('scroll', this.scrollEventHandlerForAd)
-      }
-    }, 
   },
   beforeMount () {
     // this.abIndicator = this.getMmid()
@@ -374,13 +357,6 @@ export default {
     })
     this.checkIfLockJS()
     this.updateSysStage()
-
-    /**
-     * Have ad-cover be rendered as soon as #homepage-focus-news gets visible.
-     */
-
-    // Control whether ad cover are displayed
-    window.addEventListener('scroll', this.scrollEventHandlerForAd)
 
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
