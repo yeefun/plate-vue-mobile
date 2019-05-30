@@ -1,17 +1,15 @@
 <template>
-  <main :class="abIndicator.toLowerCase()" class="article-body">
+  <main class="article-body">
     <div class="post-info category date">
       <div class="category-item"><span class="categorySquare" v-if="!isAd" v-text="category.categoryTitle" :style="category.style"></span></div>
       <div class="date-item" v-text="date"></div>
     </div>  
     <div class="post-info title"><h1 v-text="title"></h1></div>
     <div v-if="subtitle" class="post-info subtitle"><h2 v-text="subtitle"></h2></div>
-    <div :class="[ abIndicator === 'B' ? 'ab-test' : '' ]">
-      <div class="post-sharer tts">
-        <AudioPlayer class="tts" :post="articleData" />
-        <ShareLight :abIndicator="abIndicator" :gtmCategory="'article'" />
-      </div>
-      <div class="post-info credit" v-html="credit"></div>
+    <div class="post-info credit" v-html="credit"></div>
+    <div class="post-sharer tts">
+      <AudioPlayer class="tts" :post="articleData" />
+      <ShareLight :gtmCategory="'article'" />
     </div>
     <div class="post-leading">
       <HeroVideo v-if="heroVideo" class="article-heromedia" :heroCaption="heroCaption" :video="heroVideo" />
@@ -113,10 +111,6 @@
     },
     mounted () {},
     props: {
-      abIndicator: {
-        type: String,
-        default: 'A'
-      },
       articleData: {},
       articleUrl: {},
       dfpMode: {},
@@ -192,8 +186,7 @@
       & + div
         margin-left 20px
     &.tts
-      // width calc(100% - 40px)
-      width 100%
+      width calc(100% - 40px)
       padding 0 !important
       > .player
         flex 1
@@ -224,27 +217,6 @@
         font-style normal
     >>> .ad-container
       line-height normal
-  .ab-test
-    display flex
-    flex-direction column
-    .post-sharer.tts
-      order 2
-      margin 25px auto 0
-    .credit
-      order 1
-  &.b
-    .post-sharer
-      flex-direction column
-      flex-wrap wrap
-      > .player
-        order 2
-        width 100%
-        margin-top 2em
-        >>> .player__middle
-          flex 1
-      > div:not(.tts)
-        width 100%
-        margin-left 0
       
 @media (min-width 400px)
   .article-body
@@ -253,6 +225,5 @@
       padding-left 40px
     .post-sharer
       &.tts
-        // width calc(100% - 80px)
-        width 100%
+        width calc(100% - 80px)
 </style>

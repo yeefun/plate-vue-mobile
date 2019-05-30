@@ -1,6 +1,6 @@
 <template>
   <div class="article-body-container article-container" v-if="articleStyle !== 'photography'">
-    <ArticleBody :abIndicator="abIndicator" :articleData="articleData" :dfpMode="dfpMode" :articleUrl="articleUrl">
+    <ArticleBody :articleData="articleData" :dfpMode="dfpMode" :articleUrl="articleUrl">
       <slot name="ADAR1" slot="ADAR1" ></slot> 
     </ArticleBody>
     <slot name="ADAR2"></slot>
@@ -114,10 +114,6 @@
       sendGaClickEvent
     },
     props: {
-      abIndicator: {
-        type: String,
-        default: 'A'
-      },
       articleData: {},
       dfpMode: {},
       sectionId: {},
