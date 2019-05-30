@@ -42,7 +42,7 @@
         <div class="title"><h3>推薦文章</h3></div>
         <div id="matchedContentContainer" class="matchedContentContainer"></div>
       </div>
-      <PopList :pop="popularlist" v-if="isPoplistActive" :currEnv="dfpMode"></PopList>
+      <PopList :abIndicator="abIndicator" :pop="popularlist" v-if="isPoplistActive" :currEnv="dfpMode"></PopList>
       <div class="facebook-comments" v-html="fbBlock"></div>
     </LazyItemWrapper>
   </div>
@@ -114,6 +114,10 @@
       sendGaClickEvent
     },
     props: {
+      abIndicator: {
+        type: String,
+        default: 'A'
+      },
       articleData: {},
       dfpMode: {},
       sectionId: {},

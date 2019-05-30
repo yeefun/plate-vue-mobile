@@ -1,5 +1,5 @@
 <template>
-  <div class="poplist-container" v-if="(pop.length > 0)">
+  <div :class="abIndicator.toLowerCase()" class="poplist-container" v-if="(pop.length > 0)">
     <div class="pop_title"><h3>熱門文章</h3></div>
     <div class="pop_list">
       <template v-for="(o, i) in popArticles">
@@ -26,7 +26,7 @@
   import { get, take } from 'lodash'
   export default {
     name: 'pop-list',
-    props: [ 'pop', 'currEnv' ],
+    props: [ 'abIndicator', 'pop', 'currEnv' ],
     components: {
       LazyImage,
     },
@@ -141,5 +141,21 @@
         margin 0 0 20px 0
       & >>> .pop_item_title
         width 100%
-                
+    &.b
+      .pop_list
+        .pop_item
+          display block
+          width calc(50% - 5px)
+          &:first-child
+            width 100%
+          figure
+            width 100%
+            > a
+              padding-top 66.66%
+          .pop_item_title
+            a
+              min-height 0
+              padding .2em 0 0
+              color #000
+        
 </style>
