@@ -29,7 +29,7 @@ const oathCategories = Object.values(OATH_PLAYLIST).map(item => `/category/${ite
 
 export function createRouter () {
   if (process.env.VUE_ENV === 'client') {
-    const gaId = location.hostname.match(/www.mirrormedia.mg/) ? GA_ID : GA_TEST_ID
+    const gaId = location.hostname.match(/(www|m).mirrormedia.mg/) ? GA_ID : GA_TEST_ID
     window.ga && !window.gaData && window.ga('create', gaId, 'auto')
   }
   return new Router({
