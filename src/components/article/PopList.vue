@@ -5,13 +5,13 @@
       <template v-for="(o, i) in popArticles">
         <div class="pop_item">
           <figure>
-            <router-link :to="o.slug" target="_blank" @click.native="sendGaClickEvent('article', 'popular')">
+            <a :href="o.slug" target="_blank" @click="sendGaClickEvent('article', 'popular')">
               <LazyImage :src="getImage(o, 'mobile')" :caption="get(o, 'title')" />
-            </router-link>
+            </a>
             <div class="pop_item--colorBlock" :style="getSectionStyle(get(o, 'sections.0', ''))" v-text="get(o, 'sections.0.title')" />
           </figure>
           <div class="pop_item_title">
-            <router-link :to="o.slug" @click.native="sendGaClickEvent('article', 'popular')" v-text="getTruncatedVal(o.title, 21)" target="_blank" />
+            <a :href="o.slug" @click="sendGaClickEvent('article', 'popular')" v-text="getTruncatedVal(o.title, 21)" target="_blank" />
           </div>
         </div>
         <slot :name="`microAd${getMicroAdName(i)}`" v-if="(i === 1 || i === 2 || i === 3)"></slot>

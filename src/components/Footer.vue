@@ -2,8 +2,8 @@
   <footer class="left">
     <div class="mobile-follow">
       <a :href="SOCIAL_LINK.SUBSCRIBE" target="_blank" @click="sendGaClickEvent('footer', 'footer subscribe')">訂閱鏡週刊</a> - 
-      <router-link to="/story/ad1018001" target="_blank" @click.native="sendGaClickEvent('footer', 'footer ad')">廣告合作</router-link> - 
-      <router-link to="/category/campaign" target="_blank" @click.native="sendGaClickEvent('footer', 'footer activity')">活動專區</router-link>
+      <a href="/story/ad1018001" target="_blank" @click="sendGaClickEvent('footer', 'footer ad')">廣告合作</a> - 
+      <a href="/category/campaign" target="_blank" @click="sendGaClickEvent('footer', 'footer activity')">活動專區</a>
     </div>
   </footer>
 </template>

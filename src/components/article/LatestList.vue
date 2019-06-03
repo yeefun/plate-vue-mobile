@@ -5,16 +5,16 @@
       <div class="item" v-for="(o, i) in pureLatest" v-if="i < 6">
         <div class="thumbnail">
           <LazyImage :src="getImage(o, 'tiny')" :alt="get(o, [ 'title' ])"/>
-          <router-link :to="{ path: getHref(o) }" :style="{ width: '100%', height: '100%', display: 'block' }" v-if="o.style !== 'projects'" @click.native="sendGaClickEvent('article', 'latest')"></router-link>
+          <a :href="{ path: getHref(o) }" :style="{ width: '100%', height: '100%', display: 'block' }" v-if="o.style !== 'projects'" @click="sendGaClickEvent('article', 'latest')"></a>
           <a :href="`${site_url}${getHref(o)}`" :style="{ width: '100%', height: '100%', display: 'block' }" v-if="o.style === 'projects'" @click="sendGaClickEvent('article', 'latest')"></a>
         </div>
         <div class="content">
           <div class="content_category">
-            <router-link :to="{ path: getHref(o) }" v-if="o.style !== 'projects'" @click.native="sendGaClickEvent('article', 'latest')">{{ get(o, [ 'categories', 0, 'title' ], '新聞') }}</router-link>
+            <a :href="{ path: getHref(o) }" v-if="o.style !== 'projects'" @click="sendGaClickEvent('article', 'latest')">{{ get(o, [ 'categories', 0, 'title' ], '新聞') }}</a>
             <a :href="`${site_url}${getHref(o)}`" v-if="o.style === 'projects'" @click="sendGaClickEvent('article', 'latest')">{{ get(o, [ 'categories', 0, 'title' ], '新聞') }}</a>
           </div>
           <div class="content_title">
-            <router-link :to="{ path: getHref(o) }" v-if="o.style !== 'projects'" @click.native="sendGaClickEvent('article', 'latest')">{{ getTruncatedVal(get(o, [ 'title' ], ''), 27) }}</router-link>
+            <a :href="{ path: getHref(o) }" v-if="o.style !== 'projects'" @click="sendGaClickEvent('article', 'latest')">{{ getTruncatedVal(get(o, [ 'title' ], ''), 27) }}</a>
             <a :href="`${site_url}${getHref(o)}`" v-if="o.style === 'projects'" @click="sendGaClickEvent('article', 'latest')">{{ getTruncatedVal(get(o, [ 'title' ], ''), 27) }}</a>
           </div>
         </div>

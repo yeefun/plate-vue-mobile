@@ -4,10 +4,10 @@
     <div class="editorChoice__block"
       v-for="(item, index) in editorChoice"
       :class="{ first: index === 0 }">
-      <router-link class="editorChoice__block--img" v-if="item.style !== 'projects'"
-        :to="getHref(item)"
+      <a class="editorChoice__block--img" v-if="item.style !== 'projects'"
+        :href="getHref(item)"
         :target="target"
-        @click.native="sendGaClickEvent('home', 'choice')">
+        @click="sendGaClickEvent('home', 'choice')">
         <EditorChoiceItem
           :src="getImage(item, 'mobile')"
           :srcset="getSrcSet(get(item, 'heroImage.image'))"
@@ -15,7 +15,7 @@
           :css="getSectionStyle(get(item, 'sections.0', ''))"
           :section="get(item, 'sections.0.title', '')"
           :title="getTitle(item, 24)" />
-      </router-link>
+      </a>
       <a class="editorChoice__block--img" v-else
         :href="`https://www.mirrormedia.mg${getHref(item)}`"
         :target="target"
