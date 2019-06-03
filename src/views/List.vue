@@ -20,7 +20,7 @@
       <!--PAGE STYLE IS VIDEO END-->
       <!--PAGE STYLE IS “grand-seiko-2018” START-->
       <div class="list-view" v-else-if="pageStyle === 'grand-seiko-2018'"> 
-        <HeaderR :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+        <Header :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
         <list-slider class="gs"></list-slider>
         <article-list ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP' :currEnv = "dfpMode"></article-list>
         <LazyItemWrapper :position="verge.viewportH()" :strict="true">
@@ -37,7 +37,7 @@
       <!--PAGE STYLE IS “grand-seiko-2018” END-->
       <!--PAGE STYLE IS LIGHT START-->
       <div class="list-view" v-else-if="pageStyle === 'light'">
-        <HeaderR :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+        <Header :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
         <LazyItemWrapper :loadAfterPageLoaded="true">
           <div><vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" :size="get($store, 'getters.adSize')" /></div>
         </LazyItemWrapper>
@@ -58,7 +58,7 @@
       <!--PAGE STYLE IS LIGHT END-->
       <!--PAGE STYLE IS NORMAL START-->
       <div class="list-view" v-else>
-        <HeaderR :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+        <Header :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
         <LazyItemWrapper :loadAfterPageLoaded="true">
           <div :key="sectionId"><vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" :size="get($store, 'getters.adSize')" /></div>
         </LazyItemWrapper>
@@ -129,7 +129,7 @@ import EditorChoiceFoodTravel from 'src/components/EditorChoiceFoodTravel.vue'
 import Footer from 'src/components/Footer.vue'
 import FooterFoodTravel from 'src/components/FooterFoodTravel.vue'
 import HeaderFoodTravel from 'src/components/HeaderFoodTravel.vue'
-import HeaderR from 'src/components/HeaderR.vue'
+import Header from 'src/components/Header.vue'
 import HeroImageFoodTravel from 'src/components/HeroImageFoodTravel.vue'
 import LatestArticleFoodTravel from 'src/components/list/LatestArticleFoodTravel.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
@@ -479,7 +479,7 @@ export default {
     'vue-dfp-provider': VueDfpProvider,
     DfpCover,
     DfpST,
-    HeaderR,
+    Header,
     LazyItemWrapper
   },
   asyncData ({ store, route }) { return fetchCommonData(store, route) },

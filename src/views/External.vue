@@ -6,7 +6,7 @@
     :mode="dfpMode"
     :section="'other'">
     <template slot-scope="props" slot="dfpPos">
-      <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+      <Header :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
       <article-body-external :articleData="articleData" :dfpMode="dfpMode">
         <vue-dfp :is="props.vueDfp" pos="MBHD" class="dfp dfp--mobile center" :config="props.config" style="margin: 0 auto; padding: 20px 0;" slot="ADHD" :size="get($store, 'getters.adSize')"></vue-dfp>
         <vue-dfp :is="props.vueDfp" pos="MBE1" class="dfp dfp--mobile center" :config="props.config" slot="ADE1" :size="get($store, 'getters.adSize')" />
@@ -54,7 +54,7 @@
   import DfpFixed from 'src/components/DfpFixed.vue'
   import DfpST from 'src/components/DfpST.vue'
   import Footer from 'src/components/Footer.vue'
-  import HeaderR from 'src/components/HeaderR.vue'
+  import Header from 'src/components/Header.vue'
   import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
   import titleMetaMixin from 'src/util/mixinTitleMeta'
@@ -168,7 +168,7 @@
       'lazy-item-wrapper': LazyItemWrapper,
       'vue-dfp-provider': VueDfpProvider,
       Footer,
-      HeaderR      
+      Header   
     },
     computed: {
       articleData () { return get(this.$store, `state.external.${this.currArticleSlug}`, {}) },

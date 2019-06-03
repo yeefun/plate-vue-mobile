@@ -3,7 +3,7 @@
     <template slot-scope="props" slot="dfpPos">
       <div class="search-view">
         <section style="width: 100%;">
-          <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <Header :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
         </section>
         <div class="search-title container">
           <span class="search-title__text" v-text="title"></span>
@@ -39,7 +39,7 @@ import { getRole } from '../util/mmABRoleAssign'
 import ArticleList from '../components/ArticleList.vue'
 import Cookie from 'vue-cookie'
 import Footer from '../components/Footer.vue'
-import HeaderR from '../components/HeaderR.vue'
+import Header from '../components/Header.vue'
 import DfpST from '../components/DfpST.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import Loading from '../components/Loading.vue'
@@ -108,7 +108,7 @@ export default {
     'vue-dfp-provider': VueDfpProvider,
     DfpST,
     LazyItemWrapper,
-    HeaderR
+    Header
   },
   asyncData ({ store, route }) {
     return fetchData(store, route)

@@ -3,7 +3,7 @@
     <template slot-scope="props" slot="dfpPos">
       <div class="home-view">
         <section class="home-header">
-          <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" activeSection="home" />
+          <Header :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" activeSection="home" />
         </section>
         <LazyItemWrapper :loadAfterPageLoaded="true">
           <vue-dfp :is="props.vueDfp" pos="LMBHD" :config="props.config" :size="get($store, 'getters.adSize')" />
@@ -59,7 +59,7 @@ import { concat, drop, dropRight, flatten, get, includes, map, remove, slice, un
 import Cookie from 'vue-cookie'
 import DfpCover from 'src/components/DfpCover.vue'
 import EditorChoice from 'src/components/EditorChoice.vue'
-import HeaderR from 'src/components/HeaderR.vue'
+import Header from 'src/components/Header.vue'
 import LatestArticleFocus from 'src/components/list/LatestArticleFocus.vue'
 import LatestArticleMain from 'src/components/list/LatestArticleMain.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
@@ -135,7 +135,7 @@ export default {
     LazyItemWrapper,
     MirrorMediaTVAside,
     VueDfpProvider,
-    HeaderR
+    Header
   },
   asyncData ({ store }) {
     return fetchSSRData(store)

@@ -73,7 +73,7 @@ import { get, } from 'lodash'
 import { sendGaClickEvent } from 'src/util/comm'
 
 export default {
-  naem: 'AppHeader',
+  name: 'AppHeader',
   components: {
     HeaderSearchBar,
     HeaderSidebar,

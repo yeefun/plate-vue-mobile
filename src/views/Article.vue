@@ -7,7 +7,7 @@
     :mode="dfpMode">
     <template slot-scope="props" slot="dfpPos">
       <section class="article-page-header" v-show="!isArticlePhotography">
-        <HeaderR :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+        <Header :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
       </section>
       <div :key="sectionId">
         <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBHD" extClass="full mobile-only" :config="props.config" :size="get($store, 'getters.adSize')" />
@@ -72,7 +72,7 @@
   import DfpFixed from 'src/components/DfpFixed.vue'
   import DfpST from 'src/components/DfpST.vue'
   import Footer from 'src/components/Footer.vue'
-  import HeaderR from 'src/components/HeaderR.vue'
+  import Header from 'src/components/Header.vue'
   import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
   import sanitizeHtml from 'sanitize-html'
@@ -144,7 +144,7 @@
       'vue-dfp-provider': VueDfpProvider,
       AdultContentAlert,
       Footer,
-      HeaderR
+      Header
     },
     computed: {
       articleData () { return find(get(this.$store, 'state.articles.items'), { 'slug': this.currArticleSlug }) || {} },

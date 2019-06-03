@@ -8,7 +8,7 @@
 import { OATH_COPMANY_ID } from '../../constants'
 
 export default {
-  naem: 'OathPlayer',
+  name: 'OathPlayer',
   props: {
     combinedId: {
       type: String,
