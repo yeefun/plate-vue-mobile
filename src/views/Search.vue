@@ -39,7 +39,6 @@ import { getRole } from '../util/mmABRoleAssign'
 import ArticleList from '../components/ArticleList.vue'
 import Cookie from 'vue-cookie'
 import Footer from '../components/Footer.vue'
-import Header from '../components/Header.vue'
 import HeaderR from '../components/HeaderR.vue'
 import DfpST from '../components/DfpST.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
@@ -103,7 +102,6 @@ export default {
   name: 'search-view',
   components: {
     'app-footer': Footer,
-    'app-header': Header,
     'article-list': ArticleList,
     'loading': Loading,
     'more': More,

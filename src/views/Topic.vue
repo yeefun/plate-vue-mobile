@@ -94,7 +94,6 @@ import Cookie from 'vue-cookie'
 import Footer from '../components/Footer.vue'
 import FooterFull from '../components/FooterFull.vue'
 import GroupList from '../components/GroupList.vue'
-import Header from '../components/Header.vue'
 import HeaderFull from '../components/HeaderFull.vue'
 import HeaderR from '../components/HeaderR.vue'
 import Leading from '../components/leading/Leading.vue'
@@ -232,7 +231,6 @@ export default {
   name: 'Topic',
   components: {
     'app-footer': Footer,
-    'app-header': Header,
     'article-list': ArticleList,
     'article-list-full': ArticleListFull,
     'footer-full': FooterFull,
