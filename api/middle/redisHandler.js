@@ -100,6 +100,7 @@ const redisFetching = (url, callback) => {
     console.error('[ERROR] Decoding url in fail while fetching data to Redis. URIError: URI malformed.', url)
     decodedUrl = url
   }
+  console.log("[Mobile]redis key = ", decodedUrl)
   redisPoolRead.get(decodedUrl, (error, data) => {
     let redisPoolReadError
     if (data === null) {
@@ -139,6 +140,7 @@ const redisWriting = (url, data, callback, timeout) => {
     decodedUrl = url
   }
   debug('Going to Writing things to redis...')
+  consle.log("[Mobile]Writing to redis with: ", decodedUrl)
   redisPoolWrite.set(decodedUrl, data, (err) => {
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
