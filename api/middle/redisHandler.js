@@ -213,6 +213,14 @@ const redisWriting = (url, data, callback, timeout) => {
 }
 const redisFetchingRecommendNews = (field, callback) => {
   let timeoutHandler = new TimeoutHandler(callback)
+  client.send_command('MGET', [ ...field ], function (err, data) {
+    timeoutHandler.isResponded = true
+    timeoutHandler.destroy()
+    if (timeoutHandler.timeout <= 0) { return }
+    callback && callback({ err, data })
+    timeoutHandler = null
+  })
+  /*
   redisPoolRecommendNews.send_command('MGET', [ ...field ], function (err, data) {
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
@@ -220,6 +228,7 @@ const redisFetchingRecommendNews = (field, callback) => {
     callback && callback({ err, data })
     timeoutHandler = null
   })
+  */
 }
 
 const insertIntoRedis = (req, res, next) => {
