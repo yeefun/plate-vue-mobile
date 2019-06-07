@@ -3,7 +3,7 @@ const isProd = process.env.NODE_ENV === 'production'
 // const isTest = process.env.NODE_ENV === 'test'
 const RedisConnectionPool = require('redis-connection-pool')
 
-const redis = require('./redis')
+const redis = require('redis')
 
 const { 
   REDIS_AUTH,
