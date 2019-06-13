@@ -12,8 +12,8 @@ const {
   REDIS_READ_PORT,
   REDIS_WRITE_HOST,
   REDIS_WRITE_PORT,
-  REDIS_RECOMMEND_NEWS_HOST,
-  REDIS_RECOMMEND_NEWS_PORT,
+  // REDIS_RECOMMEND_NEWS_HOST,
+  // REDIS_RECOMMEND_NEWS_PORT,
   REDIS_CONNECTION_TIMEOUT,
   REDIS_TIMEOUT } = require('../config')
 
@@ -79,14 +79,14 @@ const redisPoolWrite = isProd ? RedisConnectionPool('myRedisPoolWrite', {
   options: REDIS_OPTIONS
 }) : redisPoolRead
 
-const redisPoolRecommendNews = isProd ? RedisConnectionPool('redisPoolRecommendNews', {
-  host: REDIS_RECOMMEND_NEWS_HOST,
-  port: REDIS_RECOMMEND_NEWS_PORT,
-  max_clients: REDIS_MAX_CLIENT ? REDIS_MAX_CLIENT : 50,
-  perform_checks: false,
-  database: 0,
-  options: REDIS_OPTIONS
-}) : redisPoolRead
+// const redisPoolRecommendNews = isProd ? RedisConnectionPool('redisPoolRecommendNews', {
+//   host: REDIS_RECOMMEND_NEWS_HOST,
+//   port: REDIS_RECOMMEND_NEWS_PORT,
+//   max_clients: REDIS_MAX_CLIENT ? REDIS_MAX_CLIENT : 50,
+//   perform_checks: false,
+//   database: 0,
+//   options: REDIS_OPTIONS
+// }) : redisPoolRead
 
 class TimeoutHandler {
   constructor (callback) {

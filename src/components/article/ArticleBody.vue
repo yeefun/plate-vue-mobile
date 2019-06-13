@@ -15,18 +15,37 @@
       <HeroVideo v-if="heroVideo" class="article-heromedia" :heroCaption="heroCaption" :video="heroVideo" />
       <HeroImage v-else :heroCaption="heroCaption" :heroImage="heroImage" />
     </div>
-    <ArticleBodyContent class="post-brief fb-quotable" :isBrief="true"
-      :content="brief" :bgcolor="category.color || '#bcbcbc'">
-      <slot name="ADAR1" slot="ADAR1"></slot>
-    </ArticleBodyContent>
-    <ArticleBodyContent class="post-content fb-quotable" :content="content"
-      :publishedDate="articleData.publishedDate" :updatedAt="articleData.updatedAt" >
-      <RelatedListInContent :relateds="relateds" slot="relatedListInContent">
-        <MicroAd v-for="ad in get(microAds, 'article')"
+    <ArticleBodyContent
+      class="post-brief fb-quotable"
+      :isBrief="true"
+      :content="brief"
+      :bgcolor="category.color || '#bcbcbc'"
+    />
+    <ArticleBodyContent
+      class="post-content fb-quotable"
+      :content="content"
+      :publishedDate="articleData.publishedDate"
+      :updatedAt="articleData.updatedAt"
+    >
+      <slot
+        name="ADAR1"
+        slot="ADAR1"
+      />
+      <slot
+        name="ADAR2"
+        slot="ADAR2"
+      />
+      <RelatedListInContent
+        :relateds="relateds"
+        slot="relatedListInContent"
+      >
+        <MicroAd
+          v-for="ad in get(microAds, 'article')"
           class="related"
           :currEnv="dfpMode" :currUrl="articleUrl"
           :id="`${get(ad, 'pcId')}`"
-          :key="`${get(ad, 'pcId')}`" /> 
+          :key="`${get(ad, 'pcId')}`"
+        /> 
       </RelatedListInContent>
     </ArticleBodyContent>
   </main>
