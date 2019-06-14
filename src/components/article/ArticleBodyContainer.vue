@@ -14,7 +14,6 @@
     <LazyItemWrapper :position="verge.viewportH()">
       <RecommendList
         v-if="!isAd"
-        v-show="recommendlist.length > 0"
         :isAd="isAd"
         :sectionId="sectionId"
         :currArticleId="currArticleId"

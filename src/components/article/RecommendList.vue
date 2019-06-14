@@ -1,16 +1,40 @@
 <template>
   <div class="related-list">
-    <div v-if="!(filteredRecommends.length < 1)" class="related-list__list" :style="containerStyle()">
+    <div
+      class="related-list__list"
+      :style="containerStyle()"
+    >
       <div class="related-list__list__title"><h4 :style="titleStyle()">相關文章</h4></div>
       <template v-if="!isAd">
-        <template v-for="o in filteredRecommends">
-          <div v-if="o" class="related-list__list__item">
+        <template v-for="(o, i) in filteredRecommends">
+          <div
+            v-if="o"
+            :key="i"
+            class="related-list__list__item"
+          >
             <div class="title">
               <a @click="recommendsClickHandler(get(o, [ 'slug' ]), $event)" :href="routerLinkUrl(o)" v-text="get(o, [ 'title' ], '')" :id="`recommend-${get(o, [ 'slug' ], Date.now())}`" v-if="shouldShowItem(o)" target="_blank"></a>
               <a @click="recommendsClickHandler(get(o, [ 'slug' ]), $event)" :href="getHrefFull(o)" v-text="get(o, [ 'title' ], '')" :id="`recommend-${get(o, [ 'slug' ], Date.now())}`" target="_blank" v-else></a>
             </div>
           </div>
+          <div
+            v-if="i === showPopInAdAt"
+            :key="i"
+            class="related-list__list__item"
+          >
+            <PopInAd>
+              <div id="_popIn_recommend_ad_1"></div>
+            </PopInAd>
+          </div>
         </template>
+        <div
+          v-if="showPopInAdAt === 0"
+          class="related-list__list__item"
+        >
+          <PopInAd>
+            <div id="_popIn_recommend_ad_1"></div>
+          </PopInAd>
+        </div>
       </template>
     </div>
   </div>
@@ -21,6 +45,7 @@
   import { extractSlugFromreferrer, getHref, getHrefFull, sendGaClickEvent } from '../../util/comm'
   import Deque from 'double-ended-queue'
   import HashTable from 'jshashtable'
+  import PopInAd from '../PopInAd.vue'
 
   const debug = require('debug')('CLIENT:RecommendList')
   const fetchRecommendList = (store, id) => {
@@ -33,6 +58,9 @@
   }
 
   export default {
+    components: {
+      PopInAd
+    },
     computed: {
       filteredRecommends () {
         const dqueue = this.getRecommClickHistory()
@@ -52,6 +80,12 @@
         })
         return hashtable
       },
+      showPopInAdAt () {
+        if (!this.filteredRecommends.length) {
+          return 0
+        }
+        return this.filteredRecommends.length < 3 ? this.filteredRecommends.length - 1 : 3
+      }
     },
     data () {
       return {
