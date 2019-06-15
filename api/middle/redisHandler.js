@@ -116,7 +116,7 @@ class TimeoutHandler {
 }
 
 const redisFetching = (url, callback) => {
-  return
+  callback && callback({ error: "skip the redis fetching", null })
   /*
   let start = Date.now()
   let timeoutHandler = new TimeoutHandler(callback)
