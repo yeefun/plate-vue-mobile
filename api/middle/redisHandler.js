@@ -251,6 +251,8 @@ const fetchFromRedis = (req, res, next) => {
 }
 
 const fetchFromRedisForAPI = (req, res, next) => {
+  next()
+  /*
   let start = Date.now()
   debug('Trying to fetching data from redis...', req.url)
   redisFetching(req.url, ({ error, data }) => {
@@ -266,6 +268,7 @@ const fetchFromRedisForAPI = (req, res, next) => {
       next()
     }
   })
+  */
 }
 
 module.exports = {
