@@ -116,6 +116,8 @@ class TimeoutHandler {
 }
 
 const redisFetching = (url, callback) => {
+  callback && callback({ error: redisPoolReadError, null })
+  /*
   let start = Date.now()
   let timeoutHandler = new TimeoutHandler(callback)
   let decodedUrl
@@ -251,8 +253,6 @@ const fetchFromRedis = (req, res, next) => {
 }
 
 const fetchFromRedisForAPI = (req, res, next) => {
-  next()
-  /*
   let start = Date.now()
   debug('Trying to fetching data from redis...', req.url)
   redisFetching(req.url, ({ error, data }) => {
@@ -268,7 +268,6 @@ const fetchFromRedisForAPI = (req, res, next) => {
       next()
     }
   })
-  */
 }
 
 module.exports = {
