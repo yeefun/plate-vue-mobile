@@ -61,6 +61,7 @@ const client = redis.createClient(REDIS_READ_PORT, REDIS_READ_HOST, {
   }
 })
 
+/*
 const recommendnew_client = redis.createClient(REDIS_RECOMMEND_NEWS_PORT, REDIS_RECOMMEND_NEWS_HOST, {
   password: REDIS_AUTH,
   retry_strategy: function (options) {
@@ -82,6 +83,7 @@ const recommendnew_client = redis.createClient(REDIS_RECOMMEND_NEWS_PORT, REDIS_
     return 100
   }
 })
+*/
 
 /*
 const redisPoolRead = RedisConnectionPool('myRedisPoolRead', {
@@ -242,7 +244,7 @@ const redisWriting = (url, data, callback, timeout) => {
 }
 const redisFetchingRecommendNews = (field, callback) => {
   let timeoutHandler = new TimeoutHandler(callback)
-  recommendnew_client.send_command('MGET', [ ...field ], function (err, data) {
+  client.send_command('MGET', [ ...field ], function (err, data) {
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
     if (timeoutHandler.timeout <= 0) { return }
