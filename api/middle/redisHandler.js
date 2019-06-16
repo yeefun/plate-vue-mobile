@@ -61,6 +61,29 @@ const client = redis.createClient(REDIS_READ_PORT, REDIS_READ_HOST, {
   }
 })
 
+const recommendnew_client = redis.createClient(REDIS_RECOMMEND_NEWS_PORT, REDIS_RECOMMEND_NEWS_HOST, {
+  password: REDIS_AUTH,
+  retry_strategy: function (options) {
+    if (options.error && options.error.code === 'ECONNREFUSED') {
+      return new Error('The server refused the connection')
+    }
+    if (options.error && options.error.code === 'ETIMEDOUT') {
+      return new Error('Timeout occured while connecting to redis.')
+    }
+    if (options.total_retry_time > 200 * 3) {
+      return new Error('Retry time exhausted')
+    }
+    if (options.attempt > 0 || options.times_connected > 0) {
+      // this means "dont do retry"
+      return undefined
+    }
+    // reconnect after
+    // wouldnt go this return way never
+    return 100
+  }
+})
+
+/*
 const redisPoolRead = RedisConnectionPool('myRedisPoolRead', {
   host: REDIS_READ_HOST,
   port: REDIS_READ_PORT,
@@ -87,6 +110,8 @@ const redisPoolWrite = isProd ? RedisConnectionPool('myRedisPoolWrite', {
 //   database: 0,
 //   options: REDIS_OPTIONS
 // }) : redisPoolRead
+
+*/
 
 class TimeoutHandler {
   constructor (callback) {
@@ -186,6 +211,7 @@ const redisFetching = (url, callback) => {
 }
 
 const redisWriting = (url, data, callback, timeout) => {
+  /*
   let timeoutHandler = new TimeoutHandler(callback)
   let decodedUrl
   try {
@@ -212,10 +238,11 @@ const redisWriting = (url, data, callback, timeout) => {
     }
     timeoutHandler = null
   })
+  */
 }
 const redisFetchingRecommendNews = (field, callback) => {
   let timeoutHandler = new TimeoutHandler(callback)
-  client.send_command('MGET', [ ...field ], function (err, data) {
+  recommendnew_client.send_command('MGET', [ ...field ], function (err, data) {
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
     if (timeoutHandler.timeout <= 0) { return }
@@ -234,9 +261,11 @@ const redisFetchingRecommendNews = (field, callback) => {
 }
 
 const insertIntoRedis = (req, res, next) => {
+  /*
   redisWriting(req.url, res.dataString, () => {
     // next()
   }, res.redisTTL)
+  */
 }
 
 const fetchFromRedis = (req, res, next) => {
