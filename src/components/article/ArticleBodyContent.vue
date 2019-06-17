@@ -91,7 +91,7 @@
         return !this.isBrief && get(this.nonEmptyParagraphsIndexs, 4, -1) !== -1
       },
       lastUnstyledParagraph () {
-        return get(this.nonEmptyParagraphsIndexs, this.nonEmptyParagraphsIndexs.length, 0)
+        return get(this.nonEmptyParagraphsIndexs, this.nonEmptyParagraphsIndexs.length - 1, 0)
       },
       showUpdatedTime () {
         return moment(this.updatedAt).format('YYYY.MM.DD HH:mm') !== moment(this.publishedDate).format('YYYY.MM.DD HH:mm')
