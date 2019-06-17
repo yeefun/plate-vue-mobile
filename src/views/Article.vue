@@ -29,9 +29,6 @@
         <span id="innity-custom-premium-span-12739" slot="ADAR2"></span>           
         <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR2" extClass="mobile-only" :config="props.config" slot="ADAR2" :size="get($store, 'getters.adSize')"/>
         <!--ADAR2 END-->
-        <!--ADAR3 START-->
-        <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR3" extClass="mobile-only" :config="props.config" slot="ADAR3" :size="get($store, 'getters.adSize')"/>
-        <!--ADAR3 END-->
       </article-body-container>
       <div class="article-page-footer">
         <lazy-item-wrapper :position="verge.viewportH()" :strict="true">

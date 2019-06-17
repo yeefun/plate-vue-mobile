@@ -105,14 +105,14 @@ const redisPoolWrite = isProd ? RedisConnectionPool('myRedisPoolWrite', {
   options: REDIS_OPTIONS
 }) : redisPoolRead
 
-// const redisPoolRecommendNews = isProd ? RedisConnectionPool('redisPoolRecommendNews', {
-//   host: REDIS_RECOMMEND_NEWS_HOST,
-//   port: REDIS_RECOMMEND_NEWS_PORT,
-//   max_clients: REDIS_MAX_CLIENT ? REDIS_MAX_CLIENT : 50,
-//   perform_checks: false,
-//   database: 0,
-//   options: REDIS_OPTIONS
-// }) : redisPoolRead
+const redisPoolRecommendNews = isProd ? RedisConnectionPool('redisPoolRecommendNews', {
+  host: REDIS_RECOMMEND_NEWS_HOST,
+  port: REDIS_RECOMMEND_NEWS_PORT,
+  max_clients: REDIS_MAX_CLIENT ? REDIS_MAX_CLIENT : 50,
+  perform_checks: false,
+  database: 0,
+  options: REDIS_OPTIONS
+}) : redisPoolRead
 
 */
 
