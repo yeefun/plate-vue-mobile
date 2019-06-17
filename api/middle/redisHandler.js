@@ -1,43 +1,44 @@
 const debug = require('debug')('PLATEVUE:redis')
-const isProd = process.env.NODE_ENV === 'production'
+// const isProd = process.env.NODE_ENV === 'production'
 // const isTest = process.env.NODE_ENV === 'test'
-const RedisConnectionPool = require('redis-connection-pool')
+// const RedisConnectionPool = require('redis-connection-pool')
 
 const redis = require('redis')
 
 const { 
   REDIS_AUTH,
-  REDIS_MAX_CLIENT,
+  // REDIS_MAX_CLIENT,
   REDIS_READ_HOST,
   REDIS_READ_PORT,
-  REDIS_WRITE_HOST,
-  REDIS_WRITE_PORT,
-  REDIS_RECOMMEND_NEWS_HOST,
-  REDIS_RECOMMEND_NEWS_PORT,
+  // REDIS_WRITE_HOST,
+  // REDIS_WRITE_PORT,
+  // REDIS_RECOMMEND_NEWS_HOST,
+  // REDIS_RECOMMEND_NEWS_PORT,
   REDIS_CONNECTION_TIMEOUT,
-  REDIS_TIMEOUT } = require('../config')
+  // REDIS_TIMEOUT
+} = require('../config')
 
-const REDIS_OPTIONS = {
-  auth_pass: REDIS_AUTH,
-  retry_strategy: function (options) {
-    if (options.error && options.error.code === 'ECONNREFUSED') {
-      return new Error('The server refused the connection')
-    }
-    if (options.error && options.error.code === 'ETIMEDOUT') {
-      return new Error('Timeout occured while connecting to redis.')      
-    }
-    if (options.total_retry_time > 1000 * 5) {
-      return new Error('Retry time exhausted')
-    }
-    if (options.attempt > 0 || options.times_connected > 0) {
-      // this means "dont do retry"
-      return undefined
-    }
-    // reconnect after
-    // wouldnt go this return way never
-    return 100
-  }  
-}
+// const REDIS_OPTIONS = {
+//   auth_pass: REDIS_AUTH,
+//   retry_strategy: function (options) {
+//     if (options.error && options.error.code === 'ECONNREFUSED') {
+//       return new Error('The server refused the connection')
+//     }
+//     if (options.error && options.error.code === 'ETIMEDOUT') {
+//       return new Error('Timeout occured while connecting to redis.')      
+//     }
+//     if (options.total_retry_time > 1000 * 5) {
+//       return new Error('Retry time exhausted')
+//     }
+//     if (options.attempt > 0 || options.times_connected > 0) {
+//       // this means "dont do retry"
+//       return undefined
+//     }
+//     // reconnect after
+//     // wouldnt go this return way never
+//     return 100
+//   }  
+// }
 
 const client = redis.createClient(REDIS_READ_PORT, REDIS_READ_HOST, {
   password: REDIS_AUTH,
@@ -212,7 +213,7 @@ const redisFetching = (url, callback) => {
   */
 }
 
-const redisWriting = (url, data, callback, timeout) => {
+const redisWriting = () => {
   /*
   let timeoutHandler = new TimeoutHandler(callback)
   let decodedUrl

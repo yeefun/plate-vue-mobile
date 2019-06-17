@@ -21,7 +21,9 @@
         :excludingArticle="routeUpateReferrerSlug"
       />
       <!-- ADAR3 above Newsletter and below RecommendList -->
-      <slot name="ADAR3"/>
+      <div class="adar3">
+        <slot name="ADAR3"/>
+      </div>
       <Newsletter />
       <div class="news-letter-label">更多內容，歡迎
         <a :href="SOCIAL_LINK.SUBSCRIBE" target="_blank">訂閱鏡週刊</a>、
@@ -210,4 +212,6 @@
   a, a:hover, a:link, a:visited
     display inline
 
+.adar3
+  margin 20px 0 0 0
 </style>
