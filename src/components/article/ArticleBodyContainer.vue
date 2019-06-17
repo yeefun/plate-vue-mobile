@@ -1,19 +1,29 @@
 <template>
   <div class="article-body-container article-container" v-if="articleStyle !== 'photography'">
     <ArticleBody :articleData="articleData" :dfpMode="dfpMode" :articleUrl="articleUrl">
-      <slot name="ADAR1" slot="ADAR1" ></slot> 
+      <slot
+        name="ADAR1"
+        slot="ADAR1"
+      />
+      <slot
+        name="ADAR2"
+        slot="ADAR2"
+      />
     </ArticleBody>
-    <slot name="ADAR2"></slot>
+    <!-- <slot name="ADAR2"></slot> -->
     <LazyItemWrapper :position="verge.viewportH()">
       <RecommendList
         v-if="!isAd"
-        v-show="recommendlist.length > 0"
         :isAd="isAd"
         :sectionId="sectionId"
         :currArticleId="currArticleId"
         :recommends="recommendlist"
         :excludingArticle="routeUpateReferrerSlug"
       />
+      <!-- ADAR3 above Newsletter and below RecommendList -->
+      <div class="adar3">
+        <slot name="ADAR3"/>
+      </div>
       <Newsletter />
       <div class="news-letter-label">更多內容，歡迎
         <a :href="SOCIAL_LINK.SUBSCRIBE" target="_blank">訂閱鏡週刊</a>、
