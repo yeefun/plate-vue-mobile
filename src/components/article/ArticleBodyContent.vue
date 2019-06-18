@@ -40,15 +40,19 @@
         <span>{{ moment(updatedAt).format('YYYY.MM.DD HH:mm') }}</span>
       </p>
       <!-- ADAR1 below 1st non-empty paragraph -->
-      <slot
-        v-if="shouldShowADAR1 && index === nonEmptyParagraphsIndexs[0]"
-        name="ADAR1"
-      />
+      <div class="ad">
+        <slot
+          v-if="shouldShowADAR1 && index === nonEmptyParagraphsIndexs[0]"
+          name="ADAR1"
+        />
+      </div>
       <!-- ADAR2 below 5th non-empty paragraph -->
-      <slot
-        v-if="shouldShowADAR2 && index === nonEmptyParagraphsIndexs[4]"
-        name="ADAR2"
-      />
+      <div class="ad">
+        <slot
+          v-if="shouldShowADAR2 && index === nonEmptyParagraphsIndexs[4]"
+          name="ADAR2"
+        />
+      </div>
     </LazyItemWrapper>
   </div>
 </template>
@@ -495,6 +499,10 @@
           text-align left
           line-height 1.5rem
           padding 0 25px
+
+.ad
+  margin 20px 0
+
 @media (min-width 400px)
   .content
     >>> p,   
