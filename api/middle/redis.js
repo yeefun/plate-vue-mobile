@@ -89,7 +89,7 @@ const insertIntoRedis = (key, data, timeout) => {
   const redisTimeout = timeout || REDIS_TIMEOUT || 5000
   if (key) {
     setAsync(`plate-vue-mobile-${key}`, data)
-      .then(() => expireAsync(key, redisTimeout))
+      .then(() => expireAsync(`plate-vue-mobile-${key}`, redisTimeout))
       .catch(err => {
         console.error('[Redis] Write data to Redis in fail.', key, err)
       })
