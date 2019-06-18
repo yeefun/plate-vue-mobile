@@ -15,8 +15,7 @@ const resolve = file => path.resolve(__dirname, file)
 const uuidv4 = require('uuid/v4')
 const { VALID_PREVIEW_IP_ADD } = require('./api/config')
 const { createBundleRenderer } = require('vue-server-renderer')
-const { fetchFromRedis, redisWriting } = require('./api/middle/redisHandler') 
-
+const { fetchFromRedis, insertIntoRedis } = require('./api/middle/redis')
 
 const formatMem = (bytes) => {
   return (bytes / 1024 / 1024).toFixed(2) + ' Mb'
@@ -159,7 +158,6 @@ function render (req, res, next) {
   const rendererEjsCB = function (err, html) { 
     if (!err) {
       res.status(rendererEjsCB.code).send(html)
-      isProd && redisWriting(req.url, rendererEjsCB.code || 500, null, 120)
     } else {
       console.error('ERROR OCCURRED WHEN RENDERING EJS. \n', err)
       res.status(500).send('Internal Server Error')
@@ -255,17 +253,23 @@ function render (req, res, next) {
     if (err) { return handleError(err) }
     res.send(html)
     !isProd && console.info(`whole request: ${Date.now() - s}ms`)
-    // isProd && !isPreview && redisWriting(req.url, html, null, 60)
+    isProd && !isPreview && insertIntoRedis(req.url, html, 60)
   })
 }
 
 app.use('/api', require('./api/index'), () => { /** END */ })
 app.get('*', (req, res, next) => {
   req.s = Date.now()
+  req.redis = req.url
   console.log('CURRENT HOST:', _.get(req, 'headers.host', ''), exp_dev.test(_.get(req, 'headers.host', '')))
   next()
-}, (req, res, next) => {
-  next()
+}, fetchFromRedis, (req, res, next) => {
+  if (res.redis && typeof res.redis === 'string') {
+    console.log(`Fetch page from Redis. ${decodeURIComponent(req.url)}`)
+    res.status(200).send(res.redis)
+  } else {
+    next()
+  }
 }, isProd ? render : (req, res, next) => {
   readyPromise.then(() => render(req, res, next))
 })
