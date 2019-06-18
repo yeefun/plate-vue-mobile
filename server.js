@@ -263,13 +263,14 @@ app.get('*', (req, res, next) => {
   req.redis = req.url
   console.log('CURRENT HOST:', _.get(req, 'headers.host', ''), exp_dev.test(_.get(req, 'headers.host', '')))
   next()
-}, fetchFromRedis, (req, res, next) => {
-  if (res.redis && typeof res.redis === 'string') {
-    console.log(`Fetch page from Redis. ${decodeURIComponent(req.url)}`)
-    res.status(200).send(res.redis)
-  } else {
-    next()
-  }
+}, (req, res, next) => {
+  // if (res.redis && typeof res.redis === 'string') {
+  //   console.log(`Fetch page from Redis. ${decodeURIComponent(req.url)}`)
+  //   res.status(200).send(res.redis)
+  // } else {
+  //   next()
+  // }
+  next()
 }, isProd ? render : (req, res, next) => {
   readyPromise.then(() => render(req, res, next))
 })
