@@ -46,9 +46,9 @@
           :id="`${get(ad, 'pcId')}`"
           :key="`${get(ad, 'pcId')}`"
         />
-        <PopInAd>
+        <!-- <PopInAd>
           <div id="_popIn_recommend"></div>
-        </PopInAd>
+        </PopInAd> -->
       </RelatedListInContent>
     </ArticleBodyContent>
   </main>
