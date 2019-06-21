@@ -13,7 +13,6 @@
         <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBHD" extClass="full mobile-only" :config="props.config" :size="get($store, 'getters.adSize')" />
       </div>
       <article-body-container
-        :abIndicator="abIndicator"
         :articleData="articleData"
         :dfpMode="dfpMode"
         :sectionId="sectionId"
@@ -339,8 +338,8 @@
           window.ga('set', 'contentGroup1', `${get(articleData, 'sections.0.name')}`)
           window.ga('set', 'contentGroup2', `${get(articleData, 'categories.0.name')}`)
         }
-        // window.ga('set', 'contentGroup3', '')
-        window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
+        window.ga('set', 'contentGroup3', '')
+        // window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         window.ga('send', 'pageview', { title: `${get(articleData, 'title', '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       }
     },
@@ -427,7 +426,7 @@
     },    
     mounted () {
       this.updateSysStage()
-      this.abIndicator = this.getMmid()
+      // this.abIndicator = this.getMmid()
       const scrollTriggerRegister = new ScrollTriggerRegister([
         { target: '#matchedContentContainer', offset: 400, cb: this.insertMatchedContentScript },
         { target: '#matchedContentContainer', offset: 400, cb: this.initializeFBComments }
