@@ -5,6 +5,7 @@ const compression = require('compression')
 const express = require('express')
 const favicon = require('serve-favicon')
 const fs = require('fs')
+const http = require('https')
 const maxMemUsageLimit = 1000 * 1024 * 1024
 const memwatch = require('node-memwatch')
 const moment = require('moment')
@@ -30,6 +31,7 @@ const serverInfo =
   `vue-server-renderer/${require('vue-server-renderer/package.json').version}`
 
 const app = express()
+app.maxSockets = 100000
 const debug = require('debug')('PLATEVUE:server')
 const template = fs.readFileSync(resolve('./src/index.template.html'), 'utf-8')
 
