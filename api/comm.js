@@ -1,6 +1,6 @@
 const { get, isString } = require('lodash')
 
-export const isValidJSONString = str => {
+const isValidJSONString = (str) => {
   try {
     JSON.parse(str)
   } catch (e) {
@@ -9,7 +9,7 @@ export const isValidJSONString = str => {
   return true
 }
 
-export const handlerError = (err, res) => {
+const handlerError = (err, res) => {
   const text = get(res, 'text') || get(err, 'message', '{}')
   return {
     status: (typeof(get(res, 'status')) === 'number' && get(res, 'status')) || get(err, 'status') || 500,
@@ -19,4 +19,8 @@ export const handlerError = (err, res) => {
       : `{}`
       : text
   }
+}
+
+module.exports = {
+  handlerError
 }
