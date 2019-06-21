@@ -31,7 +31,7 @@ const serverInfo =
   `vue-server-renderer/${require('vue-server-renderer/package.json').version}`
 
 const app = express()
-app.maxSockets = 100000
+app.maxSockets = 5000
 const debug = require('debug')('PLATEVUE:server')
 const template = fs.readFileSync(resolve('./src/index.template.html'), 'utf-8')
 
