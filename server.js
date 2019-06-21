@@ -32,6 +32,7 @@ const serverInfo =
 
 const app = express()
 http.globalAgent.maxSockets = Infinity
+console.log('maxsockets : ' + app.maxSockets);
 const debug = require('debug')('PLATEVUE:server')
 const template = fs.readFileSync(resolve('./src/index.template.html'), 'utf-8')
 
