@@ -20,7 +20,6 @@ import { fetchActivities,
   fetchImages,
   fetchImagesById,
   fetchLatestArticle,
-  fetchLatestNewsFromJson,
   fetchNodes,
   fetchOathPlaylist,
   fetchOathVideo,
@@ -71,12 +70,12 @@ export function createStore () {
       isTimeToShowAdCover: false,
       latestArticle: {},
       latestArticles: {},
-      latestNewsFromJson: {},
       nodes: {},
       ogimage: {},
       playlist: {
         info: {}
       },
+      resStack: '\n',
       searchResult: {},
       tag: {},
       tags: [],
@@ -249,12 +248,6 @@ export function createStore () {
           })
       },
 
-      FETCH_LATEST_NEWS_FROM_JSON: ({ commit, state }) => {
-        return state.latestNewsFromJson.latest && state.latestNewsFromJson.sections
-        ? Promise.resolve(state.latestNewsFromJson)
-        : fetchLatestNewsFromJson().then(latestNewsFromJson => commit('SET_LATEST_NEWS_FROM_JSON', { latestNewsFromJson }))
-      },
-
       FETCH_NODES: ({ commit, state }, { params }) => {
         const orig = _.values(state.nodes[ 'items' ])
         if (_.get(params, [ 'where', 'isFeatured' ])) {
@@ -364,6 +357,10 @@ export function createStore () {
 
       UPDATE_VIEWPORT: ({ commit }, viewport) => {
         commit('SET_VIEWPORT', viewport)
+      },
+      
+      TRACE_RES_STACK: ({ commit }, { log }) => {
+        commit('SET_RES_STACK', log)
       },
 
     },
@@ -487,10 +484,6 @@ export function createStore () {
         Vue.set(state, 'latestArticles', latestArticles)
       },
 
-      SET_LATEST_NEWS_FROM_JSON: (state, { latestNewsFromJson }) => {
-        Vue.set(state, 'latestNewsFromJson', latestNewsFromJson)
-      },
-
       SET_NODES: (state, { nodes }) => {
         Vue.set(state, 'nodes', nodes)
       },
@@ -548,6 +541,10 @@ export function createStore () {
 
       SET_TOPICS: (state, { topics }) => {
         Vue.set(state, 'topics', topics)
+      },
+
+      SET_RES_STACK: (state, log) => {
+        state[ 'resStack' ] += `${log}\n`
       },
 
       SET_USER: (state, { user }) => {

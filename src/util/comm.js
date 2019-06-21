@@ -266,6 +266,10 @@ export function mmLog ({ category, eventType, target, description, referrer, ...
   return _normalizeLog({ category, eventType, target, description, referrer, ...rest })
 }
 
+export function sendGaClickEvent (eventCategory, eventLabel) {
+  window.ga && window.ga('send', 'event', eventCategory, 'click', eventLabel, { nonInteraction: false })
+}
+
 export function isEleFixed (ele) {
   let node = ele
   
@@ -292,7 +296,7 @@ export function isEleShown (ele) {
   return true  
 }
 
-export function isDescendant (child, { classname = 'none' }) {
+export function isDescendant (child, { classname = 'none' }) { // deprecated
   let node = child.parentNode
   while (node !== null && node !== undefined) {
     if (node.className && node.className.indexOf(classname) > -1) {
@@ -403,7 +407,6 @@ export function insertPopInAdScript (vm) {
   if (process.env.VUE_ENV === 'client' && !vm.adScriptLoaded) {
     const pa = document.createElement('script')
     pa.onload = () => {
-      console.log('popInAd loaded')
       debug('popInAd loaded')
       vm.adScriptLoaded = true
     }
@@ -427,7 +430,7 @@ export function insertPopInAdScript (vm) {
 //   return true
 // }
 
-export function trim (str) {
+export function trim (str) { // considered deprecated
   return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
 }
 
@@ -480,11 +483,7 @@ export function sendAdCoverGA (label) {
   })
 }
 
-export function sendGaClickEvent (eventCategory, eventLabel) {
-  window.ga && window.ga('send', 'event', eventCategory, 'click', eventLabel, { nonInteraction: false })
-}
-
-export function extractSlugFromreferrer (referrer = '') {
+export function extractSlugFromReferrer (referrer = '') {
   const filteredReferrer = referrer.replace(/^https?:\/\//, '').replace(/\?[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]*$/, '')
   const referrerArr = filteredReferrer.split('/')
   if ((referrerArr[ 0 ].indexOf(SITE_DOMAIN) > -1 || referrerArr[ 0 ].indexOf('localhost') > -1) && referrerArr[ 1 ] === 'story') {

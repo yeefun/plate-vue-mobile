@@ -107,8 +107,8 @@ export default {
     'more': More,
     'vue-dfp-provider': VueDfpProvider,
     DfpST,
-    LazyItemWrapper,
-    Header
+    Header,
+    LazyItemWrapper
   },
   asyncData ({ store, route }) {
     return fetchData(store, route)

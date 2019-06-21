@@ -18,6 +18,7 @@ const { createBundleRenderer } = require('vue-server-renderer')
 const { fetchFromRedis, redisWriting } = require('./api/middle/redisHandler') 
 // const { fetchFromRedis, insertIntoRedis } = require('./api/middle/redis')
 
+
 const formatMem = (bytes) => {
   return (bytes / 1024 / 1024).toFixed(2) + ' Mb'
 }
@@ -103,7 +104,6 @@ app.use('/public', (req, res) => {
 app.use('/manifest.json', serve('./manifest.json', true), staticNotFound)
 app.use('/service-worker.js', serve('./dist/service-worker.js'), staticNotFound)
 
-
 app.use(function(req, res, next) {
   let err = null
   try {
@@ -119,10 +119,6 @@ app.use(function(req, res, next) {
   next()
 })
 
-// app.use('/\[\%img\%\]', (req, res, next) => {
-//   console.log('FUCK!!', req.url)
-//   next()
-// }, staticNotFound)
 // since this app has no user-specific content, every page is micro-cacheable.
 // if your app involves user-specific content, you need to implement custom
 // logic to determine whether a request is cacheable based on its url and
@@ -142,9 +138,9 @@ function render (req, res, next) {
     const mem = process.memoryUsage()
     //console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), `${moment().format('YYYY-MM-DD HH:mm:SS')}`)
     if (mem.heapUsed > maxMemUsageLimit) {
-      //for (let i = 0; i < 10; i += 1) {
+      for (let i = 0; i < 10; i += 1) {
         console.error('MEMORY WAS RUNNING OUT')
-      //} 
+      } 
       console.error(`KILLING PROCESS IN 1 SECOND(At ${moment().format('YYYY-MM-DD HH:mm:SS')})`)
       process.exit(1)
     }
@@ -155,11 +151,17 @@ function render (req, res, next) {
         // process.exit(1)
       }
     }    
-  }  
+  }
+  const isPreview = exp_preview_mode.test(req.url)
   const rendererEjsCB = function (err, html) { 
     if (!err) {
       res.status(rendererEjsCB.code).send(html)
-      isProd && redisWriting(req.url, rendererEjsCB.code || 500, null, 120)
+
+      /**
+       * Save every single page which's processing with problem.
+       */
+      // isProd && !isPreview && redisWriting(req.url, rendererEjsCB.code || 500, null, 120)
+
     } else {
       console.error('ERROR OCCURRED WHEN RENDERING EJS. \n', err)
       res.status(500).send('Internal Server Error')
@@ -167,9 +169,8 @@ function render (req, res, next) {
     checkoutMem()
   }
 
-  const isPreview = exp_preview_mode.test(req.url)
   if (!isPreview) {
-    res.setHeader('Cache-Control', 'public, max-age=300')
+    res.setHeader('Cache-Control', 'public, max-age=600')
   } else {
     const isValidReq = _.filter(VALID_PREVIEW_IP_ADD, i => (req.clientIp.indexOf(i) > -1)).length > 0
     console.info('Is there any preview permission limit?', _.get(VALID_PREVIEW_IP_ADD, 'length', 0) > 0)
@@ -183,8 +184,7 @@ function render (req, res, next) {
       res.render('404', rendererEjsCB)
       // response 404 instead of 403 to avoid this page be indexed by search engin.
       // res.status(403).send('Forbidden')
-
-      console.info('Attempted to access draft in fail: 403 Forbidden')
+      console.warn(`Attempted to access draft in fail: 403 Forbidden \nclientIp: ${req.connection.remoteAddress} \nreq.url: ${req.url}`)
       return
     }
   }
@@ -195,7 +195,7 @@ function render (req, res, next) {
   const cookies = new Cookies( req, res, {} )
   const mmid = cookies.get('mmid')
   if (!mmid) {
-    cookies.set('mmid', uuidv4(), { httpOnly: false, expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) })
+    // cookies.set('mmid', uuidv4(), { httpOnly: false, expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) })
   }
   const handleError = err => {
     if (err.url) {
@@ -245,6 +245,7 @@ function render (req, res, next) {
     link: '',
     adTrace: '',
     custom: '',
+    resStack: '',
   }
   
   res.on('finish', function () {
@@ -255,14 +256,19 @@ function render (req, res, next) {
     if (err) { return handleError(err) }
     res.send(html)
     !isProd && console.info(`whole request: ${Date.now() - s}ms`)
-    // isProd && !isPreview && insertIntoRedis(req.url, html, 60)
+
+    /**
+     * Save all pages in redis for 1 min for now.
+     */
+
+    // Don't save any page for now.
+    // isProd && !isPreview && redisWriting(req.url, html, null, 60)
   })
 }
 
 app.use('/api', require('./api/index'), () => { /** END */ })
 app.get('*', (req, res, next) => {
   req.s = Date.now()
-  // req.redis = req.url
   console.log('CURRENT HOST:', _.get(req, 'headers.host', ''), exp_dev.test(_.get(req, 'headers.host', '')))
   next()
 }, (req, res, next) => {
@@ -296,7 +302,7 @@ memwatch.on('leak', function(info) {
   const growth = formatMem(info.growth)
   const mem = process.memoryUsage()
   console.error('GETING MEMORY LEAK:', [ 'growth ' + growth, 'reason ' + info.reason ].join(', '))
-  console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), `${moment().format('YYYY-MM-DD HH:mm:SS')}`)
+  //console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), `${moment().format('YYYY-MM-DD HH:mm:SS')}`)
 })
 memwatch.on('stats', function(stats) {
   const estBase = formatMem(stats.estimated_base)

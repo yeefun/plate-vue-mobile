@@ -63,7 +63,6 @@ router.onReady(() => {
   app.$mount('#app')
 })
 
-
 // service worker
 const debugSW = require('debug')('CLIENT:SERVICE-WORKER')
 if ('serviceWorker' in navigator) {

@@ -264,7 +264,7 @@ export default {
       DFP_UNITS,
       OATH_ALL_VIDEO_PLAYLIST_ID,
       OATH_PLAYLIST,
-      abIndicator: 'A',
+      abIndicator: '',
       dfpHeaderLogoLoaded: false,
       mounted: false,
       showDfpCoverAdFlag: false,
