@@ -32,7 +32,6 @@ const serverInfo =
 
 const app = express()
 http.globalAgent.maxSockets = Infinity
-console.log('maxsockets : ' + app.maxSockets);
 const debug = require('debug')('PLATEVUE:server')
 const template = fs.readFileSync(resolve('./src/index.template.html'), 'utf-8')
 
@@ -163,6 +162,7 @@ function render (req, res, next) {
       /**
        * Save every single page which's processing with problem.
       */
+	  console.log("writing to redis for: " + req.url)
       isProd && !isPreview && redisWriting(req.url, rendererEjsCB.code || 500, null, 120)
 
     } else {
@@ -278,8 +278,8 @@ app.get('*', (req, res, next) => {
     req.url = req.url.split('?')[0]
 	if (urlRegex = req.url.match(/(\/story\/[\w\d-_]*?\/)/)) {
 		console.log("correct url = " + urlRegex[1])
+		req.url = urlRegex[1] + "?device=mobile"
 	}
-	req.url = req.url + "?device=mobile"
   }
   next()
 }, fetchFromRedis, (req, res, next) => {
