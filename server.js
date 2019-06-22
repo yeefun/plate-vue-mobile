@@ -162,8 +162,8 @@ function render (req, res, next) {
 
       /**
        * Save every single page which's processing with problem.
-       */
-      // isProd && !isPreview && redisWriting(req.url, rendererEjsCB.code || 500, null, 120)
+      */
+      isProd && !isPreview && redisWriting(req.url + '?device=mobile', rendererEjsCB.code || 500, null, 120)
 
     } else {
       console.error('ERROR OCCURRED WHEN RENDERING EJS. \n', err)
@@ -273,19 +273,47 @@ app.use('/api', require('./api/index'), () => { /** END */ })
 app.get('*', (req, res, next) => {
   req.s = Date.now()
   console.log('CURRENT HOST:', _.get(req, 'headers.host', ''), exp_dev.test(_.get(req, 'headers.host', '')))
+  if (req.url.match(/\/story\//) && !req.url.match(exp_preview_mode)) {
+    req.url = req.url.split('?')[0] + '?device=mobile'
+  }
   next()
-}, (req, res, next) => {
-  // if (res.redis && typeof res.redis === 'string') {
-  //   console.log(`Fetch page from Redis. ${decodeURIComponent(req.url)}`)
-  //   res.status(200).send(res.redis)
-  // } else {
-  //   next()
-  // }
-  next()
+}, fetchFromRedis, (req, res, next) => {
+  if (res.redis) {
+    console.log('Fetch page from Redis.', `${Date.now() - req.s}ms\n`, decodeURIComponent(req.url))
+    if (res.redis.length > 3) {
+      res.status(200).send(res.redis)
+    } else {
+      if (res.redis != '500') {
+        res.status(res.redis).render(res.redis)
+      } else {
+        res.status(res.redis).render(res.redis, { err: '', timestamp: (new Date).toString() })
+      }
+    }
+  } else {
+    debug('Didnt see any html data.', req.url)
+    next()
+  }
 }, isProd ? render : (req, res, next) => {
   readyPromise.then(() => render(req, res, next))
 })
 
+/*
+app.get('*', (req, res, next) => {
+  req.s = Date.now()
+  console.log('CURRENT HOST:', _.get(req, 'headers.host', ''), exp_dev.test(_.get(req, 'headers.host', '')))
+  next()
+}, (req, res, next) => {
+  if (res.redis && typeof res.redis === 'string') {
+    console.log(`Fetch page from Redis. ${decodeURIComponent(req.url)}`)
+    res.status(200).send(res.redis)
+  } else {
+    next()
+  }
+  next()
+}, isProd ? render : (req, res, next) => {
+  readyPromise.then(() => render(req, res, next))
+})
+*/
 process.on('unhandledRejection', reason => {
   console.error(`\n[Unhandled Rejection]`)
   console.error(`${reason}\n`)
