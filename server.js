@@ -163,7 +163,7 @@ function render (req, res, next) {
       /**
        * Save every single page which's processing with problem.
       */
-      isProd && !isPreview && redisWriting(req.url + '?device=mobile', rendererEjsCB.code || 500, null, 120)
+      isProd && !isPreview && redisWriting(req.url, rendererEjsCB.code || 500, null, 120)
 
     } else {
       console.error('ERROR OCCURRED WHEN RENDERING EJS. \n', err)
@@ -275,9 +275,10 @@ app.get('*', (req, res, next) => {
   console.log('CURRENT HOST:', _.get(req, 'headers.host', ''), exp_dev.test(_.get(req, 'headers.host', '')))
   let urlRegex
   if (urlRegex = req.url.match(/\/story\//) && !req.url.match(exp_preview_mode)) {
-    console.log("after get url = " + req.url)
+    console.log("before get url = " + req.url)
     req.url = req.url.split('?')[0]
     console.log("after get url = " + req.url)
+	req.url = req.url + "?device=mobile"
   }
   next()
 }, fetchFromRedis, (req, res, next) => {
