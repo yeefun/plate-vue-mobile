@@ -264,8 +264,8 @@ function render (req, res, next) {
      */
 
     // Don't save any page for now.
-	console.log("final url: " + req.url)
-    // isProd && !isPreview && redisWriting(req.url, html, null, 60)
+	console.log("final url: " + req.originalUrl)
+    isProd && !isPreview && redisWriting(req.originalUrl, html, null, 300)
   })
 }
 
@@ -277,7 +277,7 @@ app.get('*', (req, res, next) => {
   if (req.url.match(/\/story\//) && !req.url.match(exp_preview_mode)) {
     req.url = req.url.split('?')[0]
 	if (urlRegex = req.url.match(/(\/story\/[\w\d-_]*)/)) {
-		req.url = urlRegex[1] + "?device=mobile"
+		req.url = urlRegex[1]
 	}
   }
   next()
