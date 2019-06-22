@@ -264,7 +264,7 @@ function render (req, res, next) {
      */
 
     // Don't save any page for now.
-	console.log("final url: " + req.originalUrl)
+	console.log("final url: " + req.hostname + "/" + req.url)
     isProd && !isPreview && redisWriting(req.hostname + "/" + req.url, html, null, 300)
   })
 }
@@ -283,7 +283,7 @@ app.get('*', (req, res, next) => {
   next()
 }, fetchFromRedis, (req, res, next) => {
   if (res.redis) {
-    console.log('Fetch page from Redis.', decodeURIComponent(req.url), `${Date.now() - req.s}ms\n`)
+    console.log('Fetch page from Redis.', decodeURIComponent(req.hostname + "/" + req.url), `${Date.now() - req.s}ms\n`)
     if (res.redis.length > 3) {
       res.status(200).send(res.redis)
     } else {
