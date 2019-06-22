@@ -264,7 +264,7 @@ function render (req, res, next) {
      */
 
     // Don't save any page for now.
-	console.log(req.url)
+	console.log("final url: " + req.url)
     // isProd && !isPreview && redisWriting(req.url, html, null, 60)
   })
 }
