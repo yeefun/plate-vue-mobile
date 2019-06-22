@@ -277,6 +277,7 @@ app.get('*', (req, res, next) => {
   if (urlRegex = req.url.match(/\/story\//) && !req.url.match(exp_preview_mode)) {
     console.log("before get url = " + req.url)
     req.url = req.url.split('?')[0]
+	req.url.replace(/\[.*\]/g, '')
     console.log("after get url = " + req.url)
 	req.url = req.url + "?device=mobile"
   }
