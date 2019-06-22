@@ -283,7 +283,8 @@ app.get('*', (req, res, next) => {
   next()
 }, fetchFromRedis, (req, res, next) => {
   if (res.redis) {
-    console.log('Fetch page from Redis.', `${Date.now() - req.s}ms\n`, decodeURIComponent(req.url))
+    console.log("get data from redis for: " + req.url)
+    console.log('Fetch page from Redis.', decodeURIComponent(req.url), `${Date.now() - req.s}ms\n`)
     if (res.redis.length > 3) {
       res.status(200).send(res.redis)
     } else {
