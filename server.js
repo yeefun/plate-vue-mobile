@@ -274,11 +274,11 @@ app.get('*', (req, res, next) => {
   req.s = Date.now()
   console.log('CURRENT HOST:', _.get(req, 'headers.host', ''), exp_dev.test(_.get(req, 'headers.host', '')))
   let urlRegex
-  if (urlRegex = req.url.match(/\/story\//) && !req.url.match(exp_preview_mode)) {
-    console.log("before get url = " + req.url)
+  if (req.url.match(/\/story\//) && !req.url.match(exp_preview_mode)) {
     req.url = req.url.split('?')[0]
-	req.url.replace(/\[.*\]/g, '')
-    console.log("after get url = " + req.url)
+	if (urlRegex = req.url.match(/(\/story\/[\w\d-_]*?\/)/)) {
+		console.log("correct url = " + urlRegex[1])
+	}
 	req.url = req.url + "?device=mobile"
   }
   next()
