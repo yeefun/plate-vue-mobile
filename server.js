@@ -162,7 +162,7 @@ function render (req, res, next) {
       /**
        * Save every single page which's processing with problem.
       */
-      isProd && !isPreview && redisWriting(req.url, rendererEjsCB.code || 500, null, 60)
+      isProd && !isPreview && redisWriting(req.hostname + "/" + req.url, rendererEjsCB.code || 500, null, 60)
 
     } else {
       console.error('ERROR OCCURRED WHEN RENDERING EJS. \n', err)
