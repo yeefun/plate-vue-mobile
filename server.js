@@ -162,7 +162,6 @@ function render (req, res, next) {
       /**
        * Save every single page which's processing with problem.
       */
-	  console.log("writing to redis for: " + req.url)
       isProd && !isPreview && redisWriting(req.url, rendererEjsCB.code || 500, null, 120)
 
     } else {
@@ -286,6 +285,8 @@ app.get('*', (req, res, next) => {
   if (res.redis) {
     console.log('Fetch page from Redis.', `${Date.now() - req.s}ms\n`, decodeURIComponent(req.url))
     if (res.redis.length > 3) {
+	  console.log("writing page to redis for: " + req.url)
+	  redisWriting(req.url, res.redis, null, 120)
       res.status(200).send(res.redis)
     } else {
       if (res.redis != '500') {
