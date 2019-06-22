@@ -192,7 +192,6 @@ const redisWriting = (url, data, callback, timeout) => {
     decodedUrl = url
   }
   debug('Going to Writing things to redis...')
-  console.log('writing data to the redis: ', url)
   redisPoolWrite.set(decodedUrl, data, (err) => {
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
@@ -232,12 +231,12 @@ const insertIntoRedis = (req, res, next) => {
 
 const fetchFromRedis = (req, res, next) => {
   debug('Trying to fetching data from redis...', req.url)
-  redisFetching(req.url, ({ error, data }) => {
+  redisFetching(req.hostname + "/" + req.url, ({ error, data }) => {
     if (!error) {
       res.redis = data
       next()
     } else {
-      console.error(`>>> Mobile Fetch data from Redis in fail. URL: ${req.url} \n${error}`)
+      console.error(`>>> Mobile Fetch data from Redis in fail. URL: ${req.originalUrl} \n${error}`)
       next()
     }
   })
