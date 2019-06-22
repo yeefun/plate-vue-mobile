@@ -275,7 +275,7 @@ app.get('*', (req, res, next) => {
   let urlRegex
   if (req.url.match(/\/story\//) && !req.url.match(exp_preview_mode)) {
     req.url = req.url.split('?')[0]
-	if (urlRegex = req.url.match(/(\/story\/[\w\d-_]*?\/)/)) {
+	if (urlRegex = req.url.match(/(\/story\/[\w\d-_]*)/)) {
 		console.log("correct url = " + urlRegex[1])
 		req.url = urlRegex[1] + "?device=mobile"
 	}
@@ -283,7 +283,6 @@ app.get('*', (req, res, next) => {
   next()
 }, fetchFromRedis, (req, res, next) => {
   if (res.redis) {
-    console.log("get data from redis for: " + req.url)
     console.log('Fetch page from Redis.', decodeURIComponent(req.url), `${Date.now() - req.s}ms\n`)
     if (res.redis.length > 3) {
       res.status(200).send(res.redis)
