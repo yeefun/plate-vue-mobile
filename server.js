@@ -273,8 +273,9 @@ app.use('/api', require('./api/index'), () => { /** END */ })
 app.get('*', (req, res, next) => {
   req.s = Date.now()
   console.log('CURRENT HOST:', _.get(req, 'headers.host', ''), exp_dev.test(_.get(req, 'headers.host', '')))
-  if (req.url.match(/\/story\//) && !req.url.match(exp_preview_mode)) {
-    req.url = req.url.split('?')[0] + '?device=mobile'
+  let urlRegex
+  if (urlRegex = req.url.match(/(\/story\/[\d\w-_]*?\/)/) && !req.url.match(exp_preview_mode)) {
+    req.url = urlRegex[1] + '?device=mobile'
   }
   next()
 }, fetchFromRedis, (req, res, next) => {
