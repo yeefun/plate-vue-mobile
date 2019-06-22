@@ -192,6 +192,7 @@ const redisWriting = (url, data, callback, timeout) => {
     decodedUrl = url
   }
   debug('Going to Writing things to redis...')
+  console.log('writing data to the redis: ', url)
   redisPoolWrite.set(decodedUrl, data, (err) => {
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
