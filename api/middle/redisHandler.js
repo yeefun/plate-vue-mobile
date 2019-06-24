@@ -236,7 +236,7 @@ const fetchFromRedis = (req, res, next) => {
       res.redis = data
       next()
     } else {
-      console.error(`>>> Mobile Fetch data from Redis in fail. URL: ${req.originalUrl} \n${error}`)
+      console.warn(`>>> Mobile Fetch data from Redis in fail. URL: ${req.originalUrl} \n${error}`)
       next()
     }
   })
