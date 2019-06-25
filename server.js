@@ -18,7 +18,7 @@ const { VALID_PREVIEW_IP_ADD } = require('./api/config')
 const { createBundleRenderer } = require('vue-server-renderer')
 const { fetchFromRedis, redisWriting } = require('./api/middle/redisHandler') 
 // const { fetchFromRedis, insertIntoRedis } = require('./api/middle/redis')
-
+const { countRequestIncrement } = require('./prometheus/index')
 
 const formatMem = (bytes) => {
   return (bytes / 1024 / 1024).toFixed(2) + ' Mb'
@@ -213,8 +213,6 @@ function render (req, res, next) {
         `REQUEST IP: ${req.clientIp}\n`,
         `REFERER: ${req.headers.referer}\n`,
         `${err}\n`, '######################')
-
-      return
     } else {
       console.error(`ERROR OCCURRED WHEN RUNNING renderToString()\n`,
         `REQUEST URL: ${req.url}\n`,
@@ -227,17 +225,16 @@ function render (req, res, next) {
 
       if ('403' == err.status) {
         res.status(403).send('403 | Forbidden')
-        return
       } else if ('404' == err.status) {
         rendererEjsCB.code = 404
         res.render('404', rendererEjsCB)
-        return
       } else {
         rendererEjsCB.code = 500
         res.render('500', { err, timestamp: (new Date).toString() }, rendererEjsCB)
-        return
       }
-    } 
+    }
+    countRequestIncrement(req, res)
+    return
   }
   
   const context = {
@@ -264,8 +261,9 @@ function render (req, res, next) {
      */
 
     // Don't save any page for now.
-	console.log("final url: " + req.hostname + req.url)
+    console.log("final url: " + req.hostname + req.url)
     isProd && !isPreview && redisWriting(req.hostname + req.url, html, null, 300)
+    countRequestIncrement(req, res)
   })
 }
 

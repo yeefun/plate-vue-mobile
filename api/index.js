@@ -1,6 +1,7 @@
 const { get, map, toNumber, concat, compact } = require('lodash')
 const { fetchFromRedisForAPI, insertIntoRedis, redisFetching, redisFetchingRecommendNews, redisWriting } = require('./middle/redisHandler') 
 const { handlerError } = require('./comm')
+const { countRequestIncrement } = require('../prometheus/index')
 const config = require('./config')
 const bodyParser = require('body-parser')
 const debug = require('debug')('PLATEVUE:api')
@@ -38,6 +39,7 @@ const fetchStaticJson = (req, res, fileName) => {
     if (!err && data) {
       debug('Fetch static json file from Redis.', url)
       res.json(JSON.parse(data))
+      countRequestIncrement(req, res)
     } else {
       superagent
       .get(url)
@@ -53,9 +55,11 @@ const fetchStaticJson = (req, res, fileName) => {
           redisWriting(url, response.text)
           res.header('Cache-Control', 'public, max-age=600')
           res.json(JSON.parse(response.text))
+          countRequestIncrement(req, res)
         } else {
           res.header('Cache-Control', 'no-cache')
           res.status(500).send(response)
+          countRequestIncrement(req, res)
         }
       })
       .catch(error => {
@@ -65,6 +69,7 @@ const fetchStaticJson = (req, res, fileName) => {
           status: errWrapped.status,
           text: errWrapped.text
         })
+        countRequestIncrement(req, res)
         console.error(`error during fetch data from ${fileName} : ${url}\n${error}`)
       })
     }
@@ -84,7 +89,7 @@ router.get('/latestNews', (req, res) => {
   fetchStaticJson(req, res, 'latest_news')
 })
 
-router.get('/newsletter/:userEmail', async (req, res) => {
+router.get('/newsletter/:userEmail', async (req, res, next) => {
   const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   const url = `${config.NEWSLETTER_PROTOCOL}://${config.NEWSLETTER_HOST}:${config.NEWSLETTER_PORT}/user/${req.params.userEmail}`
   try {
@@ -100,16 +105,18 @@ router.get('/newsletter/:userEmail', async (req, res) => {
         }
       )
     res.json(JSON.parse(response.text))
+    next()
   } catch (error) {
     console.error(`[ERROR] GET newsletter api.`, url, `${error}`)
     const status = get(error, 'status') || 500
     const info = JSON.parse(get(error, 'response.text')) || error
     res.header('Cache-Control', 'no-cache')
     res.status(status).send(info)
+    next()
   }
-})
+}, countRequestIncrement)
 
-router.post('/newsletter', jsonParser, async (req, res) => {
+router.post('/newsletter', jsonParser, async (req, res, next) => {
   const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   const url = `${config.NEWSLETTER_PROTOCOL}://${config.NEWSLETTER_HOST}:${config.NEWSLETTER_PORT}/user`
   try {
@@ -127,6 +134,7 @@ router.post('/newsletter', jsonParser, async (req, res) => {
           }
         )
       res.status(200).json({ user: response.body.user, item: response.body.result })
+      next()
     } else {
       throw { status: 400, response: { text: "{\"_error\": {\"code\": 400, \"message\": \"Bad request.\"}}" }}
     }
@@ -136,8 +144,9 @@ router.post('/newsletter', jsonParser, async (req, res) => {
     const info = JSON.parse(get(error, 'response.text')) || error
     res.header('Cache-Control', 'no-cache')
     res.status(status).send(info)
+    next()
   }
-})
+}, countRequestIncrement)
 
 router.get('/video/:id', fetchFromRedisForAPI, async (req, res, next) => {
   if (res.redis) {
@@ -162,7 +171,7 @@ router.get('/video/:id', fetchFromRedisForAPI, async (req, res, next) => {
       console.error(`[ERROR] GET oath api.`, url, `${error}`)
     }
   }
-}, insertIntoRedis)
+}, countRequestIncrement, insertIntoRedis)
 
 router.get('/video/playlist/:playlistId', fetchFromRedisForAPI, async (req, res, next) => {
   if (res.redis) {
@@ -189,7 +198,7 @@ router.get('/video/playlist/:playlistId', fetchFromRedisForAPI, async (req, res,
       console.error(`\n[ERROR] GET oath api.`, url, `\n${error}\n`)
     }
   }
-}, insertIntoRedis)
+}, countRequestIncrement, insertIntoRedis)
 
 router.get('/playlistng/:ids', fetchFromRedisForAPI, async (req, res, next) => {
   if (res.redis) {
@@ -215,15 +224,16 @@ router.get('/playlistng/:ids', fetchFromRedisForAPI, async (req, res, next) => {
       console.error(`\n[ERROR] GET oath api.`, url, `${error}`)
     }
   }
-}, insertIntoRedis)
+}, countRequestIncrement, insertIntoRedis)
 
 // deprecated
-router.get('/playlist', (req, res) => {
+router.get('/playlist', (req, res, next) => {
   let query = req.query
   let url = `${config.YOUTUBE_PROTOCOL}://${config.YOUTUBE_HOST}?part=snippet&playlistId=${config.YOUTUBE_PLAYLIST_ID}&key=${config.YOUTUBE_API_KEY}`
   redisFetching(`${url}?${req.url}`, ({ err, data }) => {
     if (!err && data) {
       res.json(JSON.parse(data))
+      next()
     } else {
       console.warn(`[WARN]Fetch data from Redis in fail.`, `${url}?${req.url}`, `${err}`)
       superagent
@@ -233,6 +243,7 @@ router.get('/playlist', (req, res) => {
       .then(response => {
         redisWriting(`${url}?${req.url}`, JSON.stringify(response.body))
         res.json(response.body)
+        next()
       })
       .catch(error => {
         console.error(`\n[ERROR] GET youtube api.`, url, `\n${error}\n`)
@@ -240,16 +251,18 @@ router.get('/playlist', (req, res) => {
         const info = JSON.parse(get(error, 'response.text')) || error
         res.header('Cache-Control', 'no-cache')
         res.status(status).send(info)
+        next()
       })
     }
   })
-})
+}, countRequestIncrement)
 
-router.use('/search', (req, res) => {
+router.use('/search', (req, res, next) => {
   const esSearch_url = `${config.SEARCH_PROTOCOL}://${config.SEARCH_HOST}:${config.SEARCH_PORT || 9200}${config.SEARCH_ENDPOINT}`
   redisFetching(`/search${req.url}`, ({ err, data }) => {
     if (!err && data) {
       res.json(JSON.parse(data))
+      next()
     } else {
       console.warn(`\n[WARN] Fetch data from Redis in fail ${err}.`, `/search${req.url}`)
       const keywords = get(req, 'query.keyword', '').split(',')
@@ -295,6 +308,7 @@ router.use('/search', (req, res) => {
       .then(response => {
         redisWriting(`/search${req.url}`, JSON.stringify(response.body))
         res.json(response.body)
+        next()
       })
       .catch(error => {
         const errWrapped = handlerError(error)
@@ -302,13 +316,14 @@ router.use('/search', (req, res) => {
           status: errWrapped.status,
           text: errWrapped.text
         })
+        next()
         console.error(`[ERROR]POST elastic search api: ${error}`, esSearch_url)
       })
     }
   })
-})
+}, countRequestIncrement)
 
-router.use('/twitter', (req, res) => {
+router.use('/twitter', (req, res, next) => {
   const query = req.query
   const client = new Twitter(config.TWITTER_API)
 
@@ -324,7 +339,8 @@ router.use('/twitter', (req, res) => {
       }
     })
   }
-})
+  next()
+}, countRequestIncrement)
 
 router.use('/tracking', async (req, res) => {
   /*
@@ -343,7 +359,7 @@ router.use('/tracking', async (req, res) => {
   */
 })
 
-router.use('/related_news', (req, res) => {
+router.use('/related_news', (req, res, next) => {
   const query = req.query
   debug('/related_news', req.url)
   redisFetchingRecommendNews( get(query, 'id', '').split(',').map( id => 'related-news-v2-' + id ), ({ err, data }) => {
@@ -361,8 +377,9 @@ router.use('/related_news', (req, res) => {
       }
       res.json({ count: 0, result: [] })
     }
+    next()
   })
-})
+}, countRequestIncrement)
 
 router.get('*', (req, res, next) => {
   req.startTime = Date.now()
@@ -421,7 +438,8 @@ router.get('*', (req, res, next) => {
       status: errWrapped.status,
       text: errWrapped.text
     })
+    countRequestIncrement(req, res)
   }
-}, insertIntoRedis)
+}, countRequestIncrement, insertIntoRedis)
 
 module.exports = router
