@@ -11,7 +11,7 @@ const Counter = client.Counter
 // })
 
 const countRequest = new Counter({
-  name: 'http_request_total',
+  name: 'vue_mobile_http_request_total',
   help: 'HTTP request Total Count',
   labelNames: [ 'method', 'path', 'status' ]
 })
