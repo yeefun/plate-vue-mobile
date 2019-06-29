@@ -262,7 +262,7 @@ function render (req, res, next) {
 
     // Don't save any page for now.
     console.log("final url: " + req.hostname + req.url)
-    isProd && !isPreview && redisWriting(req.hostname + req.url, html, null, 300)
+    isProd && !isPreview && redisWriting(req.hostname + req.url, html, null, 600)
     countRequestIncrement(req, res)
   })
 }
