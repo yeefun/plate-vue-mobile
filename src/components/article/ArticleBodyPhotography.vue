@@ -56,7 +56,7 @@
   </div>
 </template>
 <script>
-  import { OnePageScroller } from 'kc-scroll'
+  import { OnePageScroller } from '../../../libs/kc-scroll/lib'
   import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
   import { getClientOS, addClass, removeClass } from 'src/util/comm'
   import { getCredit, shareLine, shareFacebook } from 'src/util/comm'
