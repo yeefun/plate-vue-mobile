@@ -422,6 +422,6 @@ router.get('*', (req, res, next) => {
       text: errWrapped.text
     })
   }
-}, insertIntoRedis)
+})
 
 module.exports = router
