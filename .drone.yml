@@ -75,9 +75,10 @@ pipeline:
     image: gcr.io/mirrormedia-1470651750304/drone-cloud-sdk:latest
     secrets: [google_credentials]
     commands:
-      - gcloud source repos clone configs ../configs
-      - cp ../configs/mirror-media/plate-vue/dev/config.js ./api/config.js
-      - cp ../configs/gcskeyfile.json ./gcskeyfile.json
+      - gcloud source repos clone configs configs
+      - cp configs/mirror-media/plate-vue/dev/config.js ./api/config.js
+      - cp configs/gcskeyfile.json ./gcskeyfile.json
+      - rm -rf configs
     when:
       event: push
       branch: master
