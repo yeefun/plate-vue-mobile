@@ -1,6 +1,6 @@
 <template>
   <section class="relateds-in-content" :id="`relateds-in-content-${id}`">
-    <h3 v-show="relateds.length">往下繼續閱讀</h3>
+    <h3 v-show="relateds.length">文章未完 往下繼續閱讀</h3>
     <div v-for="related in relateds" :key="related.id" class="related">
       <div class="related__title">
         <a :href="getHref(related)" target="_blank" @click="sendGaClickEvent('article', 'related')" v-text="related.title"></a>
