@@ -18,7 +18,7 @@ const { VALID_PREVIEW_IP_ADD } = require('./api/config')
 const { createBundleRenderer } = require('vue-server-renderer')
 const { fetchFromRedis, redisWriting } = require('./api/middle/redisHandler') 
 // const { fetchFromRedis, insertIntoRedis } = require('./api/middle/redis')
-
+const { monitorAfterRequest } = require('./prometheus/index')
 
 const formatMem = (bytes) => {
   return (bytes / 1024 / 1024).toFixed(2) + ' Mb'
@@ -266,6 +266,7 @@ function render (req, res, next) {
     // Don't save any page for now.
     console.log("final url: " + req.hostname + req.url)
     isProd && !isPreview && redisWriting(req.hostname + req.url, html, null, 600)
+    monitorAfterRequest(req, res)
   })
 }
 
