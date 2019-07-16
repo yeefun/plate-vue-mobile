@@ -10,7 +10,7 @@
       <div v-for="post in getPostByTag(tag.id)" :key="post.id" class="groupListBlock">
         <figure class="groupListBlock__img"><a :href="getHref(post)" target="_blank" :style="{ backgroundImage: 'url(' + getImage(post, 'mobile') + ')' }"></a></figure>
         <div class="groupListBlock__content">
-          <h2><a :href="getHref(post)" target="_blank" v-text="viewport < 600 ? getTruncatedVal(post.title, 19) : post.title"></a></h2>
+          <h2><a :href="getHref(post)" target="_blank" v-text="viewport < 600 ? getTruncatedVal(post.title, 32) : post.title"></a></h2>
           <p><a :href="getHref(post)" target="_blank" v-text="getBrief(post, 45)"></a></p>
         </div>
       </div>
@@ -108,6 +108,7 @@ export default {
 .groupListBlock
   display flex
   justify-content space-between
+  align-items center
   padding 1em 0
   border-bottom 1px solid #34495e
   &__img
