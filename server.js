@@ -17,7 +17,6 @@ const uuidv4 = require('uuid/v4')
 const { VALID_PREVIEW_IP_ADD } = require('./api/config')
 const { createBundleRenderer } = require('vue-server-renderer')
 const { fetchFromRedis, redisWriting } = require('./api/middle/redisHandler') 
-// const { fetchFromRedis, insertIntoRedis } = require('./api/middle/redis')
 
 
 const formatMem = (bytes) => {
