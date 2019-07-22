@@ -6,7 +6,7 @@
         <a :href="getHref(related)" target="_blank" @click="sendGaClickEvent('article', 'related')" v-text="related.title"></a>
       </div>
       <a
-        v-show="getImage(related.heroImage)"
+        v-if="isClient && getImage(related.heroImage)"
         :href="getHref(related)"
         class="related__img"
         target="_blank"
@@ -35,6 +35,7 @@ export default {
   data () {
     return {
       id: '',
+      isClient: false
     }
   },
   props: {
@@ -56,6 +57,7 @@ export default {
   },
   mounted () {
     this.id = uuidv4()
+    this.isClient = true
   },
 }
 </script>

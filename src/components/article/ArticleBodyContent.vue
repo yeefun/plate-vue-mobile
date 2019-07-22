@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <LazyItemWrapper
+    <div
       v-for="(p, index) in content"
       class="content-item"
       :class="{ last: index ===  content.length - 1}"
@@ -53,7 +53,7 @@
           name="ADAR2"
         />
       </div>
-    </LazyItemWrapper>
+    </div>
   </div>
 </template>
 <script>
@@ -62,7 +62,7 @@
   import ArticleImg from 'src/components/article/ArticleImg.vue'
   import AudioBox from 'src/components/AudioBox.vue'
   import ArticleVideo from 'src/components/article/Video.vue'
-  import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
+  // import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
   import Slider from '../Slider.vue'
   import moment from 'moment'
   import sanitizeHtml from 'sanitize-html'
@@ -76,7 +76,7 @@
       AudioBox,
       ArticleImg,
       ArticleVideo,
-      LazyItemWrapper,
+      // LazyItemWrapper,
       Slider
     },
     computed: {
