@@ -5,8 +5,17 @@
       <div class="related__title">
         <a :href="getHref(related)" target="_blank" @click="sendGaClickEvent('article', 'related')" v-text="related.title"></a>
       </div>
-      <a v-if="getImage(related.heroImage)" :href="getHref(related)" class="related__img" target="_blank" @click="sendGaClickEvent('article', 'related')">
-        <LazyImage :src="getImage(related.heroImage)" :alt="related.title" />
+      <a
+        v-show="getImage(related.heroImage)"
+        :href="getHref(related)"
+        class="related__img"
+        target="_blank"
+        @click="sendGaClickEvent('article', 'related')"
+      >
+        <LazyImage
+          :src="getImage(related.heroImage)"
+          :alt="related.title"
+        />
       </a>
     </div>
     <slot></slot>
