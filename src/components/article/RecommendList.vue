@@ -1,7 +1,6 @@
 <template>
   <div class="related-list">
     <div
-      v-if="!(filteredRecommends.length < 1)"
       class="related-list__list"
       :style="containerStyle()"
     >
