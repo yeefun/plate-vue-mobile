@@ -18,7 +18,7 @@
               <a @click="recommendsClickHandler(get(o, [ 'slug' ]), $event)" :href="getHrefFull(o)" v-text="get(o, [ 'title' ], '')" :id="`recommend-${get(o, [ 'slug' ], Date.now())}`" target="_blank" v-else></a>
             </div>
           </div>
-          <!-- <div
+          <div
             v-if="i === showPopInAdAt"
             :key="i"
             class="related-list__list__item"
@@ -26,16 +26,16 @@
             <PopInAd>
               <div id="_popIn_recommend_ad_1"></div>
             </PopInAd>
-          </div> -->
+          </div>
         </template>
-        <!-- <div
+        <div
           v-if="showPopInAdAt === 0"
           class="related-list__list__item"
         >
           <PopInAd>
             <div id="_popIn_recommend_ad_1"></div>
           </PopInAd>
-        </div> -->
+        </div>
       </template>
     </div>
   </div>
