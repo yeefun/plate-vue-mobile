@@ -11,7 +11,7 @@
       />
     </ArticleBody>
     <!-- <slot name="ADAR2"></slot> -->
-    <LazyItemWrapper :position="verge.viewportH()">
+    <!-- <LazyItemWrapper :position="verge.viewportH()"> -->
       <RecommendList
         v-if="!isAd"
         :isAd="isAd"
@@ -54,7 +54,7 @@
       </div>
       <PopList :pop="popularlist" v-if="isPoplistActive" :currEnv="dfpMode"></PopList>
       <div class="facebook-comments" v-html="fbBlock"></div>
-    </LazyItemWrapper>
+    <!-- </LazyItemWrapper> -->
   </div>
   <div v-else-if="articleStyle === 'photography'">
     <ArticleBodyPhotography :articleData="articleData" :viewport="verge.viewportW">
@@ -69,7 +69,7 @@
   // import ArticleBody from 'src/components/article/ArticleBody.vue'
   // import ArticleBodyPhotography from 'src/components/article/ArticleBodyPhotography.vue'
   import Footer from 'src/components/Footer.vue'
-  import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
+  // import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
   import Newsletter from 'src/components/Newsletter.vue'
   import PopList from 'src/components/article/PopList.vue'
   import RecommendList from 'src/components/article/RecommendList.vue'
@@ -84,7 +84,7 @@
       ArticleBody,
       ArticleBodyPhotography,
       Footer,
-      LazyItemWrapper,
+      // LazyItemWrapper,
       Newsletter,
       PopList,
       RecommendList,
