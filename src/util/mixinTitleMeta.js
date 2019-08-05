@@ -1,4 +1,4 @@
-import { alexa, fb_sdk, gtm_mirrormedia, gtm_likr, scorecardresearch } from './dynamicScript'
+import { alexa, dableScript, fb_sdk, gtm_mirrormedia, gtm_likr, scorecardresearch } from './dynamicScript'
 import { forEach, split } from 'lodash'
 
 const debug = require('debug')('CLIENT:mixinTitleMeta')
@@ -97,15 +97,23 @@ process.env.VUE_ENV === 'client' && document.addEventListener('DOMContentLoaded'
 process.env.VUE_ENV === 'client' && !isWindowLoadedHandlerSetup && window.addEventListener('load', () => {
   console.log('PAGE LOADED.', Date.now() - timestamp_start, 'ms')
   if (!isScriptLoaded) {
-    const insertCodes = async codes => {
+    const insertCodes = async ({ async, codes, id, src, position }) => {
       const script = document.createElement('script')
-      script.innerHTML = codes
-      document.head.appendChild(script)
+      async ? script.setAttribute('async', true) : ''
+      id ? script.setAttribute('id', id) : ''
+      src ? script.setAttribute('src', src) : ''
+      codes ? script.innerHTML = codes : ''
+      if (position && document[position]) {
+        document[position].appendChild(script)
+      } else {
+        document.head.appendChild(script)
+      }
     }
     isScriptLoaded = Promise.all([
-      insertCodes(gtm_mirrormedia).then(() => insertCodes(gtm_likr)),
-      insertCodes(fb_sdk),
-      insertCodes(scorecardresearch).then(() => insertCodes(alexa)),
+      insertCodes({ codes: gtm_mirrormedia }).then(() => insertCodes({ codes: gtm_likr })),
+      insertCodes({ codes: fb_sdk }),
+      insertCodes({ codes: scorecardresearch }).then(() => insertCodes({ codes: alexa })),
+      insertCodes({ codes: dableScript, position: 'body' }),
       Promise.resolve()
     ]).then(() => true).catch(() => false)
   }
