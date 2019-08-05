@@ -1,5 +1,5 @@
 <template>
-  <div class="poplist-container" v-if="(pop.length > 0)">
+  <div :class="abIndicator.toLowerCase()" class="poplist-container" v-if="(pop.length > 0)">
     <div class="pop_title"><h3>熱門文章</h3></div>
     <div class="pop_list">
       <template v-for="(o, i) in popArticles">
@@ -11,7 +11,7 @@
             <div class="pop_item--colorBlock" :style="getSectionStyle(get(o, 'sections.0', ''))" v-text="get(o, 'sections.0.title')" />
           </figure>
           <div class="pop_item_title">
-            <a :href="o.slug" @click="sendGaClickEvent('article', 'popular')" v-text="getTruncatedVal(o.title, 21)" target="_blank" />
+            <a :href="o.slug" @click="sendGaClickEvent('article', 'popular')" v-text="abIndicator === 'B' ? o.title : getTruncatedVal(o.title, 21)" target="_blank" />
           </div>
         </div>
         <slot :name="`microAd${getMicroAdName(i)}`" v-if="(i === 1 || i === 2 || i === 3)"></slot>
@@ -26,7 +26,7 @@
   import { get, take } from 'lodash'
   export default {
     name: 'pop-list',
-    props: [ 'pop', 'currEnv' ],
+    props: [ 'abIndicator', 'pop', 'currEnv' ],
     components: {
       LazyImage,
     },
@@ -145,5 +145,15 @@
         margin 0 0 20px 0
       & >>> .pop_item_title
         width 100%
-        
+
+  .poplist-container.b
+    .pop_list
+      .pop_item
+        .pop_item_title
+          a
+            display -webkit-box
+            -webkit-line-clamp 2
+            -webkit-box-orient vertical
+            height calc(1.5rem * 2 + .2em)
+            overflow hidden
 </style>
