@@ -243,10 +243,7 @@
       },
       needWineWarning () {
         const cats = this.articleData.categories
-        for (let i = 0; i < cats.length; i++) {
-          if (cats[i].name === 'wine') return true
-        }
-        return false
+        return cats.some((cat) => cat.name === 'wine')
       },
       sectionName () { return get(this.articleData, 'sections.0.name') },
       sectionId () {
