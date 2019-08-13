@@ -92,7 +92,8 @@
         <share :right="`20px`" :bottom="`20px`" />
       </div>
       <!--PAGE STYLE IS NORMAL END-->
-      <DfpST :props="props">
+      <WineWarning v-if="needWineWarning" />
+      <DfpST :props="props" v-else>
         <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
       </DfpST>
       <DfpCover v-show="showDfpCoverAdFlag">
@@ -138,6 +139,7 @@ import Loading from 'src/components/Loading.vue'
 import MicroAd from 'src/components/MicroAd.vue'
 import MoreFull from 'src/components/MoreFull.vue'
 import Share from 'src/components/Share.vue'
+import WineWarning from '../components/WineWarning.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import titleMetaMixin from 'src/util/mixinTitleMeta'
 import verge from 'verge'
@@ -477,6 +479,7 @@ export default {
     'more-full': MoreFull,
     'share': Share,
     'vue-dfp-provider': VueDfpProvider,
+    WineWarning,
     DfpCover,
     DfpST,
     Header,
@@ -759,6 +762,9 @@ export default {
     },
     latestList () {
       return get(this.$store, 'state.latestArticle.items', [])
+    },
+    needWineWarning () {
+      return this.$route.params.title === 'wine'
     },
     page () {
       switch (this.type) {

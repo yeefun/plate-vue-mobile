@@ -39,7 +39,8 @@
         </lazy-item-wrapper>
         <div class="footer"><Footer /></div>
       </div>
-      <dfp-st :props="props">
+      <WineWarning v-if="needWineWarning" />
+      <dfp-st :props="props" v-else>
         <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
       </dfp-st>
       <dfp-cover v-if="!hiddenAdvertised" v-show="showDfpCoverAdFlag"> 
@@ -77,6 +78,7 @@
   import Footer from 'src/components/Footer.vue'
   import Header from 'src/components/Header.vue'
   import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
+  import WineWarning from '../components/WineWarning.vue'
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
   import sanitizeHtml from 'sanitize-html'
   import truncate from 'truncate'
@@ -145,6 +147,7 @@
       'dfp-fixed': DfpFixed,
       'lazy-item-wrapper': LazyItemWrapper,
       'vue-dfp-provider': VueDfpProvider,
+      WineWarning,
       AdultContentAlert,
       Footer,
       Header
@@ -237,7 +240,11 @@
       },    
       isLockJS () {
         return get(this.articleData, 'lockJS')
-      },    
+      },
+      needWineWarning () {
+        const cats = this.articleData.categories
+        return cats.some((cat) => cat.name === 'wine')
+      },
       sectionName () { return get(this.articleData, 'sections.0.name') },
       sectionId () {
         const _sectionId = get(this.articleData, 'sections.0.id')
