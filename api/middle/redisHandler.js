@@ -9,6 +9,7 @@ const {
   REDIS_CONNECTION_TIMEOUT,
   REDIS_READ_HOST,
   REDIS_READ_PORT,
+  REDIS_RECOMMEND_AUTH,
   REDIS_RECOMMEND_NEWS_HOST,
   REDIS_RECOMMEND_NEWS_PORT,
   REDIS_TIMEOUT,
@@ -49,7 +50,7 @@ const writeClient = redis.createClient(REDIS_WRITE_PORT, REDIS_WRITE_HOST, {
 })
 
 const recommendNewsClient = isProd ? redis.createClient(REDIS_RECOMMEND_NEWS_PORT, REDIS_RECOMMEND_NEWS_HOST, {
-  password: REDIS_AUTH,
+  password: REDIS_RECOMMEND_AUTH || REDIS_AUTH,
   retry_strategy: retryStrategy
 }) : readClient
 
