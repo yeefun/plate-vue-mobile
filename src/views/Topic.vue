@@ -114,7 +114,7 @@ import titleMetaMixin from '../util/mixinTitleMeta'
 
 const MAXRESULT = 12
 const PAGE = 1
-const WINE_TOPIC_IDS = [
+const WINE_TOPICS_ID = [
   '5c25f9e3315ec51000903a82',
   '5d22bb9fe311f3925c49396c',
   '5a4d8e60160ac91000294611'
@@ -479,7 +479,7 @@ export default {
       }
     },
     needWineWarning () {
-      return WINE_TOPIC_IDS.some((id) => this.$route.params.topicId === id)
+      return WINE_TOPICS_ID.some((id) => this.$route.params.topicId === id)
     },
     uuid () {
       return this.$route.params.topicId
